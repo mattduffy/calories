@@ -1,7 +1,7 @@
 {
   "name": "@mattduffy/calories",
   "version": "1.0.0",
-  "description": "A library to estimate energy expenditure, in calories, using the Pandolf - Santee equation for metabolic equivalent tasks.",
+  "description": "A library to estimate energy expenditure, in calories, using the Pandolf-Santee equation for metabolic equivalent tasks.",
   "author": "Matthew Duffy",
   "license": "ISC",
   "main": "index.js",
@@ -21,12 +21,21 @@
   "scripts": {
     "test": "DEBUG=* node --test test/test.js"
   },
-  
   "keywords": [
+    "calories burned",
     "calories",
     "Pandolf",
     "Santee",
+    "Pandolf-Santee",
     "MET",
     "metabolic equivalent tasks"
-  ]
+  ],
+  "devDependencies": {
+    "eslint": "8.57.1",
+    "eslint-config-airbnb-base": "15.0.0",
+    "eslint-plugin-import": "2.26.0"
+  },
+  "dependencies": {
+    "debug": "4.4.3"
+  }
 }
