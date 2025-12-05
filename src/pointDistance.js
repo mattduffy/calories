@@ -4,14 +4,15 @@
  * @summary Calculate the distance between gps points.
  * @file: src/pointDistance.js
  */
-function rads(degrees) {
+
+export function rads(degrees) {
   return degrees * (Math.PI / 180)
 }
 
-function degs(radians) {
+export function degs(radians) {
   const deg = radians * (180 / Math.PI)
   console.log(`radians in ${radians} \ndegrees out ${deg}`)
-  return deg 
+  return deg
 }
 
 export function pointDistance(p1, p2, u = 'metric') {
