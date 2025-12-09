@@ -30,18 +30,18 @@ const COMBINED = BODY_WEIGHT + RUCK_WEIGHT
  * reference value of 3.5 ml O₂/(kg·min).
  * Metabolic Equivalent Task (Hiking):
  *  MET = 7.5 (7.0 for backpacking or general weight lifting has a MET of 3.5)
- *  Calories Burned Per Minute: 𝐶𝑎𝑙𝑜𝑟𝑖𝑒𝑠/𝑚𝑖𝑛 = (MET * 3.5 * Weight in kg) / 200
- *  Ttl Calories Burned: 𝑇𝑜𝑡𝑎𝑙𝐶𝑎𝑙𝑜𝑟𝑖𝑒𝑠𝐵𝑢𝑟𝑛𝑒𝑑 = (MET * 3.5 * Weight in kg) / 200 * minutes
+ *  Calories Burned Per Minute: Calories / minute = (MET * 3.5 * Weight in kg) / 200
+ *  Ttl Calories Burned: Total Caloires Burned = (MET * 3.5 * Weight in kg) / 200 * minutes
  * How to use:
  * Weight: Your body weight plus the weight of your ruck/pack.
  * Convert to kg if needed (1 lb≈0.4536 kg).
  * Duration: The total time spent hiking/rucking, in minutes.
  * @author Matthew Duffy <mattduffy@gmail.com>
- * @param Number minutes - Time spent expending energy, in minutes.
- * @param Number MET - The metabolic equivalent task number.
- * @return Number - Estimated calories used per duration of MET.
+ * @param {Number} MET - The metabolic equivalent task number.
+ * @param {Number} minutes - Time spent expending energy, in minutes.
+ * @return {Number} - Estimated calories used per duration of MET.
  */
-function simpleCalories(minutes, MET = 7.5) {
+function simpleCalories(MET = 7.5, minutes = 1) {
   log('calculating simple EE method')
   return ((MET * 3.5 * COMBINED) / 200) * minutes
 }
@@ -58,11 +58,11 @@ function simpleCalories(minutes, MET = 7.5) {
  * G = Grade of incline (e.g., 0 for flat, 1 for 100%)
  * n = Terrain factor (e.g., 1.0 for pavement, or higher for sand/brush)
  * @author Matthew Duffy <mattuffy@gmail.com>
- * @param Number W - The body weight.
- * @param Number L - The load/weight carried.
- * @param Number V - The speed of the hike.
- * @param Number G - The grade of incline climbed (0 for flat, 1 for 100%).
- * @param Number n - The terrain factor (1.0 for pavement, higher for sand/brush).
+ * @param {Number} W - The body weight.
+ * @param {Number} L - The load/weight carried.
+ * @param {Number} V - The speed of the hike.
+ * @param {Number} G - The grade of incline climbed (0 for flat, 1 for 100%).
+ * @param {Number} n - The terrain factor (1.0 for pavement, higher for sand/brush).
  * @return
  */
 function pandolf(W, L, V, G, n = 1.2) {
@@ -71,7 +71,38 @@ function pandolf(W, L, V, G, n = 1.2) {
   return (1.5 * W) + (2.0 * (W + L)) * (L / W) + ((n * (W + L)) * ((1.5 * V) + (0.35 * V) * G))
 }
 
+/*
+ * @summary From a geojson data structure, extract the timestamps and
+ * GPS waypoints to calculate calories burned.
+ * @author Matthew Duffy <mattduffy@gmail.com>
+ * @param {Object} GeoJson - A geojson object with location data and a properties member.
+ * @param {Array} GeoJson.properties.timestamps - An array of timestamps associated with each
+ * GPS waypoint.
+ * @param {Number} bodyWeight - The body weight.
+ * @param {Number} [ruckWeight=null] - Optional ruck weight to include.
+ * @return {Number} - Estimated calories burned.
+ */
+function caloriesFromGeojson(GeoJson, bodyWeight, ruckWeight = null) {
+
+}
+
+/*
+ * @summary Calculate calories burned from provided GPS waypoints, timestamps, body weight and
+ * optional ruck weight if provided.
+ * @author Matthew Duffy <mattduffy@gmail.com>
+ * @param {Number[]} timesstamps - An array of timestamps.
+ * @param {Object[]} waypoints - An array of objects containing gps waypoints.
+ * @param {Number} bodyWeight - The body weight.
+ * @param {Number} [ruckWeight=null] - Optional ruck weight to include.
+ * @return {Number} - Estimated calories burned
+ */
+function calories(timestamps, waypoints, bodyWeight, ruckWeight = null) {
+
+}
+
 export {
+  calories,
   simpleCalories,
+  caloriesFromGeojson,
   pandolf,
 }
