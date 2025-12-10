@@ -1,6 +1,6 @@
 /**
  * @module @mattduffy/calories
- * @author Matthew Duffy <mattduffy@gmail.com>*
+ * @author Matthew Duffy <mattduffy@gmail.com>
  * @summary Calculate the distance between gps points.
  * @file: src/pointDistance.js
  */
