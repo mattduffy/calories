@@ -7,6 +7,7 @@
 
 import Debug from 'debug'
 import { pointDistance } from './pointDistance.js'
+import { calculateSlopeGrade } from './slope.js'
 
 const error = Debug('calories:ERROR')
 const log = Debug('calories')
@@ -99,6 +100,22 @@ function caloriesFromGeojson(GeoJson, bodyWeight, ruckWeight = null) {
 function calories(timestamps, waypoints, bodyWeight, ruckWeight = null) {
 
 }
+
+const gpsPointA = {
+  latitude: 34.0522,
+  longitude: -118.2437,
+  altitude: 100,
+}
+
+const gpsPointB = {
+  latitude: 34.0530,
+  longitude: -118.2420,
+  altitude: 150,
+}
+
+const slope = calculateSlopeGrade(gpsPointA, gpsPointB)
+log(`Slope Percentage: ${slope.percentage.toFixed(2)}%`)
+log(`Slope Angle: ${slope.angleDegrees.toFixed(2)} degrees`)
 
 export {
   calories,
