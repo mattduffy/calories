@@ -84,7 +84,7 @@ function pandolf(W, L, V, G, n = 1.2) {
  * @return {Number} - Estimated calories burned.
  */
 function caloriesFromGeojson(GeoJson, bodyWeight, ruckWeight = null) {
-
+  log('caloriesFromGeojson:', ruckWeight)
 }
 
 /*
@@ -98,7 +98,7 @@ function caloriesFromGeojson(GeoJson, bodyWeight, ruckWeight = null) {
  * @return {Number} - Estimated calories burned
  */
 function calories(timestamps, waypoints, bodyWeight, ruckWeight = null) {
-
+  log('calories:', ruckWeight)
 }
 
 const gpsPointA = {
