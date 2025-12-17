@@ -20,10 +20,6 @@ let BODY_WEIGHT
 let RUCK_WEIGHT
 const COMBINED = BODY_WEIGHT + RUCK_WEIGHT
 
-// bump
-// second bump
-// third bump
-
 /**
  * @summary The simplest calorie estimating function.  No account is given for
  * terrain type, gps factors (hill grading), uphill vs downhill efforts, etc.
