@@ -16,7 +16,7 @@ export function degs(radians) {
 }
 
 export function pointDistance(p1, p2, u = 'metric') {
-  console.log('Heading::pointDistances(p1, p2, u): ', p1, p2, u)
+  console.log('calories::pointDistances(p1, p2, u): ', p1, p2, u)
   const earthRadiusKm = 6371
   const earthRadiusMeters = 6371000
   const earthRadiusMi = 3959
@@ -32,7 +32,7 @@ export function pointDistance(p1, p2, u = 'metric') {
     r = earthRadiusMeters
     console.log('No units given, default to earth radius in meters')
   }
-  // console.log(`Heading::pointDistance() using earth radius: ${r} ${_u}`)
+  // console.log(`calories::pointDistance() using earth radius: ${r} ${_u}`)
   const dLat = rads(p2.latitude - p1.latitude)
   const dLon = rads(p2.longitude - p1.longitude)
   const lat1 = rads(p1.latitude)

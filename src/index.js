@@ -9,12 +9,9 @@ import Debug from 'debug'
 import { pointDistance } from './pointDistance.js'
 import { calculateSlopeGrade } from './slope.js'
 
-const error = Debug('calories:ERROR')
+// const error = Debug('calories:ERROR')
 const log = Debug('calories')
 log.log = console.log.bind(console)
-
-log(pointDistance)
-error(pointDistance)
 
 let BODY_WEIGHT
 let RUCK_WEIGHT
