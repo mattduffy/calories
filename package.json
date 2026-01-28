@@ -19,6 +19,7 @@
     "package.json": "./package.json"
   },
   "scripts": {
+    "lint": "eslint --",
     "test": "DEBUG=* node --test test/test.js"
   },
   "keywords": [
