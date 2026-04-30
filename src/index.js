@@ -31,8 +31,8 @@ const COMBINED = BODY_WEIGHT + RUCK_WEIGHT
  * Convert to kg if needed (1 lb≈0.4536 kg).
  * Duration: The total time spent hiking/rucking, in minutes.
  * @author Matthew Duffy <mattduffy@gmail.com>
- * @param {Number} MET - The metabolic equivalent task number.
- * @param {Number} minutes - Time spent expending energy, in minutes.
+ * @param {Number} [MET=7.5] - The metabolic equivalent task number.
+ * @param {Number} [minutes=1] - Time spent expending energy, in minutes.
  * @return {Number} - Estimated calories used per duration of MET.
  */
 function simpleCalories(MET = 7.5, minutes = 1) {
@@ -56,7 +56,7 @@ function simpleCalories(MET = 7.5, minutes = 1) {
  * @param {Number} L - The load/weight carried.
  * @param {Number} V - The speed of the hike.
  * @param {Number} G - The grade of incline climbed (0 for flat, 1 for 100%).
- * @param {Number} n - The terrain factor (1.0 for pavement, higher for sand/brush).
+ * @param {Number} [n=1.2] - The terrain factor (1.0 for pavement, higher for sand/brush).
  * @return
  */
 function pandolf(W, L, V, G, n = 1.2) {
@@ -73,10 +73,10 @@ function pandolf(W, L, V, G, n = 1.2) {
  * @param {Array} GeoJson.properties.timestamps - An array of timestamps associated with each
  * GPS waypoint.
  * @param {Number} bodyWeight - The body weight.
- * @param {Number} [ruckWeight=null] - Optional ruck weight to include.
+ * @param {Number} [ruckWeight=0] - Optional ruck weight to include.
  * @return {Number} - Estimated calories burned.
  */
-function caloriesFromGeojson(GeoJson, bodyWeight, ruckWeight = null) {
+function caloriesFromGeojson(GeoJson, bodyWeight, ruckWeight = 0) {
   log('caloriesFromGeojson:', ruckWeight)
 }
 
@@ -87,10 +87,10 @@ function caloriesFromGeojson(GeoJson, bodyWeight, ruckWeight = null) {
  * @param {Number[]} timesstamps - An array of timestamps.
  * @param {Object[]} waypoints - An array of objects containing gps waypoints.
  * @param {Number} bodyWeight - The body weight.
- * @param {Number} [ruckWeight=null] - Optional ruck weight to include.
+ * @param {Number} [ruckWeight=0] - Optional ruck weight to include.
  * @return {Number} - Estimated calories burned
  */
-function calories(timestamps, waypoints, bodyWeight, ruckWeight = null) {
+function calories(timestamps, waypoints, bodyWeight, ruckWeight = 0) {
   log('calories:', ruckWeight)
 }
 
