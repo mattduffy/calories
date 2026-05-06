@@ -42,7 +42,7 @@ function simpleCalories(MET = 7.5, minutes = 1) {
 
 /**
  * @summary The Pandolf equation for estimating energy expenditure.
- * This equation is more complex but includes factors like terrain grade.
+ * This equation is more complex and includes factors like speed and terrain grade.
  * M = 1.5W + 2.0 * (W + L) * (L / W) + n * (W + L) * (1.5V + 0.35VG)
  * Where:
  * M = Metabolic rate (calories per minute)
@@ -53,13 +53,13 @@ function simpleCalories(MET = 7.5, minutes = 1) {
  * n = Terrain factor (e.g., 1.0 for pavement, or higher for sand/brush)
  * @author Matthew Duffy <mattuffy@gmail.com>
  * @param {Number} W - The body weight.
- * @param {Number} L - The load/weight carried.
+ * @param {Number} L - The weight of the load carried.
  * @param {Number} V - The speed of the hike.
  * @param {Number} G - The grade of incline climbed (0 for flat, 1 for 100%).
  * @param {Number} [n=1.2] - The terrain factor (1.0 for pavement, higher for sand/brush).
  * @return
  */
-function pandolf(W, L, V, G, n = 1.2) {
+function pandolfCalories(W, L, V, G, n = 1.2) {
   log('calculating Pandolf equation for calories used.')
   // 1.5W + 2.0(W + L)(L/W) + n(W + L)(1.5V + 0.35VG)
   return (1.5 * W) + (2.0 * (W + L)) * (L / W) + ((n * (W + L)) * ((1.5 * V) + (0.35 * V) * G))
@@ -71,7 +71,7 @@ function pandolf(W, L, V, G, n = 1.2) {
  * @author Matthew Duffy <mattduffy@gmail.com>
  * @param {Object} GeoJson - A geojson object with location data and a properties member.
  * @param {Array} GeoJson.properties.timestamps - An array of timestamps associated with each
- * GPS waypoint.
+ *                                                GPS waypoint.
  * @param {Number} bodyWeight - The body weight.
  * @param {Number} [ruckWeight=0] - Optional ruck weight to include.
  * @return {Number} - Estimated calories burned.
@@ -113,6 +113,6 @@ log(`Slope Angle: ${slope.angleDegrees.toFixed(2)} degrees`)
 export {
   calories,
   simpleCalories,
+  pandolfCalories,
   caloriesFromGeojson,
-  pandolf,
 }
