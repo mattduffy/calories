@@ -6,7 +6,7 @@ import {
 } from 'node:test'
 import assert from 'node:assert/strict'
 import {
-  calories,
+  // calories,
   simpleCalories,
   pandolfCalories,
 } from '../src/index.js'
@@ -17,6 +17,11 @@ console.log(walk_1.features[0].geometry.coordinates[0])
 console.log(walk_2.features[0].geometry.coordinates[0])
 
 const skip = { skip: true }
+const weights = {
+  body: 160 / 2.2, 
+  ruck: 0,
+  water: 0,
+}
 
 describe('First test suite for calories package', async () => {
   before(() => {
@@ -26,8 +31,19 @@ describe('First test suite for calories package', async () => {
     console.log('running after each test')
   })
 
-  it('First calorie test', async () => {
-    console.log('testing first test.')
-    assert(true)
+  it('First calorie test - simpleCalories', async () => {
+    const walk_1_minutes = walk_1.features[0].properties.duration / 60000
+    const finish = walk_1.features[0].properties.endTime
+    const start  = walk_1.features[0].properties.startTime
+    const walk_1_timediff = (finish - start) / 60000
+    console.log('duration:', walk_1_minutes)
+    console.log('difftime:', walk_1_timediff)
+    const cals_1 = simpleCalories(walk_1_minutes, weights)
+    console.log(cals_1)
+    const cals_2 = simpleCalories(walk_1_timediff, weights)
+    console.log(cals_2)
+
+    assert(!isNaN(cals_1) && cals_1 > 0)
+    assert(!isNaN(cals_2) && cals_2 > 0)
   })
 })
