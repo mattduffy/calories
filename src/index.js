@@ -6,7 +6,7 @@
  */
 
 import Debug from 'debug'
-import { pointDistance } from './pointDistance.js'
+// import { pointDistance } from './pointDistance.js'
 import { calculateSlopeGrade } from './slope.js'
 
 // const error = Debug('calories:ERROR')
@@ -15,7 +15,7 @@ log.log = console.log.bind(console)
 
 let BODY_WEIGHT
 let RUCK_WEIGHT
-const COMBINED = BODY_WEIGHT + RUCK_WEIGHT
+let COMBINED = BODY_WEIGHT + RUCK_WEIGHT
 
 /**
  * @summary The simplest calorie estimating function.  No account is given for
@@ -31,12 +31,21 @@ const COMBINED = BODY_WEIGHT + RUCK_WEIGHT
  * Convert to kg if needed (1 lb≈0.4536 kg).
  * Duration: The total time spent hiking/rucking, in minutes.
  * @author Matthew Duffy <mattduffy@gmail.com>
- * @param {Number} [MET=7.5] - The metabolic equivalent task number.
  * @param {Number} [minutes=1] - Time spent expending energy, in minutes.
+ * @param {object} weights - The different weight values to be combined.
+ * @param {Number} [weights.body=0] - Body weight in kilograms.
+ * @param {Number} [weights.ruck=0] - Ruck weight carried, in kilograms.
+ * @param {Number} [weights.water=0] - Weight of water carried, in kilograms.
+ * @param {Number} [MET=7.5] - The metabolic equivalent task number.
  * @return {Number} - Estimated calories used per duration of MET.
  */
-function simpleCalories(MET = 7.5, minutes = 1) {
+function simpleCalories(minutes = 1, weights = { body: 0, ruck: 0, water: 0 }, MET = 7.5) {
   log('calculating simple EE method')
+  log('minutes', minutes)
+  log('weights', weights)
+  COMBINED = weights.body + weights.ruck + weights.water
+  log('combined weights', COMBINED)
+  log(`computing ((${MET} * 3.5 * ${COMBINED}) / 200) * ${minutes}`)
   return ((MET * 3.5 * COMBINED) / 200) * minutes
 }
 
