@@ -6,6 +6,7 @@ import {
 } from 'node:test'
 import assert from 'node:assert/strict'
 import {
+  m2m,
   // calories,
   simpleCalories,
   pandolfCalories,
@@ -32,10 +33,12 @@ describe('First test suite for calories package', async () => {
   })
 
   it('First calorie test - simpleCalories', async () => {
-    const walk_1_minutes = walk_1.features[0].properties.duration / 60000
-    const finish = walk_1.features[0].properties.endTime
-    const start  = walk_1.features[0].properties.startTime
-    const walk_1_timediff = (finish - start) / 60000
+    // const walk_1_minutes = walk_1.features[0].properties.duration / 60000
+    const walk_1_minutes = m2m(walk_1.features[0].properties.duration)
+    const finish = m2m(walk_1.features[0].properties.endTime)
+    const start  = m2m(walk_1.features[0].properties.startTime)
+    // const walk_1_timediff = (finish - start) / 60000
+    const walk_1_timediff = finish - start
     console.log('duration:', walk_1_minutes)
     console.log('difftime:', walk_1_timediff)
     const cals_1 = simpleCalories(walk_1_minutes, weights)

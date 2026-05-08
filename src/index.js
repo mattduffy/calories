@@ -18,6 +18,16 @@ let RUCK_WEIGHT
 let COMBINED = BODY_WEIGHT + RUCK_WEIGHT
 
 /**
+ * @summary Convert a number of milliseconds to minutes.
+ * @author Matthew Duffy <mattduffy@gmail.com>
+ * @param {Number} milliseconds - The number of milliseconds to convert to minutes.
+ * @return {Number} - The calculated number of minutes.
+ */
+function m2m(milliseconds) {
+  return milliseconds / 60000
+}
+
+/**
  * @summary The simplest calorie estimating function.  No account is given for
  * terrain type, gps factors (hill grading), uphill vs downhill efforts, etc.
  * MET - ratio of energy spent per unit time during a specific physical activity to a
@@ -120,6 +130,7 @@ log(`Slope Percentage: ${slope.percentage.toFixed(2)}%`)
 log(`Slope Angle: ${slope.angleDegrees.toFixed(2)} degrees`)
 
 export {
+  m2m,
   calories,
   simpleCalories,
   pandolfCalories,
