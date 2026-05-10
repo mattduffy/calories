@@ -6,7 +6,7 @@
  */
 
 import Debug from 'debug'
-// import { pointDistance } from './pointDistance.js'
+import { pointDistance } from './pointDistance.js'
 import { calculateSlopeGrade } from './slope.js'
 
 // const error = Debug('calories:ERROR')
@@ -82,6 +82,21 @@ function pandolfCalories(W, L, V, G, n = 1.2) {
   log('calculating Pandolf equation for calories used.')
   // 1.5W + 2.0(W + L)(L/W) + n(W + L)(1.5V + 0.35VG)
   return (1.5 * W) + (2.0 * (W + L)) * (L / W) + ((n * (W + L)) * ((1.5 * V) + (0.35 * V) * G))
+}
+
+/**
+ * @summary New attempt at defining a Pandolf-Santee function for calculating calories.
+ * @author Matthew Duffy <mattduffy@gmail.com>
+ * @param {Number[][]} coordinates - An array of arrays containing point coordinate values in the
+ *                                 format:
+ *                                 [longitude, latitude, heading, altitude, accuracy, timestamp].
+ * @param {Number} bw - Body weight recorded for hike.
+ * @param {Number} [rw=0] Optional ruck weight recorded for hike.
+ * @param {Number} [n=1.2] Optional terrain characterization value - 1.2 for dirt path.
+ * @return {Number} Calculated calories expended.
+ */
+function _pandolfCalories(coordinates, bw = 0, rw = 0, n = 1.2) {
+
 }
 
 /*
