@@ -7,7 +7,6 @@ import {
 import assert from 'node:assert/strict'
 import {
   m2m,
-  // calories,
   simpleCalories,
   pandolfCalories,
 } from '../src/index.js'
@@ -48,5 +47,13 @@ describe('First test suite for calories package', async () => {
 
     assert(!isNaN(cals_1) && cals_1 > 0)
     assert(!isNaN(cals_2) && cals_2 > 0)
+  })
+
+  it('Second calorie test - advancedCalories', async () => {
+    const cal1 = pandolfCalories(walk_1.features[0].geometry.coordinates, { weightKg: 160, loadKg: 30, terrain: 1.1 })
+    console.log('walk_1 pandolf calories', cal1.totalKcal, cal1.totalDistanceM, cal1.totalDurationSec)
+    const cal2 = pandolfCalories(walk_2.features[0].geometry.coordinates, { weightKg: 160, loadKg: 30, terrain: 1.1 })
+    console.log('walk_2 pandolf calories', cal2.totalKcal, cal2.totalDistanceM, cal2.totalDurationSec)
+
   })
 })
