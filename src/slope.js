@@ -35,7 +35,8 @@ export function degs(radians) {
  */
 export function calculateVerticalInterval(alt1, alt2) {
   // Vertical difference in meters
-  return Math.abs(alt2 - alt1)
+  // return Math.abs(alt2 - alt1)
+  return alt2 - alt1
 }
 
 /*
