@@ -16,7 +16,7 @@ export function degs(radians) {
 }
 
 export function pointDistance(p1, p2, u = 'metric') {
-  console.log('calories::pointDistances(p1, p2, u): ', p1, p2, u)
+  // console.log('calories::pointDistances(p1, p2, u): ', p1, p2, u)
   const earthRadiusKm = 6371
   const earthRadiusMeters = 6371000
   const earthRadiusMi = 3959
