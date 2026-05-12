@@ -51,6 +51,26 @@ function m2m(milliseconds) {
 }
 
 /**
+ * @summary Check if y is within 10% of x: y = 91, x = 100 => true.
+ */
+function within10(x, y) {
+  const min = Math.min(x, y)
+  const max = Math.max(x, y)
+  const per = Math.floor((min / max) * 100)
+  return 100 - per <= 10
+}
+
+/**
+ * @summary Check if y is within 5% of x: y = 94, x = 100 => true.
+ */
+function within5(x, y) {
+  const min = Math.min(x, y)
+  const max = Math.max(x, y)
+  const per = Math.floor((min / max) * 100)
+  return 100 - per <= 5
+}
+
+/**
  * @summary The simplest calorie estimating function.  No account is given for
  * terrain type, gps factors (hill grading), uphill vs downhill efforts, etc.
  * MET - ratio of energy spent per unit time during a specific physical activity to a
@@ -65,7 +85,7 @@ function m2m(milliseconds) {
  * Duration: The total time spent hiking/rucking, in minutes.
  * @author Matthew Duffy <mattduffy@gmail.com>
  * @param {Number} [minutes=1] - Time spent expending energy, in minutes.
- * @param {object} weights - The different weight values to be combined.
+ * @param {Object} weights - The different weight values to be combined.
  * @param {Number} [weights.body=0] - Body weight in kilograms.
  * @param {Number} [weights.ruck=0] - Ruck weight carried, in kilograms.
  * @param {Number} [weights.water=0] - Weight of water carried, in kilograms.
@@ -108,8 +128,6 @@ function pandolfMetabolicRate(W, L, V, G, n) {
  * @summary Applies a simple rolling-average smoother to the altitude values in a
  * coordinate array. Raw GPS altitude can have ±5–15 m of noise, which creates
  * artificial grade spikes that inflate calorie estimates.
- *
- * Returns a new array — the original is not mutated.
  * @author Matthew Duffy <mattduffy@gmail.com>
  * @param {Numver[][]} coords - Array of coordinate arrays
  * @param {number} [windowSize=5] - Number of points to average (odd number recommended)
@@ -122,80 +140,59 @@ function smoothAltitude(coords, windowSize = 5) {
     const start = Math.max(0, i - half)
     const end = Math.min(coords.length - 1, i + half)
     const slice = coords.slice(start, end + 1)
-    const avgAlt = slice.reduce((sum, c) => sum + c[3], 0) / slice.length
+    const avgerageAltitude = slice.reduce((sum, c) => sum + c[3], 0) / slice.length
 
-    // Return a new array with the smoothed altitude (index 3) replaced
-    return [coord[0], coord[1], coord[2], avgAlt, coord[4], coord[5]]
+    // Return a new array with the smoothed altitude replaced
+    return [coord[0], coord[1], coord[2], avgerageAltitude, coord[4], coord[5]]
   })
 }
 
 /**
- * @summary The Pandolf equation for estimating energy expenditure.
- * This equation is more complex and includes factors like speed and terrain grade.
- * M = 1.5W + 2.0 * (W + L) * (L / W) + n * (W + L) * (1.5V + 0.35VG)
- * Where:
- * M = Metabolic rate (calories per minute)
- * W = Body weight
- * L = Load carried (weight of the ruck)
- * V = Speed
- * G = Grade of incline (e.g., 0 for flat, 1 for 100%)
- * n = Terrain factor (e.g., 1.0 for pavement, or higher for sand/brush)
- * @author Matthew Duffy <mattuffy@gmail.com>
- * @param {Number} W - The body weight.
- * @param {Number} L - The weight of the load carried.
- * @param {Number} V - The speed of the hike.
- * @param {Number} G - The grade of incline climbed (0 for flat, 1 for 100%).
- * @param {Number} [n=1.2] - The terrain factor (1.0 for pavement, higher for sand/brush).
- * @return
- */
-// function _pandolfCalories(W, L, V, G, n = 1.2) {
-//   log('calculating Pandolf equation for calories used.')
-//   // 1.5W + 2.0(W + L)(L/W) + n(W + L)(1.5V + 0.35VG)
-//   return (1.5 * W) + (2.0 * (W + L)) * (L / W) + ((n * (W + L)) * ((1.5 * V) + (0.35 * V) * G))
-// }
-
-/**
- * Processes a single segment (two consecutive GPS points) and returns
- * metabolic and distance data for that segment.
+ * @summary Processes a single segment (two consecutive GPS points) and returns metabolic and
+ * distance data for that segment.
  * @author Matthew Duffy <mattduffy@gmail.com>
  * @param {Number[]} point1 - [longitude, latitude, heading, altitude, accuracy, timestamp]
  * @param {Number[]} point2 - [longitude, latitude, heading, altitude, accuracy, timestamp]
- * @param {Number} W - Body weight (kg)
- * @param {Number} L - Load carried (kg)
+ * @param {Number} W - Body weight in kg.
+ * @param {Number} L - Load carried in kg.
+ * @param {Number} H2O - Water carried in kg.
  * @param {Number} n - Terrain coefficient
  * @returns {Object|null} - Segment result, or null if the segment should be skipped
  */
-function processSegment(point1, point2, W, L, n) {
+function processSegment(point1, point2, W, L, H2O, n) {
   const [lon1, lat1, , alt1, , t1] = point1
   const [lon2, lat2, , alt2, , t2] = point2
 
-  const p1 = { longitude: lon1, latitude: lat1 }
-  const p2 = { longitude: lon2, latitude: lat2 }
-  const horizontalDist = pointDistance(p1, p2)
+  const p1 = { longitude: lon1, latitude: lat1, altitude: alt1 }
+  const p2 = { longitude: lon2, latitude: lat2, altitude: alt2 }
+  const horizontalDistance = pointDistance(p1, p2)
   const timeDiff = (t2 - t1) / 1000 // seconds
 
   // Skip GPS jitter, stationary points, or out-of-order timestamps
-  if (timeDiff <= 0 || horizontalDist < MIN_SEGMENT_DIST_M) return null
+  if (timeDiff <= 0 || horizontalDistance < MIN_SEGMENT_DIST_M) return null
 
-  const altitudeDiff = alt2 - alt1
-
+  // Find the elevation change as slope between two points.
+  const slopeGrade = calculateSlopeGrade(p1, p2)
+  const grade = slopeGrade.percentage
   // Grade as a percentage: rise / run * 100
   // Uses horizontal distance as the "run" (standard for hiking/trail grade)
-  const grade = (altitudeDiff / horizontalDist) * 100
+  const altitudeDiff = alt2 - alt1
+  // const grade = (altitudeDiff / horizontalDistance) * 100
 
   // Derived speed; clamped to MAX_SPEED_MS to guard against GPS outliers
-  const speed = Math.min(horizontalDist / timeDiff, MAX_SPEED_MS)
+  const speed = Math.min(horizontalDistance / timeDiff, MAX_SPEED_MS)
 
   // Metabolic rate for this segment (watts)
-  const metabolicRateW = pandolfMetabolicRate(W, L, speed, grade, n)
+  const combinedL = L + H2O
+  const metabolicRateW = pandolfMetabolicRate(W, combinedL, speed, grade, n)
 
   // Energy expended = power × time (joules), converted to kcal
   const kcal = (metabolicRateW * timeDiff) / JOULES_PER_KCAL
 
   return {
-    horizontalDist, // meters
+    horizontalDistance, // meters
     altitudeDiff, // meters
-    grade, // percent
+    grade: slopeGrade.percentage,
     speed, // m/s
     durationSec: timeDiff, // seconds
     metabolicRateW, // watts
@@ -216,9 +213,10 @@ function processSegment(point1, point2, W, L, n) {
  *                                timestamp (ms),
  *                              ]
  * @param {Object} options
- * @param {Number} options.weightKg       - Body weight in kg (required)
- * @param {Number} [options.loadKg=0]     - Load/pack weight in kg
- * @param {Number} [options.terrain=1.0]  - Terrain coefficient (η). Use TERRAIN_COEFFICIENTS.
+ * @param {Number} options.weightKg - Body weight in kg (required).
+ * @param {Number} [options.loadKg=0] - Load/pack weight in kg.
+ * @param {Number} [options.waterKg=0] - Water weight in kg carried.
+ * @param {Number} [options.terrain=1.0]  - Terrain coefficient (n). Use TERRAIN_COEFFICIENTS.
  * @param {Boolean} [options.smooth=true] - Whether to smooth GPS altitude before calculating.
  * @param {Number} [options.smoothWindow=5] - Rolling average size for altitude smoothing.
  * @returns {Object} Result object:
@@ -234,6 +232,7 @@ function calculateCalories(coords, options = {}) {
   const {
     weightKg,
     loadKg = 0,
+    waterKg = 0,
     terrain = TERRAIN_COEFFICIENTS.BLACKTOP,
     smooth = true,
     smoothWindow = 5,
@@ -252,18 +251,16 @@ function calculateCalories(coords, options = {}) {
   let totalDurationSec = 0
 
   for (let i = 1; i < track.length; i += 1) {
-    const seg = processSegment(track[i - 1], track[i], weightKg, loadKg, terrain)
+    const seg = processSegment(track[i - 1], track[i], weightKg, loadKg, waterKg, terrain)
     // if (!seg) continue
     if (seg) {
       totalKcal += seg.kcal
-      totalDistanceM += seg.horizontalDist
+      totalDistanceM += seg.horizontalDistance
       totalDurationSec += seg.durationSec
       segments.push(seg)
     }
   }
-
   const avgSpeedMs = totalDurationSec > 0 ? totalDistanceM / totalDurationSec : 0
-
   return {
     totalKcal,
     totalDistanceM,
@@ -273,24 +270,10 @@ function calculateCalories(coords, options = {}) {
   }
 }
 
-const gpsPointA = {
-  latitude: 34.0522,
-  longitude: -118.2437,
-  altitude: 100,
-}
-
-const gpsPointB = {
-  latitude: 34.0530,
-  longitude: -118.2420,
-  altitude: 150,
-}
-
-const slope = calculateSlopeGrade(gpsPointA, gpsPointB)
-log(`Slope Percentage: ${slope.percentage.toFixed(2)}%`)
-log(`Slope Angle: ${slope.angleDegrees.toFixed(2)} degrees`)
-
 export {
   m2m,
+  within10,
+  within5,
   // calories,
   simpleCalories,
   calculateCalories as pandolfCalories,
