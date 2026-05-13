@@ -52,22 +52,22 @@ function m2m(milliseconds) {
 
 /**
  * @summary Check if y is within 10% of x: y = 91, x = 100 => true.
+ * @param {Number} x - The comparator input value.
+ * @param {Number} y - The input value, as some percentage of x.
+ * @return {Boolean} - If y is within 10% of x, return True.
  */
 function within10(x, y) {
-  const min = Math.min(x, y)
-  const max = Math.max(x, y)
-  const per = Math.floor((min / max) * 100)
-  return 100 - per <= 10
+  return (0.9 * x) <= y
 }
 
 /**
  * @summary Check if y is within 5% of x: y = 94, x = 100 => true.
+ * @param {Number} x - The comparator input value.
+ * @param {Number} y - The input value, as some percentage of x.
+ * @return {Boolean} - If y is within 5% of x, return True.
  */
 function within5(x, y) {
-  const min = Math.min(x, y)
-  const max = Math.max(x, y)
-  const per = Math.floor((min / max) * 100)
-  return 100 - per <= 5
+  return (0.95 * x) <= y
 }
 
 /**
@@ -113,14 +113,14 @@ function simpleCalories(minutes = 1, weights = { body: 0, ruck: 0, water: 0 }, M
  * @returns {number} Metabolic rate in watts (always >= 0)
  */
 function pandolfMetabolicRate(W, L, V, G, n) {
-  if (V <= 0) return 0
-
+  if (V <= 0) {
+    return 0
+  }
   const loadRatio = L / W
-  const M = 1.5 * W
-    + 2 * (W + L) * loadRatio ** 2
-    + n * (W + L) * (1.5 * V ** 2 + 0.35 * V * G)
-
-  // The equation can return negative values on steep descents; clamp to 0
+  const M = 1.5 * W + 2
+    * (W + L) * loadRatio ** 2 + n
+    * (W + L) * (1.5 * V ** 2 + 0.35 * V * G)
+  // The equation can return negative values on steep descents so clamp to 0.
   return Math.max(0, M)
 }
 
@@ -167,6 +167,7 @@ function processSegment(point1, point2, W, L, H2O, n) {
   const p2 = { longitude: lon2, latitude: lat2, altitude: alt2 }
   const horizontalDistance = pointDistance(p1, p2)
   const timeDiff = (t2 - t1) / 1000 // seconds
+  // const timeDiff = (t2 - t1) / 10000 // milliseconds
 
   // Skip GPS jitter, stationary points, or out-of-order timestamps
   if (timeDiff <= 0 || horizontalDistance < MIN_SEGMENT_DIST_M) return null
@@ -219,6 +220,7 @@ function processSegment(point1, point2, W, L, H2O, n) {
  * @param {Number} [options.terrain=1.0]  - Terrain coefficient (n). Use TERRAIN_COEFFICIENTS.
  * @param {Boolean} [options.smooth=true] - Whether to smooth GPS altitude before calculating.
  * @param {Number} [options.smoothWindow=5] - Rolling average size for altitude smoothing.
+ * @throws {Error} - Throws error if not enough coordinates or body weight is not provided.
  * @returns {Object} Result object:
  *   {
  *     totalKcal : Number, // Total calories burned
@@ -233,7 +235,7 @@ function calculateCalories(coords, options = {}) {
     weightKg,
     loadKg = 0,
     waterKg = 0,
-    terrain = TERRAIN_COEFFICIENTS.BLACKTOP,
+    terrain = TERRAIN_COEFFICIENTS.DIRT,
     smooth = true,
     smoothWindow = 5,
   } = options
@@ -244,7 +246,7 @@ function calculateCalories(coords, options = {}) {
   if (coords.length < 2) {
     throw new Error('At least 2 coordinate points are required.')
   }
-  const track = smooth ? smoothAltitude(coords, smoothWindow) : coords
+  const track = (smooth) ? smoothAltitude(coords, smoothWindow) : coords
   const segments = []
   let totalKcal = 0
   let totalDistanceM = 0
@@ -252,7 +254,6 @@ function calculateCalories(coords, options = {}) {
 
   for (let i = 1; i < track.length; i += 1) {
     const seg = processSegment(track[i - 1], track[i], weightKg, loadKg, waterKg, terrain)
-    // if (!seg) continue
     if (seg) {
       totalKcal += seg.kcal
       totalDistanceM += seg.horizontalDistance
@@ -260,7 +261,7 @@ function calculateCalories(coords, options = {}) {
       segments.push(seg)
     }
   }
-  const avgSpeedMs = totalDurationSec > 0 ? totalDistanceM / totalDurationSec : 0
+  const avgSpeedMs = (totalDurationSec > 0) ? totalDistanceM / totalDurationSec : 0
   return {
     totalKcal,
     totalDistanceM,
@@ -272,9 +273,8 @@ function calculateCalories(coords, options = {}) {
 
 export {
   m2m,
-  within10,
   within5,
-  // calories,
+  within10,
   simpleCalories,
   calculateCalories as pandolfCalories,
 }
