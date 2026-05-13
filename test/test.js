@@ -16,15 +16,15 @@ import walk_2 from './walk_2.json' with { type: 'json' }
 import walk_3 from './walk_3.json' with { type: 'json' }
 import walk_4 from './walk_4.json' with { type: 'json' }
 
-console.log(walk_1.features[0].geometry.coordinates[0])
-console.log(walk_2.features[0].geometry.coordinates[0])
-console.log(walk_3.features[0].geometry.coordinates[0])
-console.log(walk_4.features[0].geometry.coordinates[0])
+// console.log(walk_1.features[0].geometry.coordinates[0])
+// console.log(walk_2.features[0].geometry.coordinates[0])
+// console.log(walk_3.features[0].geometry.coordinates[0])
+// console.log(walk_4.features[0].geometry.coordinates[0])
 
 const skip = { skip: true }
 const weights = {
-  body: 160 / 2.2, 
-  ruck: 0,
+  body: (160 / 2.2), 
+  ruck: (30 / 2.2),
   water: 0,
 }
 
@@ -46,25 +46,35 @@ console.log(`Slope Angle: ${slope.angleDegrees.toFixed(2)} degrees`)
 
 describe('First test suite for calories package', async () => {
   before(() => {
-    console.log('running before each test')
+    console.log('running before the tests')
   })
   after(() => {
-    console.log('running after each test')
+    console.log('running after after the test')
   })
 
   it('First calorie test - simpleCalories', async () => {
-    // const walk_1_minutes = walk_1.features[0].properties.duration / 60000
     const walk_1_minutes = m2m(walk_1.features[0].properties.duration)
-    const finish = m2m(walk_1.features[0].properties.endTime)
-    const start  = m2m(walk_1.features[0].properties.startTime)
-    // const walk_1_timediff = (finish - start) / 60000
-    const walk_1_timediff = finish - start
+    const walk_1_timediff = m2m(walk_1.features[0].properties.endTime)
+      - m2m(walk_1.features[0].properties.startTime)
+    console.log('name:', walk_1.features[0].properties.name)
     console.log('duration:', walk_1_minutes)
     console.log('difftime:', walk_1_timediff)
     const cals_1 = simpleCalories(walk_1_minutes, weights)
-    console.log(cals_1)
-    const cals_2 = simpleCalories(walk_1_timediff, weights)
-    console.log(cals_2)
+    console.log('just calculated:', cals_1)
+    console.log('original value:', walk_1.features[0].properties.simpleCalories)
+
+    const walk_2_minutes = m2m(walk_2.features[0].properties.duration)
+    const walk_2_timediff = m2m(walk_2.features[0].properties.endTime)
+      - m2m(walk_2.features[0].properties.startTime)
+    console.log('name:', walk_2.features[0].properties.name)
+    console.log('duration:', walk_2_minutes)
+    console.log('difftime:', walk_2_timediff)
+    const cals_2 = simpleCalories(walk_2_timediff, weights)
+    console.log('just calculated:', cals_2)
+    console.log('original value:', walk_2.features[0].properties.simpleCalories)
+
+    console.log('')
+    console.log('')
 
     assert(!isNaN(cals_1) && cals_1 > 0)
     assert(!isNaN(cals_2) && cals_2 > 0)
@@ -81,56 +91,117 @@ describe('First test suite for calories package', async () => {
       walk_1.features[0].geometry.coordinates,
       { weightKg: cal1W.body, loadKg: cal1W.ruck, waterKg: cal1W.water, terrain: 1.1 },
     )
-    console.log(`walk_1 pandolf calories: ${cal1.totalKcal}`)
-    console.log(`walk_1 pandolf distance: ${cal1.totalDistanceM}, ${walk_1.features[0].properties.distance}`)
-    console.log(`walk_1 pandolf duration: ${cal1.totalDurationSec}, ${walk_1.features[0].properties.duration}`)
+    let simple = walk_1.features[0].properties.simpleCalories
+    console.log(`name: ${walk_1.features[0].properties.name}`)
+    console.log(`walk_1 pandolf calories: ${cal1.totalKcal} (simpleCalories: ${simple})`)
+    console.log(
+      `walk_1 pandolf distance: ${cal1.totalDistanceM} (${walk_1.features[0].properties.distance})`
+    )
+    console.log(
+      `walk_1 pandolf duration: ${cal1.totalDurationSec}, `
+      + `(${walk_1.features[0].properties.duration / 1000})`
+    )
     cal1.segments.map((seg, i) => {
       if (seg.kcal > calClamp) { 
-        console.log(`seg # ${i}, seg kcal ${seg.kcal}, distance ${seg.horizontalDistance}, time ${seg.durationSec}`)
+        console.log(
+          `seg # ${i}, `
+          + `seg kcal ${seg.kcal}, `
+          + `distance ${seg.horizontalDistance}, `
+          + `time ${seg.durationSec}`)
       }
     })
+
+    console.log('')
     const cal2W = walk_2.features[0].properties.weights
     const cal2 = pandolfCalories(
       walk_2.features[0].geometry.coordinates,
       { weightKg: cal2W.body, loadKg: cal2W.ruck, waterKg: cal2W.water, terrain: 1.1 },
     )
-    // console.log('walk_2 pandolf calories', cal2.totalKcal, cal2.totalDistanceM, cal2.totalDurationSec)
-    console.log(`walk_2 pandolf calories: ${cal2.totalKcal}`)
-    console.log(`walk_2 pandolf distance: ${cal2.totalDistanceM}, ${walk_2.features[0].properties.distance}`)
-    console.log(`walk_2 pandolf duration: ${cal2.totalDurationSec}, ${walk_2.features[0].properties.duration}`)
+    simple = walk_2.features[0].properties.simpleCalories
+    console.log(`name: ${walk_2.features[0].properties.name}`)
+    console.log(`walk_2 pandolf calories: ${cal2.totalKcal} (simpleCalories: ${simple})`)
+    console.log(
+      `walk_2 pandolf distance: ${cal2.totalDistanceM} (${walk_2.features[0].properties.distance})`
+    )
+    console.log(
+      `walk_2 pandolf duration: ${cal2.totalDurationSec}, `
+      + `(${walk_2.features[0].properties.duration / 1000})`
+    )
     cal2.segments.map((seg, i) => {
       if (seg.kcal > calClamp) { 
-        console.log(`seg # ${i}, seg kcal ${seg.kcal}, distance ${seg.horizontalDistance}, time ${seg.durationSec}`)
+        console.log(
+          `seg # ${i}, `
+          + `seg kcal ${seg.kcal}, `
+          + `distance ${seg.horizontalDistance}, `
+          + `time ${seg.durationSec}`)
       }
     })
+
+    console.log('')
     const cal3W = walk_3.features[0].properties.weights
     const cal3 = pandolfCalories(
       walk_3.features[0].geometry.coordinates,
       { weightKg: cal3W.body, loadKg: cal3W.ruck, waterKg: cal3W.water, terrain: 1.1 },
     )
-    // console.log('walk_3 pandolf calories', cal3.totalKcal, cal3.totalDistanceM, cal3.totalDurationSec)
-    console.log(`walk_3 pandolf calories: ${cal3.totalKcal}`)
-    console.log(`walk_3 pandolf distance: ${cal3.totalDistanceM}, ${walk_3.features[0].properties.distance}`)
-    console.log(`walk_3 pandolf duration: ${cal3.totalDurationSec}, ${walk_3.features[0].properties.duration}`)
+    simple = walk_3.features[0].properties.simpleCalories
+    console.log(`name: ${walk_3.features[0].properties.name}`)
+    console.log(`walk_3 pandolf calories: ${cal3.totalKcal} (simpleCalories: ${simple})`)
+    console.log(
+      `walk_3 pandolf distance: ${cal3.totalDistanceM} (${walk_3.features[0].properties.distance})`
+    )
+    console.log(
+      `walk_3 pandolf duration: ${cal3.totalDurationSec}, `
+      + `(${walk_3.features[0].properties.duration / 1000})`
+    )
     cal3.segments.map((seg, i) => {
       if (seg.kcal > calClamp) { 
-        console.log(`seg # ${i}, seg kcal ${seg.kcal}, distance ${seg.horizontalDistance}, time ${seg.durationSec}`)
-      }
-    })
-    const cal4W = walk_3.features[0].properties.weights
-    const cal4 = pandolfCalories(
-      walk_4.features[0].geometry.coordinates,
-      { weightKg: cal4W.body, loadKg: cal4W.ruck, waterKg: cal4W.water, terrain: 1.1 },
-    )
-    // console.log('walk_4 pandolf calories', cal4.totalKcal, cal4.totalDistanceM, cal4.totalDurationSec)
-    console.log(`walk_4 pandolf calories: ${cal4.totalKcal}`)
-    console.log(`walk_4 pandolf distance: ${cal4.totalDistanceM}, ${walk_4.features[0].properties.distance}`)
-    console.log(`walk_4 pandolf duration: ${cal4.totalDurationSec}, ${walk_4.features[0].properties.duration}`)
-    cal4.segments.map((seg, i) => {
-      if (seg.kcal > calClamp) { 
-        console.log(`seg # ${i}, seg kcal ${seg.kcal}, distance ${seg.horizontalDistance}, time ${seg.durationSec}`)
+        console.log(
+          `seg # ${i}, `
+          + `seg kcal ${seg.kcal}, `
+          + `distance ${seg.horizontalDistance}, `
+          + `time ${seg.durationSec}`
+        )
       }
     })
 
+    console.log('')
+    const cal4W = walk_4.features[0].properties.weights ?? weights 
+    const cal4 = pandolfCalories(
+      walk_4.features[0].geometry.coordinates,
+      {
+        weightKg: (cal4W.body / 2.2),
+        loadKg: (cal4W.ruck / 2.2),
+        waterKg: (cal4W.water / 2.2),
+        terrain: 1.1,
+      },
+    )
+    simple = walk_4.features[0].properties.simpleCalories
+    console.log(`name: ${walk_4.features[0].properties.name}`)
+    console.log(`walk_4 pandolf calories: ${cal4.totalKcal} (simpleCalories: ${simple})`)
+    console.log(
+      `walk_4 pandolf distance: ${cal4.totalDistanceM} (${walk_4.features[0].properties.distance})`
+    )
+    console.log(
+      `walk_4 pandolf duration: ${cal4.totalDurationSec}, `
+      + `(${walk_4.features[0].properties.duration / 1000})`
+    )
+    cal4.segments.map((seg, i) => {
+      if (seg.kcal > calClamp) { 
+        console.log(
+          `seg # ${i}, `
+          + `seg kcal ${seg.kcal}, `
+          + `distance ${seg.horizontalDistance}, `
+          + `time ${seg.durationSec}`
+        )
+      }
+    })
+
+  })
+
+  it(
+    'Fix issue with pandolf function time calculations in seconds rather than milliseconds.',
+    async () => {
+    console.log('pandolf function is using seconds instead of milliseconds.')
+    // assert(false)
   })
 })
