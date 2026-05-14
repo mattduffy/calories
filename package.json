@@ -1,6 +1,6 @@
 {
   "name": "@mattduffy/calories",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A library to estimate energy expenditure, in calories, using the Pandolf-Santee equation for metabolic equivalent tasks.",
   "author": "Matthew Duffy",
   "license": "ISC",
