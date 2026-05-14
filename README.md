@@ -9,5 +9,5 @@ npm install --save @mattduffy/calories
 ```
 
 ```javascript
-import { simpleCalories } from '@mattduffy/caloies'
+import { simpleCalories, pandolfCaloires } from '@mattduffy/calories'
 ```
