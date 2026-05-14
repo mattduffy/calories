@@ -7,6 +7,8 @@ import {
 import assert from 'node:assert/strict'
 import {
   m2m,
+  within5,
+  within10,
   simpleCalories,
   pandolfCalories,
 } from '../src/index.js'
@@ -15,6 +17,7 @@ import walk_1 from './walk_1.json' with { type: 'json' }
 import walk_2 from './walk_2.json' with { type: 'json' }
 import walk_3 from './walk_3.json' with { type: 'json' }
 import walk_4 from './walk_4.json' with { type: 'json' }
+import walk_5 from './walk_5.json' with { type: 'json' }
 
 // console.log(walk_1.features[0].geometry.coordinates[0])
 // console.log(walk_2.features[0].geometry.coordinates[0])
@@ -94,6 +97,8 @@ describe('First test suite for calories package', async () => {
     let simple = walk_1.features[0].properties.simpleCalories
     console.log(`name: ${walk_1.features[0].properties.name}`)
     console.log(`walk_1 pandolf calories: ${cal1.totalKcal} (simpleCalories: ${simple})`)
+    console.log('within5: ', within5(cal1.totalDistanceM, walk_1.features[0].properties.distance))
+    console.log('within10: ', within10(cal1.totalDistanceM, walk_1.features[0].properties.distance))
     console.log(
       `walk_1 pandolf distance: ${cal1.totalDistanceM} (${walk_1.features[0].properties.distance})`
     )
@@ -120,6 +125,8 @@ describe('First test suite for calories package', async () => {
     simple = walk_2.features[0].properties.simpleCalories
     console.log(`name: ${walk_2.features[0].properties.name}`)
     console.log(`walk_2 pandolf calories: ${cal2.totalKcal} (simpleCalories: ${simple})`)
+    console.log('within5: ', within5(cal2.totalDistanceM, walk_2.features[0].properties.distance))
+    console.log('within10: ', within10(cal2.totalDistanceM, walk_2.features[0].properties.distance))
     console.log(
       `walk_2 pandolf distance: ${cal2.totalDistanceM} (${walk_2.features[0].properties.distance})`
     )
@@ -146,6 +153,8 @@ describe('First test suite for calories package', async () => {
     simple = walk_3.features[0].properties.simpleCalories
     console.log(`name: ${walk_3.features[0].properties.name}`)
     console.log(`walk_3 pandolf calories: ${cal3.totalKcal} (simpleCalories: ${simple})`)
+    console.log('within5: ', within5(cal3.totalDistanceM, walk_3.features[0].properties.distance))
+    console.log('within10: ', within10(cal3.totalDistanceM, walk_3.features[0].properties.distance))
     console.log(
       `walk_3 pandolf distance: ${cal3.totalDistanceM} (${walk_3.features[0].properties.distance})`
     )
@@ -178,6 +187,8 @@ describe('First test suite for calories package', async () => {
     simple = walk_4.features[0].properties.simpleCalories
     console.log(`name: ${walk_4.features[0].properties.name}`)
     console.log(`walk_4 pandolf calories: ${cal4.totalKcal} (simpleCalories: ${simple})`)
+    console.log('within5: ', within5(cal4.totalDistanceM, walk_4.features[0].properties.distance))
+    console.log('within10: ', within10(cal4.totalDistanceM, walk_4.features[0].properties.distance))
     console.log(
       `walk_4 pandolf distance: ${cal4.totalDistanceM} (${walk_4.features[0].properties.distance})`
     )
@@ -196,6 +207,46 @@ describe('First test suite for calories package', async () => {
       }
     })
 
+    console.log('')
+    const cal5W = walk_4.features[0].properties.weights ?? weights 
+    const walk5Simple = simpleCalories(
+      m2m(walk_5.features[0].properties.duration),
+      weights
+    )
+    const cal5 = pandolfCalories(
+      walk_5.features[0].geometry.coordinates,
+      {
+        weightKg: (cal5W.body / 2.2),
+        loadKg: (cal5W.ruck / 2.2),
+        waterKg: (cal5W.water / 2.2),
+        terrain: 1.1,
+      },
+    )
+    simple = walk_5.features[0].properties.simpleCalories
+    console.log(`name: ${walk_5.features[0].properties.name}`)
+    console.log(`walk_5 pandolf calories: ${cal5.totalKcal} (simpleCalories: ${simple})`)
+    console.log(
+      `walk_5 pandolf distance: ${cal5.totalDistanceM} (${walk_5.features[0].properties.distance})`
+    )
+    console.log(
+      `walk_5 pandolf duration: ${cal5.totalDurationSec}, `
+      + `(${walk_5.features[0].properties.duration / 1000})`
+    )
+    console.log('within5 distance:', within5(cal5.totalDistanceM, walk_5.features[0].properties.distance))
+    console.log('within10 distance:', within10(cal5.totalDistanceM, walk_5.features[0].properties.distance))
+    console.log('within5 calories:', within5(cal5.totalKcal, walk5Simple))
+    console.log('within10 calories:', within10(cal5.totalKcal, walk5Simple))
+    cal5.segments.map((seg, i) => {
+      if (seg.kcal > calClamp) { 
+        console.log(
+          `seg # ${i}, `
+          + `seg kcal ${seg.kcal}, `
+          + `distance ${seg.horizontalDistance}, `
+          + `time ${seg.durationSec}`
+        )
+      }
+    })
+    
   })
 
   it(
