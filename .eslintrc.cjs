@@ -31,7 +31,12 @@ module.exports = {
       },
     },
   ],
+  parser: '@babel/eslint-parser',
   parserOptions: {
+    requireConfigFile: false,
+    babelOptions: {
+      plugins: ['@babel/plugin-syntax-import-assertions'],
+    },
     ecmaVersion: 'latest',
     sourceType: 'module',
   },
@@ -43,5 +48,8 @@ module.exports = {
     'import/prefer-default-export': 'off',
     'max-len': ['error', { code: 100 }],
     'new-cap': 'off',
+    camelcase: ['error', {
+      allow: ['walk_1', 'walk_2', 'walk_3', 'walk_4', 'walk_5', 'cals_1', 'cals_2'],
+    }],
   },
 }
