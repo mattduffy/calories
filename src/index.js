@@ -90,9 +90,23 @@ function within5(x, y) {
  * @param {Number} [weights.ruck=0] - Ruck weight carried, in kilograms.
  * @param {Number} [weights.water=0] - Weight of water carried, in kilograms.
  * @param {Number} [MET=7.5] - The metabolic equivalent task number.
+ * @throws {Error} - If minutes is not a number greater than zero.
+ * @throws {Error} - If weights.body is not a number greater than zero.
  * @return {Number} - Estimated calories used per duration of MET.
  */
 function simpleCalories(minutes = 1, weights = { body: 0, ruck: 0, water: 0 }, MET = 7.5) {
+  if (minutes <= 0 || !Number.isFinite(minutes) || minutes === null) {
+    throw new Error('minutes parameter must be a number greater than zero.')
+  }
+  if (weights.body <= 0
+    || !Number.isFinite(weights.body)
+    || weights.body === null
+    || weights.body === undefined) {
+    throw new Error('weights.body must be a number greater than zero.')
+  }
+  if (MET <= 0 || !Number.isFinite(MET) || MET === null || MET === undefined) {
+    throw new Error('MET parameter must be a number greater than zero.')
+  }
   log('calculating simple EE method')
   log('minutes', minutes)
   log('weights', weights)
@@ -217,7 +231,7 @@ function processSegment(point1, point2, W, L, H2O, n) {
  * @param {Number} options.weightKg - Body weight in kg (required).
  * @param {Number} [options.loadKg=0] - Load/pack weight in kg.
  * @param {Number} [options.waterKg=0] - Water weight in kg carried.
- * @param {Number} [options.terrain=1.0]  - Terrain coefficient (n). Use TERRAIN_COEFFICIENTS.
+ * @param {Number} [options.terrain=1.1]  - Terrain coefficient (n). Use TERRAIN_COEFFICIENTS.
  * @param {Boolean} [options.smooth=true] - Whether to smooth GPS altitude before calculating.
  * @param {Number} [options.smoothWindow=5] - Rolling average size for altitude smoothing.
  * @throws {Error} - Throws error if not enough coordinates or body weight is not provided.
