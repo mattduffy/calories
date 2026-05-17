@@ -26,8 +26,8 @@ import walk_5 from './walk_5.json' with { type: 'json' }
 
 const skip = { skip: true }
 const weights = {
-  body: (160 / 2.2),
-  ruck: (30 / 2.2),
+  body: 70, // (160 / 2.2),
+  ruck: 5, // (30 / 2.2),
   water: 0,
 }
 
@@ -55,6 +55,28 @@ describe('First test suite for calories package', async () => {
     console.log('running after after the test')
   })
 
+  it('Missing required parameters: minutes - simpleCalories', async () => {
+    const badMinutes = 'bad'
+    assert.throws(() => { simpleCalories(badMinutes, weights) })
+    const zeroMinutes = 0
+    assert.throws(() => { simpleCalories(zeroMinutes, weights) })
+    const nullMinutes = null
+    assert.throws(() => { simpleCalories(nullMinutes, weights) })
+  })
+  it('Missing required parameter: weights.body - simplCalories', async () => {
+    const nullBodyWeight = { body: null }
+    assert.throws(() => { simpleCalories(10, nullBodyWeight) })
+    const zeroBodyWeight = { body: 0 }
+    assert.throws(() => { simpleCalories(10, zeroBodyWeight) })
+    const undefinedBodyWeight = { }
+    assert.throws(() => { simpleCalories(10, undefinedBodyWeight) })
+  })
+  it('Missing required parameter: MET - simplCalories', async () => {
+    const nullMET = null
+    assert.throws(() => { simpleCalories(10, { body: 70 }, nullMET) })
+    const zeroMET = 0
+    assert.throws(() => { simpleCalories(10, { body: 70 }, zeroMET) })
+  })
   it('First calorie test - simpleCalories', async () => {
     const walk_1_minutes = m2m(walk_1.features[0].properties.duration)
     const walk_1_timediff = m2m(walk_1.features[0].properties.endTime)
