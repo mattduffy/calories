@@ -97,14 +97,24 @@ describe('First test suite for calories package', async () => {
     const cals_2 = simpleCalories(walk_2_timediff, weights)
     console.log('just calculated:', cals_2)
     console.log('original value:', walk_2.features[0].properties.simpleCalories)
-
-    console.log('')
-    console.log('')
+    console.log('\n\n')
 
     assert(!Number.isNaN(cals_1) && cals_1 > 0)
     assert(!Number.isNaN(cals_2) && cals_2 > 0)
   })
 
+  it('Test missing coordinates array parameter - pandolfCalories', async () => {
+    const coords = [[]]
+    const options = { bodyWeightKg: 70 }
+    // pandolfCalories(coords, options)
+    assert.throws(() => { pandolfCalories(coords, options) })
+  })
+  it('Test missing options object parameter - pandolfCalories', async () => {
+    const coords = walk_5.features[0].geometry.coordinates
+    const options = { }
+    // pandolfCalories(coords, options)
+    assert.throws(() => { pandolfCalories(coords, options) })
+  })
   it('Second calorie test - advancedCalories', async () => {
     const calClamp = 1.5
     // const cal1RawDuration = walk_1.features[0].properties.duration
@@ -115,7 +125,7 @@ describe('First test suite for calories package', async () => {
     const cal1 = pandolfCalories(
       walk_1.features[0].geometry.coordinates,
       {
-        weightKg: cal1W.body, loadKg: cal1W.ruck, waterKg: cal1W.water, terrain: 1.1,
+        bodyWeightKg: cal1W.body, loadKg: cal1W.ruck, waterKg: cal1W.water, terrain: 1.1,
       },
     )
     let simple = walk_1.features[0].properties.simpleCalories
@@ -147,7 +157,7 @@ describe('First test suite for calories package', async () => {
     const cal2 = pandolfCalories(
       walk_2.features[0].geometry.coordinates,
       {
-        weightKg: cal2W.body, loadKg: cal2W.ruck, waterKg: cal2W.water, terrain: 1.1,
+        bodyWeightKg: cal2W.body, loadKg: cal2W.ruck, waterKg: cal2W.water, terrain: 1.1,
       },
     )
     simple = walk_2.features[0].properties.simpleCalories
@@ -179,7 +189,7 @@ describe('First test suite for calories package', async () => {
     const cal3 = pandolfCalories(
       walk_3.features[0].geometry.coordinates,
       {
-        weightKg: cal3W.body, loadKg: cal3W.ruck, waterKg: cal3W.water, terrain: 1.1,
+        bodyWeightKg: cal3W.body, loadKg: cal3W.ruck, waterKg: cal3W.water, terrain: 1.1,
       },
     )
     simple = walk_3.features[0].properties.simpleCalories
@@ -211,7 +221,7 @@ describe('First test suite for calories package', async () => {
     const cal4 = pandolfCalories(
       walk_4.features[0].geometry.coordinates,
       {
-        weightKg: (cal4W.body / 2.2),
+        bodyWeightKg: (cal4W.body / 2.2),
         loadKg: (cal4W.ruck / 2.2),
         waterKg: (cal4W.water / 2.2),
         terrain: 1.1,
@@ -250,7 +260,7 @@ describe('First test suite for calories package', async () => {
     const cal5 = pandolfCalories(
       walk_5.features[0].geometry.coordinates,
       {
-        weightKg: (cal5W.body / 2.2),
+        bodyWeightKg: (cal5W.body / 2.2),
         loadKg: (cal5W.ruck / 2.2),
         waterKg: (cal5W.water / 2.2),
         terrain: 1.1,
