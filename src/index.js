@@ -149,13 +149,11 @@ function pandolfMetabolicRate(W, L, V, G, n) {
  */
 function smoothAltitude(coords, windowSize = 5) {
   const half = Math.floor(windowSize / 2)
-
   return coords.map((coord, i) => {
     const start = Math.max(0, i - half)
     const end = Math.min(coords.length - 1, i + half)
     const slice = coords.slice(start, end + 1)
     const avgerageAltitude = slice.reduce((sum, c) => sum + c[3], 0) / slice.length
-
     // Return a new array with the smoothed altitude replaced
     return [coord[0], coord[1], coord[2], avgerageAltitude, coord[4], coord[5]]
   })
@@ -171,7 +169,7 @@ function smoothAltitude(coords, windowSize = 5) {
  * @param {Number} L - Load carried in kg.
  * @param {Number} H2O - Water carried in kg.
  * @param {Number} n - Terrain coefficient
- * @returns {Object|null} - Segment result, or null if the segment should be skipped
+ * @returns {Object|null} - Segment result, or null if the segment should be skipped.
  */
 function processSegment(point1, point2, W, L, H2O, n) {
   const [lon1, lat1, , alt1, , t1] = point1
@@ -181,27 +179,26 @@ function processSegment(point1, point2, W, L, H2O, n) {
   const p2 = { longitude: lon2, latitude: lat2, altitude: alt2 }
   const horizontalDistance = pointDistance(p1, p2)
   const timeDiff = (t2 - t1) / 1000 // seconds
-  // const timeDiff = (t2 - t1) / 10000 // milliseconds
 
-  // Skip GPS jitter, stationary points, or out-of-order timestamps
+  // Skip GPS jitter, stationary points, or out-of-order timestamps.
   if (timeDiff <= 0 || horizontalDistance < MIN_SEGMENT_DIST_M) return null
 
   // Find the elevation change as slope between two points.
   const slopeGrade = calculateSlopeGrade(p1, p2)
   const grade = slopeGrade.percentage
   // Grade as a percentage: rise / run * 100
-  // Uses horizontal distance as the "run" (standard for hiking/trail grade)
+  // Uses horizontal distance as the "run" (standard for hiking/trail grade).
   const altitudeDiff = alt2 - alt1
   // const grade = (altitudeDiff / horizontalDistance) * 100
 
-  // Derived speed; clamped to MAX_SPEED_MS to guard against GPS outliers
+  // Derived speed - clamped to MAX_SPEED_MS to guard against GPS outliers.
   const speed = Math.min(horizontalDistance / timeDiff, MAX_SPEED_MS)
 
   // Metabolic rate for this segment (watts)
   const combinedL = L + H2O
   const metabolicRateW = pandolfMetabolicRate(W, combinedL, speed, grade, n)
 
-  // Energy expended = power × time (joules), converted to kcal
+  // Energy expended = power × time (joules), converted to kcal.
   const kcal = (metabolicRateW * timeDiff) / JOULES_PER_KCAL
 
   return {
@@ -228,13 +225,14 @@ function processSegment(point1, point2, W, L, H2O, n) {
  *                                timestamp (ms),
  *                              ]
  * @param {Object} options
- * @param {Number} options.weightKg - Body weight in kg (required).
+ * @param {Number} options.bodyWeightKg - Body weight in kg (required).
  * @param {Number} [options.loadKg=0] - Load/pack weight in kg.
  * @param {Number} [options.waterKg=0] - Water weight in kg carried.
  * @param {Number} [options.terrain=1.1]  - Terrain coefficient (n). Use TERRAIN_COEFFICIENTS.
  * @param {Boolean} [options.smooth=true] - Whether to smooth GPS altitude before calculating.
  * @param {Number} [options.smoothWindow=5] - Rolling average size for altitude smoothing.
- * @throws {Error} - Throws error if not enough coordinates or body weight is not provided.
+ * @throws {Error} - Throws error if not enough coordinates.
+ * @throws {Error} - Throws error if body weight is not provided.
  * @returns {Object} Result object:
  *   {
  *     totalKcal : Number, // Total calories burned
@@ -246,7 +244,7 @@ function processSegment(point1, point2, W, L, H2O, n) {
  */
 function calculateCalories(coords, options = {}) {
   const {
-    weightKg,
+    bodyWeightKg,
     loadKg = 0,
     waterKg = 0,
     terrain = TERRAIN_COEFFICIENTS.DIRT,
@@ -254,11 +252,11 @@ function calculateCalories(coords, options = {}) {
     smoothWindow = 5,
   } = options
 
-  if (!weightKg || weightKg <= 0) {
-    throw new Error('weightKg is required and must be a positive number.')
-  }
   if (coords.length < 2) {
     throw new Error('At least 2 coordinate points are required.')
+  }
+  if (!bodyWeightKg || bodyWeightKg <= 0) {
+    throw new Error('weightKg is required and must be a positive number.')
   }
   const track = (smooth) ? smoothAltitude(coords, smoothWindow) : coords
   const segments = []
@@ -267,7 +265,7 @@ function calculateCalories(coords, options = {}) {
   let totalDurationSec = 0
 
   for (let i = 1; i < track.length; i += 1) {
-    const seg = processSegment(track[i - 1], track[i], weightKg, loadKg, waterKg, terrain)
+    const seg = processSegment(track[i - 1], track[i], bodyWeightKg, loadKg, waterKg, terrain)
     if (seg) {
       totalKcal += seg.kcal
       totalDistanceM += seg.horizontalDistance
