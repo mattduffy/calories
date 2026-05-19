@@ -1,6 +1,6 @@
 # Estimating Energy Expenditure Using The Pandolf-Santee Equation
 
-Creating accurate estimates of the number of calories burned during a physical activity period is notoriously difficult, especially when attempting to incorporate positional data.  Most instances of estimating calories burned are simply calculated as an exertion effort based on body weight, time duration and a known __MET__ ([Metabolic Equivalent Task](https://en.wikipedia.org/wiki/Metabolic_equivalent_of_task)) value for a given activity.  This method doesn't include positional data such as distance, velocity or elevation changes.  This can be considered a simple calorie estimates.
+Creating accurate estimates of the number of calories burned during a physical activity period is notoriously difficult, especially when attempting to incorporate positional data.  Most instances of estimating calories burned are simply calculated as an exertion effort based on body weight, time duration and a known __MET__ ([Metabolic Equivalent Task](https://en.wikipedia.org/wiki/Metabolic_equivalent_of_task)) value for a given activity.  This method doesn't include positional data such as distance, velocity or elevation changes.  This can be considered a simple calorie estimate.
 
 There are several, more advanced methods for estimating calories burned that do attempt to incorporate GPS data for a richer, more nuanced estimate.  The Pandolf-Santee equation is one such approach and is the one used in this package.
 
@@ -71,7 +71,7 @@ const cooords = [
 // sensor, set smooth to false.
 const options = {
   bodyWeightKg: 70, // Required, measured in kilograms
-  loadKg: 13.6,        // optional, measured in kilograms
+  loadKg: 13.6,     // optional, measured in kilograms
   waterKg: 0,       // optional, measured in kilograms
   terrain: 1.1,     // optional, default value = 1.1
   smooth: true,     // optional, smooth GSP elvation values
