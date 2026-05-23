@@ -283,10 +283,18 @@ function calculateCalories(coords, options = {}) {
   }
 }
 
+function minimumMechanicCalories() {
+  // https://blog.smu.edu/research/2017/10/17/study-new-simple-method-determines-rate-burn-calories-walking-uphill-downhill-level-ground/
+  // https://pubmed.ncbi.nlm.nih.gov/28729390/
+  // https://pmc.ncbi.nlm.nih.gov/articles/PMC8560389/
+  // https://journals.physiology.org/doi/full/10.1152/japplphysiol.00504.2017
+}
+
 export {
   m2m,
   within5,
   within10,
   simpleCalories,
+  minimumMechanicCalories,
   calculateCalories as pandolfCalories,
 }
