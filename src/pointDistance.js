@@ -5,10 +5,21 @@
  * @file: src/pointDistance.js
  */
 
+/**
+ * @summary Convert degrees into radians.
+ * @author Matthew Duffy <mattduffy@gmail.com>
+ * @param {Number} degrees - Value in degrees to be converted.
+ * @returm {Number} - Value in radians.
+ */
 export function rads(degrees) {
   return degrees * (Math.PI / 180)
 }
 
+/*
+ * Convert radians to degrees.
+ * @param {Number} radians - Radians to be converted to degrees.
+ * @return {Number} deg - Number of degrees.
+ */
 export function degs(radians) {
   const deg = radians * (180 / Math.PI)
   console.log(`radians in ${radians} \ndegrees out ${deg}`)

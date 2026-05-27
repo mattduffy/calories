@@ -5,13 +5,13 @@
  * @file src/index.js
  */
 
-import Debug from 'debug'
-import { pointDistance } from './pointDistance.js'
-import { calculateSlopeGrade } from './slope.js'
+// import Debug from 'debug'
+// import { pointDistance } from './pointDistance.js'
+// import { calculateSlopeGrade } from './slope.js'
 
 // const error = Debug('calories:ERROR')
-const log = Debug('calories')
-log.log = console.log.bind(console)
+// const log = Debug('calories')
+// log.log = console.log.bind(console)
 
 let BODY_WEIGHT
 let RUCK_WEIGHT
@@ -71,6 +71,109 @@ function within5(x, y) {
 }
 
 /**
+ * @summary Convert degrees into radians.
+ * @author Matthew Duffy <mattduffy@gmail.com>
+ * @param {Number} degrees - Value in degrees to be converted.
+ * @returm {Number} - Value in radians.
+ */
+function rads(degrees) {
+  return degrees * (Math.PI / 180)
+}
+
+/**
+ * @summary Convert radians into degrees.
+ * @author Matthew Duffy <mattduffy@gmail.com>
+ * @param {Number} degrees - Value in radians to be converted.
+ * @returm {Number} - Value in degrees.
+ */
+function degs(radians) {
+  const deg = radians * (180 / Math.PI)
+  console.log(`radians in ${radians} \ndegrees out ${deg}`)
+  return deg
+}
+
+/**
+ * @summary Calculate the distance between 2 gps coordinate points using a haversine function.
+ * @author Matthew Duffy <mattduffy@gmail.com>
+ * @param {} p1 - First gps coordinate point.
+ * @param {} p2 - Second gps coordinate point.
+ * @param {String} u - Unit of measurement to use.
+ * @return {Number} - The arc distance between to gps points.
+ */
+function pointDistance(p1, p2, u = 'metric') {
+  // console.log('calories::pointDistances(p1, p2, u): ', p1, p2, u)
+  const earthRadiusKm = 6371
+  const earthRadiusMeters = 6371000
+  const earthRadiusMi = 3959
+  const _u = u.toLowerCase()
+  let r
+  if (_u === 'metric' || _u === 'meters') {
+    r = earthRadiusMeters
+  } else if (_u === 'km') {
+    r = earthRadiusKm
+  } else if (_u === 'miles' || _u === 'mi' || _u === 'imperial') {
+    r = earthRadiusMi
+  } else {
+    r = earthRadiusMeters
+    console.log('No units given, default to earth radius in meters')
+  }
+  // console.log(`calories::pointDistance() using earth radius: ${r} ${_u}`)
+  const dLat = rads(p2.latitude - p1.latitude)
+  const dLon = rads(p2.longitude - p1.longitude)
+  const lat1 = rads(p1.latitude)
+  const lat2 = rads(p2.latitude)
+  const a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
+          + Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2)
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+  return r * c
+}
+
+/*
+ * Calculate difference in altitude between two points.
+ * @param {Number} alt1 - First altitude value, in meters.
+ * @param {Number} alt1 - Second altitude value, in meters.
+ * @return {Number} - Difference in altitude.
+ */
+function calculateVerticalInterval(alt1, alt2) {
+  // Vertical difference in meters
+  // return Math.abs(alt2 - alt1)
+  return alt2 - alt1
+}
+
+/*
+ * Calculate the slope between two gps points.
+ * @param {Object} point1 - A gps coordinate point.
+ * @param {Number} point1.longitude - A gps longitude coordinate.
+ * @param {Number} point1.latitude - A gps latitude coordinate.
+ * @param {Object} point2 - A gps coordinate point.
+ * @param {Number} point2.longitude - A gps longitude coordinate.
+ * @param {Number} point2.latitude - A gps latitude coordinate.
+ * @return {Object} - Object containing slope in percentage and degree values.
+ */
+function calculateSlopeGrade(point1, point2) {
+  const horizontalDistance = pointDistance(
+    { latitude: point1.latitude, longitude: point1.longitude },
+    { latitude: point2.latitude, longitude: point2.longitude },
+  )
+
+  const verticalInterval = calculateVerticalInterval(point1.altitude, point2.altitude)
+
+  if (horizontalDistance === 0) {
+    // Vertical ascent/descent
+    return { percentage: Infinity, angleDegrees: 90 }
+  }
+
+  const slopePercentage = (verticalInterval / horizontalDistance) * 100
+  const slopeAngleRadians = Math.atan(verticalInterval / horizontalDistance)
+  const slopeAngleDegrees = (slopeAngleRadians * 180) / Math.PI
+
+  return {
+    percentage: slopePercentage,
+    angleDegrees: slopeAngleDegrees,
+  }
+}
+
+/**
  * @summary The simplest calorie estimating function.  No account is given for
  * terrain type, gps factors (hill grading), uphill vs downhill efforts, etc.
  * MET - ratio of energy spent per unit time during a specific physical activity to a
@@ -107,12 +210,12 @@ function simpleCalories(minutes = 1, weights = { body: 0, ruck: 0, water: 0 }, M
   if (MET <= 0 || !Number.isFinite(MET) || MET === null || MET === undefined) {
     throw new Error('MET parameter must be a number greater than zero.')
   }
-  log('calculating simple EE method')
-  log('minutes', minutes)
-  log('weights', weights)
+  console.log('calculating simple EE method')
+  console.log('minutes', minutes)
+  console.log('weights', weights)
   COMBINED = weights.body + weights.ruck + weights.water
-  log('combined weights', COMBINED)
-  log(`computing ((${MET} * 3.5 * ${COMBINED}) / 200) * ${minutes}`)
+  console.log('combined weights', COMBINED)
+  console.log(`computing ((${MET} * 3.5 * ${COMBINED}) / 200) * ${minutes}`)
   return ((MET * 3.5 * COMBINED) / 200) * minutes
 }
 
@@ -284,7 +387,8 @@ function calculateCalories(coords, options = {}) {
 }
 
 function minimumMechanicCalories() {
-  // https://blog.smu.edu/research/2017/10/17/study-new-simple-method-determines-rate-burn-calories-walking-uphill-downhill-level-ground/
+  // https://blog.smu.edu/research/2017/10/17/study-new-simple-method-determines-rate-burn-
+  // calories-walking-uphill-downhill-level-ground/
   // https://pubmed.ncbi.nlm.nih.gov/28729390/
   // https://pmc.ncbi.nlm.nih.gov/articles/PMC8560389/
   // https://journals.physiology.org/doi/full/10.1152/japplphysiol.00504.2017
@@ -292,9 +396,12 @@ function minimumMechanicCalories() {
 
 export {
   m2m,
+  degs,
+  rads,
   within5,
   within10,
   simpleCalories,
+  calculateSlopeGrade,
   minimumMechanicCalories,
   calculateCalories as pandolfCalories,
 }
