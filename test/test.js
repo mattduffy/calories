@@ -11,8 +11,8 @@ import {
   within10,
   simpleCalories,
   pandolfCalories,
+  calculateSlopeGrade,
 } from '../src/index.js'
-import { calculateSlopeGrade } from '../src/slope.js'
 import walk_1 from './walk_1.json' with { type: 'json' }
 import walk_2 from './walk_2.json' with { type: 'json' }
 import walk_3 from './walk_3.json' with { type: 'json' }
