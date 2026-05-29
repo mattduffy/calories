@@ -23,7 +23,8 @@
   },
   "scripts": {
     "lint": "eslint --",
-    "test": "DEBUG=* node --test test/test.js"
+    "test": "DEBUG=* node --test test/test.js",
+    "postinstall": "node src/postinstall.js"
   },
   "keywords": [
     "calories",
