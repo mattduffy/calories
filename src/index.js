@@ -299,10 +299,10 @@ function processSegment(point1, point2, W, L, H2O, n) {
 
   // Metabolic rate for this segment (watts)
   const combinedL = L + H2O
-  const metabolicRateW = pandolfMetabolicRate(W, combinedL, speed, grade, n)
+  const metabolicRateWatts = pandolfMetabolicRate(W, combinedL, speed, grade, n)
 
   // Energy expended = power × time (joules), converted to kcal.
-  const kcal = (metabolicRateW * timeDiff) / JOULES_PER_KCAL
+  const kcal = (metabolicRateWatts * timeDiff) / JOULES_PER_KCAL
 
   return {
     horizontalDistance, // meters
@@ -310,7 +310,7 @@ function processSegment(point1, point2, W, L, H2O, n) {
     grade: slopeGrade.percentage,
     speed, // m/s
     durationSec: timeDiff, // seconds
-    metabolicRateW, // watts
+    metabolicRateWatts, // watts
     kcal, // kilocalories
   }
 }
@@ -345,7 +345,7 @@ function processSegment(point1, point2, W, L, H2O, n) {
  *     segments : Number[] // Per-segment breakdown (see processSegment return shape)
  *   }
  */
-function calculateCalories(coords, options = {}) {
+function pandolfCalories(coords, options = {}) {
   const {
     bodyWeightKg,
     loadKg = 0,
@@ -386,6 +386,42 @@ function calculateCalories(coords, options = {}) {
   }
 }
 
+/**
+ * @summary A wrapper function to preserver the function name calculateCalories() after
+ *          it was renamed pandolfCalories(), to make room for additional advanced calorie
+ *          estimating models.
+ * @author Matthew Duffy <mattduffy@gmail.com>
+ * @param {Number[][]} coords - GPS coordinate array. Each element:
+ *                              [
+ *                                longitude,
+ *                                latitude,
+ *                                heading,
+ *                                altitude (m),
+ *                                accuracy (m),
+ *                                timestamp (ms),
+ *                              ]
+ * @param {Object} - options
+ * @param {Number} options.bodyWeightKg - Body weight in kg (required).
+ * @param {Number} [options.loadKg=0] - Load/pack weight in kg.
+ * @param {Number} [options.waterKg=0] - Water weight in kg carried.
+ * @param {Number} [options.terrain=1.1]  - Terrain coefficient (n). Use TERRAIN_COEFFICIENTS.
+ * @param {Boolean} [options.smooth=true] - Whether to smooth GPS altitude before calculating.
+ * @param {Number} [options.smoothWindow=5] - Rolling average size for altitude smoothing.
+ * @throws {Error} - Throws error if not enough coordinates.
+ * @throws {Error} - Throws error if body weight is not provided.
+ * @returns {Object} Result object:
+ *   {
+ *     totalKcal : Number, // Total calories burned
+ *     totalDistanceM : Number, // Total horizontal distance (meters)
+ *     totalDurationSec: Number, // Total elapsed time (seconds)
+ *     avgSpeedMs : Number, // Average speed (m/s)
+ *     segments : Number[] // Per-segment breakdown (see processSegment return shape)
+ *   }
+ */
+function calculateCalories(coords, options = {}) {
+  return pandolfCalories(coords, options)
+}
+
 function minimumMechanicCalories() {
   // https://blog.smu.edu/research/2017/10/17/study-new-simple-method-determines-rate-burn-
   // calories-walking-uphill-downhill-level-ground/
@@ -401,7 +437,8 @@ export {
   within5,
   within10,
   simpleCalories,
+  pandolfCalories,
+  calculateCalories,
   calculateSlopeGrade,
   minimumMechanicCalories,
-  calculateCalories as pandolfCalories,
 }
