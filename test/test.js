@@ -34,6 +34,7 @@ const results = [
     name: null,
     distance: null,
     duration: null,
+    weights: null,
     simple1: null,
     simple2: null,
     pandolf: null,
@@ -70,6 +71,10 @@ function dist(m) {
     return '0 km (0 miles)'
   }
   return `${(m / 1000).toFixed(2)} km (${((m / 1000) * 0.6).toFixed(2)} miles)`
+}
+
+function _dot1(f) {
+  return Number.parseFloat(f.toFixed(1))
 }
 
 describe('First test suite for calories package', async () => {
@@ -122,9 +127,10 @@ describe('First test suite for calories package', async () => {
       date: date_1,
       name: walk_1.features[0].properties.name,
       distance: dist(walk_1.features[0].properties.distance),
-      duration: walk_1_minutes,
-      simple1: walk_1.features[0].properties.simpleCalories,
-      simple2: cals_1,
+      duration: _dot1(walk_1_minutes),
+      weights: `b: ${_dot1(weights.body)}, r: ${_dot1(weights.ruck)}`,
+      simple1: _dot1(walk_1.features[0].properties.simpleCalories),
+      simple2: _dot1(cals_1),
       pandolf: null,
       minimumMech: null,
     })
@@ -148,9 +154,10 @@ describe('First test suite for calories package', async () => {
       date: date_2,
       name: walk_2.features[0].properties.name,
       distance: dist(walk_2.features[0].properties.distance),
-      duration: walk_2_minutes,
-      simple1: walk_2.features[0].properties.simpleCalories,
-      simple2: cals_2,
+      duration: _dot1(walk_2_minutes),
+      weights: `b: ${_dot1(weights.body)}, r: ${_dot1(weights.ruck)}`,
+      simple1: _dot1(walk_2.features[0].properties.simpleCalories),
+      simple2: _dot1(cals_2),
       pandolf: null,
       minimumMech: null,
     })
@@ -182,7 +189,7 @@ describe('First test suite for calories package', async () => {
         bodyWeightKg: cal1W.body, loadKg: cal1W.ruck, waterKg: cal1W.water, terrain: 1.1,
       },
     )
-    results[1].pandolf = cal1.totalKcal
+    results[1].pandolf = _dot1(cal1.totalKcal)
     const simple = walk_1.features[0].properties.simpleCalories
     console.log(`name: ${walk_1.features[0].properties.name}`)
     console.log(`walk_1 pandolf calories: ${cal1.totalKcal} (simpleCalories: ${simple})`)
@@ -224,7 +231,7 @@ describe('First test suite for calories package', async () => {
         bodyWeightKg: cal2W.body, loadKg: cal2W.ruck, waterKg: cal2W.water, terrain: 1.1,
       },
     )
-    results[2].pandolf = cal2.totalKcal
+    results[2].pandolf = _dot1(cal2.totalKcal)
     const simple = walk_2.features[0].properties.simpleCalories
     console.log(`name: ${walk_2.features[0].properties.name}`)
     console.log(`walk_2 pandolf calories: ${cal2.totalKcal} (simpleCalories: ${simple})`)
@@ -279,10 +286,11 @@ describe('First test suite for calories package', async () => {
       date: date_3,
       name: walk_3.features[0].properties.name,
       distance: dist(walk_3.features[0].properties.distance),
-      duration: m2m(walk_3.features[0].properties.duration),
-      simple1: cals_3,
-      simple2: walk_3.features[0].properties.simpleCalories,
-      pandolf: cal3.totalKcal,
+      duration: _dot1(m2m(walk_3.features[0].properties.duration)),
+      weights: `b: ${_dot1(cal3W.body / 2.2)}, r: ${_dot1(cal3W.ruck / 2.2)}`,
+      simple1: _dot1(cals_3),
+      simple2: _dot1(walk_3.features[0].properties.simpleCalories),
+      pandolf: _dot1(cal3.totalKcal),
       minimumMech: null,
     })
     console.log(`name: ${walk_3.features[0].properties.name}`)
@@ -373,10 +381,11 @@ describe('First test suite for calories package', async () => {
       date: date_4,
       name: walk_4.features[0].properties.name,
       distance: dist(walk_4.features[0].properties.distance),
-      duration: walk_4_minutes,
-      simple1: simple,
-      simple2: cals_4,
-      pandolf: cal4.totalKcal,
+      duration: _dot1(walk_4_minutes),
+      weights: `b: ${_dot1(cal4W.body / 2.2)}, r: ${_dot1(cal4W.ruck / 2.2)}`,
+      simple1: _dot1(simple),
+      simple2: _dot1(cals_4),
+      pandolf: _dot1(cal4.totalKcal),
       minimumMech: null,
     })
   })
@@ -409,10 +418,11 @@ describe('First test suite for calories package', async () => {
       date: date_5,
       name: walk_5.features[0].properties.name,
       distance: dist(walk_5.features[0].properties.distance),
-      duration: walk_5_minutes,
-      simple1: walk_1.features[0].properties.simpleCalories,
-      simple2: walk5Simple,
-      pandolf: cal5.totalKcal,
+      duration: _dot1(walk_5_minutes),
+      weights: `b: ${cal5W.body / 2.2}, r: ${_dot1(cal5W.ruck / 2.2)}`,
+      simple1: _dot1(walk_1.features[0].properties.simpleCalories),
+      simple2: _dot1(walk5Simple),
+      pandolf: _dot1(cal5.totalKcal),
       minimumMech: null,
     })
     console.log(`name: ${walk_5.features[0].properties.name}`)
@@ -476,10 +486,11 @@ describe('First test suite for calories package', async () => {
       date: date_6,
       name: walk_6.features[0].properties.name,
       distance: dist(walk_6.features[0].properties.distance),
-      duration: walk_6_minutes,
-      simple1: walk_1.features[0].properties.simpleCalories,
-      simple2: walk6Simple,
-      pandolf: cal6.totalKcal,
+      duration: _dot1(walk_6_minutes),
+      weights: `b: ${_dot1(cal6W.body / 2.2)}, r: ${_dot1(cal6W.ruck / 2.2)}`,
+      simple1: _dot1(walk_1.features[0].properties.simpleCalories),
+      simple2: _dot1(walk6Simple),
+      pandolf: _dot1(cal6.totalKcal),
       minimumMech: null,
     })
     console.log(`name: ${walk_6.features[0].properties.name}`)
@@ -543,10 +554,11 @@ describe('First test suite for calories package', async () => {
       date: date_7,
       name: walk_7.features[0].properties.name,
       distance: dist(walk_7.features[0].properties.distance),
-      duration: walk_7_minutes,
-      simple1: walk_7.features[0].properties.simpleCalories,
-      simple2: walk7Simple,
-      pandolf: cal7.totalKcal,
+      duration: _dot1(walk_7_minutes),
+      weights: `b: ${_dot1(cal7W.body / 2.2)}, r: ${_dot1(cal7W.ruck / 2.2)}`,
+      simple1: _dot1(walk_7.features[0].properties.simpleCalories),
+      simple2: _dot1(walk7Simple),
+      pandolf: _dot1(cal7.totalKcal),
       minimumMech: null,
     })
     console.log(`name: ${walk_7.features[0].properties.name}`)
@@ -610,10 +622,11 @@ describe('First test suite for calories package', async () => {
       date: date_8,
       name: walk_8.features[0].properties.name,
       distance: dist(walk_8.features[0].properties.distance),
-      duration: walk_8_minutes,
-      simple1: walk_8.features[0].properties.simpleCalories,
-      simple2: walk8Simple,
-      pandolf: cal8.totalKcal,
+      duration: _dot1(walk_8_minutes),
+      weights: `b: ${_dot1(cal8W.body / 2.2)}, r: ${cal8W.ruck / 2.2}`,
+      simple1: _dot1(walk_8.features[0].properties.simpleCalories),
+      simple2: _dot1(walk8Simple),
+      pandolf: _dot1(cal8.totalKcal),
       minimumMech: null,
     })
     console.log(`name: ${walk_8.features[0].properties.name}`)
