@@ -22,6 +22,7 @@ import walk_5 from './walk_5-sewer-monster.json' with { type: 'json' }
 import walk_6 from './walk_6-meat-stew.json' with { type: 'json' }
 import walk_7 from './walk_7-meat-stu.json' with { type: 'json' }
 import walk_8 from './walk_8-sf-stumbes.json' with { type: 'json' }
+import walk_9 from './walk_9-50-gredits-per-throw.json' with { type: 'json' }
 
 // console.log(walk_1.features[0].geometry.coordinates[0])
 // console.log(walk_2.features[0].geometry.coordinates[0])
@@ -650,6 +651,74 @@ describe('First test suite for calories package', async () => {
     console.log('within5 calories:', within5(cal8.totalKcal, walk8Simple))
     console.log('within10 calories:', within10(cal8.totalKcal, walk8Simple))
     cal8.segments.map((seg, i) => {
+      if (seg.kcal > calClamp) {
+        console.log(
+          `seg # ${i}, `
+          + `seg kcal ${seg.kcal}, `
+          + `distance ${seg.horizontalDistance}, `
+          + `time ${seg.durationSec}`,
+        )
+      }
+      return 0
+    })
+  })
+
+  it('Advanced calorie comparison test - walk_9', async () => {
+    console.log('')
+    const cal9W = walk_9.features[0].properties.weights ?? weights
+    const walk9Simple = simpleCalories(
+      m2m(walk_9.features[0].properties.duration),
+      weights,
+    )
+    const cal9 = pandolfCalories(
+      walk_9.features[0].geometry.coordinates,
+      {
+        bodyWeightKg: (cal9W.body / 2.2),
+        loadKg: (cal9W.ruck / 2.2),
+        waterKg: (cal9W.water / 2.2),
+        terrain: 1.1,
+      },
+    )
+    const simple = walk_9.features[0].properties.simpleCalories
+    const walk_9_minutes = m2m(walk_9.features[0].properties.duration)
+    const date_9 = new Date(walk_9.features[0].properties.date)
+      .toLocaleDateString('en-US', {
+        month: '2-digit',
+        day: '2-digit',
+        year: 'numeric',
+      })
+    results.push({
+      date: date_9,
+      name: walk_9.features[0].properties.name,
+      distance: dist(walk_9.features[0].properties.distance),
+      duration: _dot1(walk_9_minutes),
+      weights: `b: ${_dot1(cal9W.body / 2.2)}, r: ${_dot1(cal9W.ruck / 2.2)}`,
+      simple1: _dot1(walk_9.features[0].properties.simpleCalories),
+      simple2: _dot1(walk9Simple),
+      pandolf: _dot1(cal9.totalKcal),
+      minimumMech: null,
+    })
+    console.log(`name: ${walk_9.features[0].properties.name}`)
+    console.log(`walk_9 pandolf calories: ${cal9.totalKcal} (simpleCalories: ${simple})`)
+    console.log(
+      `walk_9 pandolf distance: ${cal9.totalDistanceM} `
+      + `(${walk_9.features[0].properties.distance})`,
+    )
+    console.log(
+      `walk_9 pandolf duration: ${cal9.totalDurationSec}, `
+      + `(${walk_9.features[0].properties.duration / 1000})`,
+    )
+    console.log(
+      'within5 distance:',
+      within5(cal9.totalDistanceM, walk_9.features[0].properties.distance),
+    )
+    console.log(
+      'within10 distance:',
+      within10(cal9.totalDistanceM, walk_9.features[0].properties.distance),
+    )
+    console.log('within5 calories:', within5(cal9.totalKcal, walk9Simple))
+    console.log('within10 calories:', within10(cal9.totalKcal, walk9Simple))
+    cal9.segments.map((seg, i) => {
       if (seg.kcal > calClamp) {
         console.log(
           `seg # ${i}, `
