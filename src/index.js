@@ -5,14 +5,6 @@
  * @file src/index.js
  */
 
-// import Debug from 'debug'
-// import { pointDistance } from './pointDistance.js'
-// import { calculateSlopeGrade } from './slope.js'
-
-// const error = Debug('calories:ERROR')
-// const log = Debug('calories')
-// log.log = console.log.bind(console)
-
 let BODY_WEIGHT
 let RUCK_WEIGHT
 let COMBINED = BODY_WEIGHT + RUCK_WEIGHT
@@ -151,25 +143,24 @@ function calculateVerticalInterval(alt1, alt2) {
  * @return {Object} - Object containing slope in percentage and degree values.
  */
 function calculateSlopeGrade(point1, point2) {
+  // slope = Rise / Run           Ration or Fraction
+  // grade = (Rise / Run) * 100   Percentage
+  // angle = arctan(Rise / Run)   Degress
   const horizontalDistance = pointDistance(
     { latitude: point1.latitude, longitude: point1.longitude },
     { latitude: point2.latitude, longitude: point2.longitude },
   )
-
   const verticalInterval = calculateVerticalInterval(point1.altitude, point2.altitude)
-
   if (horizontalDistance === 0) {
     // Vertical ascent/descent
-    return { percentage: Infinity, angleDegrees: 90 }
+    return { grade: Infinity, angleDegrees: 90 }
   }
-
-  const slopePercentage = (verticalInterval / horizontalDistance) * 100
-  const slopeAngleRadians = Math.atan(verticalInterval / horizontalDistance)
-  const slopeAngleDegrees = (slopeAngleRadians * 180) / Math.PI
-
+  // const slopePercentage =
+  // const slopeAngleRadians =
+  // const slopeAngleDegrees = (slopeAngleRadians * 180) / Math.PI
   return {
-    percentage: slopePercentage,
-    angleDegrees: slopeAngleDegrees,
+    grade: (verticalInterval / horizontalDistance) * 100,
+    angleDegrees: (Math.atan(verticalInterval / horizontalDistance) * 180) / Math.PI,
   }
 }
 
@@ -281,35 +272,33 @@ function processSegment(point1, point2, W, L, H2O, n) {
   const p1 = { longitude: lon1, latitude: lat1, altitude: alt1 }
   const p2 = { longitude: lon2, latitude: lat2, altitude: alt2 }
   const horizontalDistance = pointDistance(p1, p2)
-  const timeDiff = (t2 - t1) / 1000 // seconds
+  const durationSec = (t2 - t1) / 1000 // seconds
 
   // Skip GPS jitter, stationary points, or out-of-order timestamps.
-  if (timeDiff <= 0 || horizontalDistance < MIN_SEGMENT_DIST_M) return null
+  if (durationSec <= 0 || horizontalDistance < MIN_SEGMENT_DIST_M) return null
 
   // Find the elevation change as slope between two points.
   const slopeGrade = calculateSlopeGrade(p1, p2)
-  const grade = slopeGrade.percentage
-  // Grade as a percentage: rise / run * 100
+  const { grade } = slopeGrade
   // Uses horizontal distance as the "run" (standard for hiking/trail grade).
   const altitudeDiff = alt2 - alt1
-  // const grade = (altitudeDiff / horizontalDistance) * 100
 
   // Derived speed - clamped to MAX_SPEED_MS to guard against GPS outliers.
-  const speed = Math.min(horizontalDistance / timeDiff, MAX_SPEED_MS)
+  const speed = Math.min(horizontalDistance / durationSec, MAX_SPEED_MS)
 
   // Metabolic rate for this segment (watts)
   const combinedL = L + H2O
   const metabolicRateWatts = pandolfMetabolicRate(W, combinedL, speed, grade, n)
 
   // Energy expended = power × time (joules), converted to kcal.
-  const kcal = (metabolicRateWatts * timeDiff) / JOULES_PER_KCAL
+  const kcal = (metabolicRateWatts * durationSec) / JOULES_PER_KCAL
 
   return {
     horizontalDistance, // meters
     altitudeDiff, // meters
-    grade: slopeGrade.percentage,
+    grade, // percentage
     speed, // m/s
-    durationSec: timeDiff, // seconds
+    durationSec, // seconds
     metabolicRateWatts, // watts
     kcal, // kilocalories
   }
