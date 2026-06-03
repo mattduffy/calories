@@ -60779,6 +60779,9 @@
         "terrain": {
           "value": 1.1,
           "text": "Dirt path / Packed Trail"
+        },
+        "apple": {
+          "activity": 712
         }
       },
       "geometry": {
