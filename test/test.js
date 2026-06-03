@@ -40,6 +40,7 @@ const results = [
     simple2: null,
     pandolf: null,
     minimumMech: null,
+    apple: null,
   },
 ]
 
@@ -64,7 +65,7 @@ const gpsPointB = {
 
 const calClamp = 1.5
 const slope = calculateSlopeGrade(gpsPointA, gpsPointB)
-console.log(`Slope Percentage: ${slope.percentage.toFixed(2)}%`)
+console.log(`Slope Percentage: ${slope.grade.toFixed(2)}%`)
 console.log(`Slope Angle: ${slope.angleDegrees.toFixed(2)} degrees`)
 
 function dist(m) {
@@ -134,6 +135,7 @@ describe('First test suite for calories package', async () => {
       simple2: _dot1(cals_1),
       pandolf: null,
       minimumMech: null,
+      apple: null,
     })
     const walk_2_minutes = m2m(walk_2.features[0].properties.duration)
     const walk_2_timediff = m2m(walk_2.features[0].properties.endTime)
@@ -161,6 +163,7 @@ describe('First test suite for calories package', async () => {
       simple2: _dot1(cals_2),
       pandolf: null,
       minimumMech: null,
+      apple: null,
     })
     assert(!Number.isNaN(cals_1) && cals_1 > 0)
     assert(!Number.isNaN(cals_2) && cals_2 > 0)
@@ -293,6 +296,7 @@ describe('First test suite for calories package', async () => {
       simple2: _dot1(walk_3.features[0].properties.simpleCalories),
       pandolf: _dot1(cal3.totalKcal),
       minimumMech: null,
+      apple: null,
     })
     console.log(`name: ${walk_3.features[0].properties.name}`)
     console.log(`walk_3 pandolf calories: ${cal3.totalKcal} (simpleCalories: ${simple})`)
@@ -388,6 +392,7 @@ describe('First test suite for calories package', async () => {
       simple2: _dot1(cals_4),
       pandolf: _dot1(cal4.totalKcal),
       minimumMech: null,
+      apple: null,
     })
   })
 
@@ -425,6 +430,7 @@ describe('First test suite for calories package', async () => {
       simple2: _dot1(walk5Simple),
       pandolf: _dot1(cal5.totalKcal),
       minimumMech: null,
+      apple: null,
     })
     console.log(`name: ${walk_5.features[0].properties.name}`)
     console.log(`walk_5 pandolf calories: ${cal5.totalKcal} (simpleCalories: ${simple})`)
@@ -493,6 +499,7 @@ describe('First test suite for calories package', async () => {
       simple2: _dot1(walk6Simple),
       pandolf: _dot1(cal6.totalKcal),
       minimumMech: null,
+      apple: null,
     })
     console.log(`name: ${walk_6.features[0].properties.name}`)
     console.log(`walk_6 pandolf calories: ${cal6.totalKcal} (simpleCalories: ${simple})`)
@@ -561,6 +568,7 @@ describe('First test suite for calories package', async () => {
       simple2: _dot1(walk7Simple),
       pandolf: _dot1(cal7.totalKcal),
       minimumMech: null,
+      apple: null,
     })
     console.log(`name: ${walk_7.features[0].properties.name}`)
     console.log(`walk_7 pandolf calories: ${cal7.totalKcal} (simpleCalories: ${simple})`)
@@ -629,6 +637,7 @@ describe('First test suite for calories package', async () => {
       simple2: _dot1(walk8Simple),
       pandolf: _dot1(cal8.totalKcal),
       minimumMech: null,
+      apple: null,
     })
     console.log(`name: ${walk_8.features[0].properties.name}`)
     console.log(`walk_8 pandolf calories: ${cal8.totalKcal} (simpleCalories: ${simple})`)
@@ -697,6 +706,7 @@ describe('First test suite for calories package', async () => {
       simple2: _dot1(walk9Simple),
       pandolf: _dot1(cal9.totalKcal),
       minimumMech: null,
+      apple: _dot1(walk_9.features[0].properties.apple.activity),
     })
     console.log(`name: ${walk_9.features[0].properties.name}`)
     console.log(`walk_9 pandolf calories: ${cal9.totalKcal} (simpleCalories: ${simple})`)
