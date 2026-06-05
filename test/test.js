@@ -795,22 +795,32 @@ describe('First test suite for calories package', async () => {
     console.log(`name: ${walk_10.features[0].properties.name}`)
     console.log(`walk_10 pandolf calories: ${cal10.totalKcal} (simpleCalories: ${simple})`)
     console.log(
-      `walk_10 pandolf distance: ${cal10.totalDistanceM} `
-      + `(${walk_10.features[0].properties.distance})`,
+      `walk_10 pandolf distance: calculated ${_dot1(cal10.totalDistanceM)} `
+      + `(original ${_dot1(walk_10.features[0].properties.distance)})`,
     )
     console.log(
-      `walk_10 pandolf duration: ${cal10.totalDurationSec}, `
-      + `(${walk_10.features[0].properties.duration / 1000})`,
+      `walk_10 pandolf duration: calculated ${_dot1(cal10.totalDurationSec)}, `
+      + `(original ${_dot1(walk_10.features[0].properties.duration / 1000)})`,
     )
     console.log(
       'within5 distance:',
+      `${_dot1(cal10.totalDistanceM)}, ${_dot1(walk_10.features[0].properties.distance)}`,
       within5(cal10.totalDistanceM, walk_10.features[0].properties.distance),
     )
     console.log(
       'within10 distance:',
       within10(cal10.totalDistanceM, walk_10.features[0].properties.distance),
+      `calculated ${_dot1(cal10.totalDistanceM)} /`,
+      `original ${_dot1(walk_10.features[0].properties.distance)} =`,
+      _dot1(cal10.totalDistanceM) / _dot1(walk_10.features[0].properties.distance),
     )
-    console.log('within5 calories:', within5(cal10.totalKcal, walk10Simple))
+    console.log(
+      'within5 calories:',
+      within5(cal10.totalKcal, walk10Simple),
+      `calculated ${_dot1(cal10.totalKcal)} /`,
+      `original ${_dot1(walk10Simple)} =`,
+      _dot1(cal10.totalKcal) / _dot1(walk10Simple),
+    )
     console.log('within10 calories:', within10(cal10.totalKcal, walk10Simple))
     cal10.segments.map((seg, i) => {
       if (seg.kcal > calClamp) {
