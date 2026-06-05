@@ -59,6 +59,8 @@ function within10(x, y) {
  * @return {Boolean} - If y is within 5% of x, return True.
  */
 function within5(x, y) {
+  // this is not mathematically correct, and should maybe do a sanity check first
+  // to make sure y is not already bigger than x.
   return (0.95 * x) <= y
 }
 
