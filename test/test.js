@@ -838,10 +838,17 @@ describe('First test suite for calories package', async () => {
 
   it('Advanced calorie comparison test - walk_11', async () => {
     console.log('')
-    const cal11W = walk_11.features[0].properties.weights ?? weights
+    // const cal11W = walk_11.features[0].properties.weights ?? weights
+    const cal11W = walk_11.features[0].properties.weights
+    console.log('cal11W weights are:', cal11W)
     const walk11Simple = simpleCalories(
       m2m(walk_11.features[0].properties.duration),
-      weights,
+      // weights,
+      {
+        body: _dot1(cal11W.body / 2.2),
+        ruck: _dot1(cal11W.ruck / 2.2),
+        water: (cal11W.water === 0) ? 0 : cal11W.water / 2.2,
+      },
     )
     const cal11 = pandolfCalories(
       walk_11.features[0].geometry.coordinates,
@@ -902,7 +909,7 @@ describe('First test suite for calories package', async () => {
       `original ${_dot1(walk11Simple)} =`,
       _dot1(cal11.totalKcal) / _dot1(walk11Simple),
     )
-    console.log('within11 calories:', within10(cal11.totalKcal, walk11Simple))
+    console.log('within10 calories:', within10(cal11.totalKcal, walk11Simple))
     cal11.segments.map((seg, i) => {
       if (seg.kcal > calClamp) {
         console.log(
