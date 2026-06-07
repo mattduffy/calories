@@ -43,25 +43,29 @@ function m2m(milliseconds) {
 }
 
 /**
- * @summary Check if y is within 10% of x: y = 91, x = 100 => true.
- * @param {Number} x - The comparator input value.
- * @param {Number} y - The input value, as some percentage of x.
+ * @summary Check if x and y values are within 10% of each other.
+ * @param {Number} x - The first input value.
+ * @param {Number} y - The second input value, possibly within 10% of x.
  * @return {Boolean} - If y is within 10% of x, return True.
  */
 function within10(x, y) {
-  return (0.9 * x) <= y
+  const _min = Math.min(x, y)
+  const _max = Math.max(x, y)
+  // If 90% of _max is less than the value of _min, return true.
+  return (Math.floor(0.9 * _max) <= _min)
 }
 
 /**
- * @summary Check if y is within 5% of x: y = 94, x = 100 => true.
- * @param {Number} x - The comparator input value.
- * @param {Number} y - The input value, as some percentage of x.
+ * @summary Check if x and y values are within 5% of each other.
+ * @param {Number} x - The first input value.
+ * @param {Number} y - The second input value, possibly within 5% of x.
  * @return {Boolean} - If y is within 5% of x, return True.
  */
 function within5(x, y) {
-  // this is not mathematically correct, and should maybe do a sanity check first
-  // to make sure y is not already bigger than x.
-  return (0.95 * x) <= y
+  const _min = Math.min(x, y)
+  const _max = Math.max(x, y)
+  // If 95% of _max is less than the value of _min, return true.
+  return (Math.floor(0.95 * _max) <= _min)
 }
 
 /**
@@ -207,7 +211,7 @@ function simpleCalories(minutes = 1, weights = { body: 0, ruck: 0, water: 0 }, M
   console.log('minutes', minutes)
   console.log('weights', weights)
   COMBINED = weights.body + weights.ruck + weights.water
-  console.log('combined weights', COMBINED)
+  console.log('combined weights', COMBINED, 'in kg')
   console.log(`computing ((${MET} * 3.5 * ${COMBINED}) / 200) * ${minutes}`)
   return ((MET * 3.5 * COMBINED) / 200) * minutes
 }
