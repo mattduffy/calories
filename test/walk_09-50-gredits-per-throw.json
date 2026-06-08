@@ -6285,9 +6285,9 @@
         "highestElevation": 409.81082546990365,
         "lowestElevation": null,
         "changeInElevation": null,
-        "simpleCalories": 2661.75,
+        "simpleCalories": 1031.75,
         "pandolfCalories": {
-          "totalKcal": 1924.8051292040484,
+          "totalKcal": 874.8051292040484,
           "totalDistanceM": 9543.373780647597,
           "totalDurationSec": 6095.108000000002,
           "avgSpeedMs": 1.565743179718488,

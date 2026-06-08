@@ -3921,7 +3921,12 @@
         "lowestElevation": null,
         "changeInElevation": null,
         "simpleCalories": 1629.6,
-        "pandolfCalories": null,
+        "pandolfCalories": {
+          "totalKcal": 534.1769299472506,
+          "totalDistanceM": 5730.121086461854,
+          "totalDurationSec": 3754.070000000002,
+          "avgSpeedMs": 1.5263756632
+        },
         "weights": {
           "body": 164,
           "ruck": 30,
