@@ -211,7 +211,7 @@ function simpleCalories(minutes = 1, weights = { body: 0, ruck: 0, water: 0 }, M
   console.log('minutes', minutes)
   console.log('weights', weights)
   COMBINED = weights.body + weights.ruck + weights.water
-  console.log('combined weights', COMBINED, 'in kg')
+  console.log('combined weights', COMBINED)
   console.log(`computing ((${MET} * 3.5 * ${COMBINED}) / 200) * ${minutes}`)
   return ((MET * 3.5 * COMBINED) / 200) * minutes
 }
