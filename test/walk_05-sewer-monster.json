@@ -6166,12 +6166,19 @@
         "highestElevation": 408.96309150755405,
         "lowestElevation": null,
         "changeInElevation": null,
-        "simpleCalories": 2610.5625,
+        "simpleCalories": 1188.5625,
         "pandolfCalories": null,
         "weights": {
           "body": 165,
           "ruck": 30,
           "water": 0
+        },
+        "terrain": {
+          "value": 1.1,
+          "text": "Dirt path / Packed Trail"
+        },
+        "apple": {
+          "activity": 742
         }
       },
       "geometry": {

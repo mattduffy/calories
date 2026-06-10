@@ -3542,7 +3542,25 @@
         "lowestElevation": null,
         "changeInElevation": null,
         "calories": 250,
-        "simpleCalories": 668.7784090909091
+        "simpleCalories": 668.7784090909091,
+        "pandolfCalories": {
+          "totalKcal": 453.1769299472506,
+          "totalDistanceM": 5596.121086461854,
+          "totalDurationSec": 3472.070000000002,
+          "avgSpeedMs": 1.6263756632
+        },
+        "weights": {
+          "body": 164,
+          "ruck": 30,
+          "water": 0
+        },
+        "terrain": {
+          "value": 1.1,
+          "text": "Dirt path / Packed Trail"
+        },
+        "apple": {
+          "activity": 503
+        }
       },
       "geometry": {
         "type": "LineString",

@@ -3606,6 +3606,13 @@
           "body": 165,
           "ruck": 30,
           "water": 0
+        },
+        "terrain": {
+          "value": 1.1,
+          "text": "Dirt path / Packed Trail"
+        },
+        "apple": {
+          "activity": 462
         }
       },
       "geometry": {

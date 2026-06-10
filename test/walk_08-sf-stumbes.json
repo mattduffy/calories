@@ -3874,6 +3874,9 @@
         "terrain": {
           "value": 1,
           "text": "Paved road / Treadmill"
+        },
+        "apple": {
+          "activity": 424
         }
       },
       "geometry": {
