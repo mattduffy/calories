@@ -82,7 +82,7 @@ function dist(m) {
 
 function _dot1(f) {
   if (!f) {
-    return null
+    return 0
   }
   return Number.parseFloat(f.toFixed(1))
 }
@@ -117,6 +117,7 @@ describe('First test suite for calories package', async () => {
     const zeroMET = 0
     assert.throws(() => { simpleCalories(10, { body: 70 }, zeroMET) })
   })
+
   it('First calorie test - simpleCalories', async () => {
     const walk_1_minutes = m2m(walk_1.features[0].properties.duration)
     const walk_1_timediff = m2m(walk_1.features[0].properties.endTime)
@@ -185,12 +186,14 @@ describe('First test suite for calories package', async () => {
     // pandolfCalories(coords, options)
     assert.throws(() => { pandolfCalories(coords, options) })
   })
+
   it('Test missing options object parameter - pandolfCalories', async () => {
     const coords = walk_5.features[0].geometry.coordinates
     const options = { }
     // pandolfCalories(coords, options)
     assert.throws(() => { pandolfCalories(coords, options) })
   })
+
   it('Second calorie test - advancedCalories', async () => {
     // const cal1RawDuration = walk_1.features[0].properties.duration
     // const cal2RawDuration = walk_2.features[0].properties.duration
@@ -207,6 +210,7 @@ describe('First test suite for calories package', async () => {
       },
     )
     results[1].pandolf2 = _dot1(cal1.totalKcal)
+    results[1].apple = _dot1(walk_1.features[0].properties?.apple?.activity) ?? 0
     const simple = walk_1.features[0].properties.simpleCalories
     console.log(`walk_1 pandolf calories: ${cal1.totalKcal} (simpleCalories: ${simple})`)
     console.log('within5: ', within5(
@@ -258,6 +262,7 @@ describe('First test suite for calories package', async () => {
       },
     )
     results[2].pandolf2 = _dot1(cal2.totalKcal)
+    results[2].apple = _dot1(walk_2.features[0].properties?.apple?.activity) ?? 0
     const simple = walk_2.features[0].properties.simpleCalories
     console.log(`walk_2 pandolf calories: ${cal2.totalKcal} (simpleCalories: ${simple})`)
     console.log(
@@ -342,7 +347,7 @@ describe('First test suite for calories package', async () => {
       pandolf1: _dot1(walk_3.features[0].properties?.pandolfCalories?.totalKcal) ?? null,
       pandolf2: _dot1(cal3.totalKcal),
       minimumMech: null,
-      apple: null,
+      apple: _dot1(walk_3.features[0].properties?.apple?.activity) ?? 0,
     })
     console.log(`walk_3 pandolf calories: ${cal3.totalKcal} (simpleCalories: ${simple})`)
     console.log(
@@ -396,7 +401,7 @@ describe('First test suite for calories package', async () => {
       walk_4_minutes,
       {
         body: _dot1(cal4W.body / 2.2),
-        ruck: _dot1(cal4W.ruck / 2.2),
+        ruck: _dot1(cal4W.ruck / 2.2) ?? 0,
         water: (cal4W.water === 0) ? 0 : cal4W.water / 2.2,
       },
     )
@@ -427,7 +432,7 @@ describe('First test suite for calories package', async () => {
       pandolf1: _dot1(walk_4.features[0].properties?.pandolfCalories?.totalKcal) ?? null,
       pandolf2: _dot1(cal4.totalKcal),
       minimumMech: null,
-      apple: null,
+      apple: _dot1(walk_4.features[0].properties?.apple?.activity) ?? 0,
     })
     console.log(`walk_4 pandolf calories: ${cal4.totalKcal} (simpleCalories: ${simple})`)
     console.log(
@@ -511,7 +516,7 @@ describe('First test suite for calories package', async () => {
       pandolf1: _dot1(walk_5.features[0].properties?.pandolfCalories?.totalKcal) ?? null,
       pandolf2: _dot1(cal5.totalKcal),
       minimumMech: null,
-      apple: null,
+      apple: _dot1(walk_5.features[0].properties?.apple?.activity) ?? 0,
     })
     console.log(`walk_5 pandolf calories: ${cal5.totalKcal} (simpleCalories: ${simple})`)
     console.log(
@@ -558,11 +563,16 @@ describe('First test suite for calories package', async () => {
   it('Advanced calorie comparison test - walk_06', async () => {
     console.log('')
     console.log(`name: ${walk_6.features[0].properties.name}`)
+    const walk_6_minutes = m2m(walk_6.features[0].properties.duration)
     const cal6W = walk_6.features[0].properties.weights ?? weights
     console.log('cal6W weights in lbs are:', cal6W)
     const walk6Simple = simpleCalories(
-      m2m(walk_6.features[0].properties.duration),
-      weights,
+      walk_6_minutes,
+      {
+        body: _dot1(cal6W.body / 2.2),
+        ruck: _dot1(cal6W.ruck / 2.2),
+        water: (cal6W.water === 0) ? 0 : cal6W.water / 2.2,
+      },
     )
     const cal6 = pandolfCalories(
       walk_6.features[0].geometry.coordinates,
@@ -574,7 +584,6 @@ describe('First test suite for calories package', async () => {
       },
     )
     const simple = walk_6.features[0].properties.simpleCalories
-    const walk_6_minutes = m2m(walk_6.features[0].properties.duration)
     const date_6 = new Date(walk_6.features[0].properties.date)
       .toLocaleDateString('en-US', {
         month: '2-digit',
@@ -592,26 +601,36 @@ describe('First test suite for calories package', async () => {
       pandolf1: _dot1(walk_6.features[0].properties?.pandolfCalories?.totalKcal) ?? null,
       pandolf2: _dot1(cal6.totalKcal),
       minimumMech: null,
-      apple: null,
+      apple: _dot1(walk_6.features[0].properties?.apple?.activity) ?? 0,
     })
     console.log(`walk_6 pandolf calories: ${cal6.totalKcal} (simpleCalories: ${simple})`)
     console.log(
-      `walk_6 pandolf distance: ${cal6.totalDistanceM} `
-      + `(${walk_6.features[0].properties.distance})`,
+      `walk_6 pandolf distance calculated: ${_dot1(cal6.totalDistanceM)} `
+      + `(original ${walk_6.features[0].properties.distance})`,
     )
     console.log(
-      `walk_6 pandolf duration: ${cal6.totalDurationSec}, `
-      + `(${walk_6.features[0].properties.duration / 1000})`,
+      `walk_6 pandolf duration calculated: ${_dot1(cal6.totalDurationSec)}, `
+      + `(original ${walk_6.features[0].properties.duration / 1000})`,
     )
     console.log(
       'within5 distance:',
+      `${_dot1(cal6.totalDistanceM)}, ${_dot1(walk_6.features[0].properties.distance)}`,
       within5(cal6.totalDistanceM, walk_6.features[0].properties.distance),
     )
     console.log(
       'within10 distance:',
       within10(cal6.totalDistanceM, walk_6.features[0].properties.distance),
+      `calculated ${_dot1(cal6.totalDistanceM)} /`,
+      `original ${_dot1(walk_6.features[0].properties.distance)} =`,
+      _dot1(cal6.totalDistanceM) / _dot1(walk_6.features[0].properties.distance),
     )
-    console.log('within5 calories:', within5(cal6.totalKcal, walk6Simple))
+    console.log(
+      'within5 calories:',
+      within5(cal6.totalKcal, walk6Simple),
+      `calculated ${_dot1(cal6.totalKcal)} /`,
+      `original ${_dot1(walk6Simple)} =`,
+      _dot1(cal6.totalKcal) / _dot1(walk6Simple),
+    )
     console.log('within10 calories:', within10(cal6.totalKcal, walk6Simple))
     cal6.segments.map((seg, i) => {
       if (seg.kcal > calClamp) {
@@ -629,11 +648,16 @@ describe('First test suite for calories package', async () => {
   it('Advanced calorie comparison test - walk_07', async () => {
     console.log('')
     console.log(`name: ${walk_7.features[0].properties.name}`)
+    const walk_7_minutes = m2m(walk_7.features[0].properties.duration)
     const cal7W = walk_7.features[0].properties.weights ?? weights
     console.log('cal7W weights in lbs are:', cal7W)
     const walk7Simple = simpleCalories(
-      m2m(walk_7.features[0].properties.duration),
-      weights,
+      walk_7_minutes,
+      {
+        body: _dot1(cal7W.body / 2.2),
+        ruck: _dot1(cal7W.ruck / 2.2),
+        water: (cal7W.water === 0) ? 0 : cal7W.water / 2.2,
+      },
     )
     const cal7 = pandolfCalories(
       walk_7.features[0].geometry.coordinates,
@@ -645,7 +669,6 @@ describe('First test suite for calories package', async () => {
       },
     )
     const simple = walk_7.features[0].properties.simpleCalories
-    const walk_7_minutes = m2m(walk_7.features[0].properties.duration)
     const date_7 = new Date(walk_7.features[0].properties.date)
       .toLocaleDateString('en-US', {
         month: '2-digit',
@@ -663,26 +686,36 @@ describe('First test suite for calories package', async () => {
       pandolf1: _dot1(walk_7.features[0].properties?.pandolfCalories?.totalKcal) ?? null,
       pandolf2: _dot1(cal7.totalKcal),
       minimumMech: null,
-      apple: null,
+      apple: _dot1(walk_7.features[0].properties?.apple?.activity) ?? 0,
     })
     console.log(`walk_7 pandolf calories: ${cal7.totalKcal} (simpleCalories: ${simple})`)
     console.log(
-      `walk_7 pandolf distance: ${cal7.totalDistanceM} `
-      + `(${walk_7.features[0].properties.distance})`,
+      `walk_7 pandolf distance calculated : ${_dot1(cal7.totalDistanceM)} `
+      + `(original ${_dot1(walk_7.features[0].properties.distance)})`,
     )
     console.log(
-      `walk_7 pandolf duration: ${cal7.totalDurationSec}, `
-      + `(${walk_7.features[0].properties.duration / 1000})`,
+      `walk_7 pandolf duration calculated: ${_dot1(cal7.totalDurationSec)}, `
+      + `(original ${_dot1(walk_7.features[0].properties.duration / 1000)})`,
     )
     console.log(
       'within5 distance:',
+      `${_dot1(cal7.totalDistanceM)}, ${_dot1(walk_7.features[0].properties.distance)}`,
       within5(cal7.totalDistanceM, walk_7.features[0].properties.distance),
     )
     console.log(
       'within10 distance:',
       within10(cal7.totalDistanceM, walk_7.features[0].properties.distance),
+      `calulated ${_dot1(cal7.totalDistanceM)} /`,
+      `original ${_dot1(walk_7.features[0].properties.distance)} =`,
+      _dot1(cal7.totalDistanceM) / _dot1(walk_7.features[0].properties.distance),
     )
-    console.log('within5 calories:', within5(cal7.totalKcal, walk7Simple))
+    console.log(
+      'within5 calories:',
+      within5(cal7.totalKcal, walk7Simple),
+      `calculated ${_dot1(cal7.totalKcal)} /`,
+      `original ${_dot1(walk7Simple)} =`,
+      _dot1(cal7.totalKcal) / _dot1(walk7Simple),
+    )
     console.log('within10 calories:', within10(cal7.totalKcal, walk7Simple))
     cal7.segments.map((seg, i) => {
       if (seg.kcal > calClamp) {
@@ -701,9 +734,15 @@ describe('First test suite for calories package', async () => {
     console.log('')
     console.log(`name: ${walk_8.features[0].properties.name}`)
     const cal8W = walk_8.features[0].properties.weights ?? weights
+    const walk_8_minutes = m2m(walk_8.features[0].properties.duration)
+    console.log('cal8W weights in lbs are:', cal8W)
     const walk8Simple = simpleCalories(
-      m2m(walk_8.features[0].properties.duration),
-      weights,
+      walk_8_minutes,
+      {
+        body: _dot1(cal8W.body / 2.2),
+        ruck: _dot1(cal8W.ruck / 2.2),
+        water: (cal8W.water === 0) ? 0 : cal8W.water / 2.2,
+      },
     )
     const cal8 = pandolfCalories(
       walk_8.features[0].geometry.coordinates,
@@ -715,7 +754,6 @@ describe('First test suite for calories package', async () => {
       },
     )
     const simple = walk_8.features[0].properties.simpleCalories
-    const walk_8_minutes = m2m(walk_8.features[0].properties.duration)
     const date_8 = new Date(walk_8.features[0].properties.date)
       .toLocaleDateString('en-US', {
         month: '2-digit',
@@ -733,26 +771,36 @@ describe('First test suite for calories package', async () => {
       pandolf1: _dot1(walk_8.features[0].properties?.pandolfCalories?.totalKcal) ?? null,
       pandolf2: _dot1(cal8.totalKcal),
       minimumMech: null,
-      apple: null,
+      apple: _dot1(walk_8.features[0].properties?.apple?.activity) ?? 0,
     })
     console.log(`walk_8 pandolf calories: ${cal8.totalKcal} (simpleCalories: ${simple})`)
     console.log(
-      `walk_8 pandolf distance: ${cal8.totalDistanceM} `
-      + `(${walk_8.features[0].properties.distance})`,
+      `walk_8 pandolf distance calculated: ${_dot1(cal8.totalDistanceM)} `
+      + `(original ${_dot1(walk_8.features[0].properties.distance)})`,
     )
     console.log(
-      `walk_8 pandolf duration: ${cal8.totalDurationSec}, `
-      + `(${walk_8.features[0].properties.duration / 1000})`,
+      `walk_8 pandolf duration calculated: ${_dot1(cal8.totalDurationSec)}, `
+      + `(original ${_dot1(walk_8.features[0].properties.duration / 1000)})`,
     )
     console.log(
       'within5 distance:',
+      `${_dot1(cal8.totalDistanceM)}, ${_dot1(walk_8.features[0].properties.distance)}`,
       within5(cal8.totalDistanceM, walk_8.features[0].properties.distance),
     )
     console.log(
       'within10 distance:',
       within10(cal8.totalDistanceM, walk_8.features[0].properties.distance),
+      `calculated ${_dot1(cal8.totalDistanceM)} /`,
+      `original ${_dot1(walk_8.features[0].properties.distance)} =`,
+      _dot1(cal8.totalDistanceM) / _dot1(walk_8.features[0].properties.distance),
     )
-    console.log('within5 calories:', within5(cal8.totalKcal, walk8Simple))
+    console.log(
+      'within5 calories:',
+      within5(cal8.totalKcal, walk8Simple),
+      `calculated ${_dot1(cal8.totalKcal)} /`,
+      `original ${_dot1(walk8Simple)} =`,
+      _dot1(cal8.totalKcal) / _dot1(walk8Simple),
+    )
     console.log('within10 calories:', within10(cal8.totalKcal, walk8Simple))
     cal8.segments.map((seg, i) => {
       if (seg.kcal > calClamp) {
@@ -770,10 +818,16 @@ describe('First test suite for calories package', async () => {
   it('Advanced calorie comparison test - walk_09', async () => {
     console.log('')
     console.log(`name: ${walk_9.features[0].properties.name}`)
+    const walk_9_minutes = m2m(walk_9.features[0].properties.duration)
     const cal9W = walk_9.features[0].properties.weights ?? weights
+    console.log('cal9W weights in lbs are:', cal9W)
     const walk9Simple = simpleCalories(
-      m2m(walk_9.features[0].properties.duration),
-      weights,
+      walk_9_minutes,
+      {
+        body: _dot1(cal9W.body / 2.2),
+        ruck: _dot1(cal9W.ruck / 2.2),
+        water: (cal9W.water === 0) ? 0 : cal9W.water / 2.2,
+      },
     )
     const cal9 = pandolfCalories(
       walk_9.features[0].geometry.coordinates,
@@ -785,7 +839,6 @@ describe('First test suite for calories package', async () => {
       },
     )
     const simple = walk_9.features[0].properties.simpleCalories
-    const walk_9_minutes = m2m(walk_9.features[0].properties.duration)
     const date_9 = new Date(walk_9.features[0].properties.date)
       .toLocaleDateString('en-US', {
         month: '2-digit',
@@ -811,18 +864,28 @@ describe('First test suite for calories package', async () => {
       + `(${walk_9.features[0].properties.distance})`,
     )
     console.log(
-      `walk_9 pandolf duration: ${cal9.totalDurationSec}, `
-      + `(${walk_9.features[0].properties.duration / 1000})`,
+      `walk_9 pandolf duration calculated: ${_dot1(cal9.totalDurationSec)}, `
+      + `(original ${_dot1(walk_9.features[0].properties.duration / 1000)})`,
     )
     console.log(
       'within5 distance:',
+      `${_dot1(cal9.totalDistanceM)}, ${_dot1(walk_9.features[0].properties.distance)}`,
       within5(cal9.totalDistanceM, walk_9.features[0].properties.distance),
     )
     console.log(
       'within10 distance:',
       within10(cal9.totalDistanceM, walk_9.features[0].properties.distance),
+      `calculated ${_dot1(cal9.totalDistanceM)} /`,
+      `original ${_dot1(walk_9.features[0].properties.distance)} =`,
+      _dot1(cal9.totalDistanceM) / _dot1(walk_9.features[0].properties.distance),
     )
-    console.log('within5 calories:', within5(cal9.totalKcal, walk9Simple))
+    console.log(
+      'within5 calories:',
+      within5(cal9.totalKcal, walk9Simple),
+      `calculated ${_dot1(cal9.totalKcal)} /`,
+      `original ${_dot1(walk9Simple)} =`,
+      _dot1(cal9.totalKcal) / _dot1(walk9Simple),
+    )
     console.log('within10 calories:', within10(cal9.totalKcal, walk9Simple))
     cal9.segments.map((seg, i) => {
       if (seg.kcal > calClamp) {
@@ -840,10 +903,16 @@ describe('First test suite for calories package', async () => {
   it('Advanced calorie comparison test - walk_10', async () => {
     console.log('')
     console.log(`name: ${walk_10.features[0].properties.name}`)
+    const walk_10_minutes = m2m(walk_10.features[0].properties.duration)
     const cal10W = walk_10.features[0].properties.weights ?? weights
+    console.log('cal10W weights in lbs are:', cal10W)
     const walk10Simple = simpleCalories(
-      m2m(walk_10.features[0].properties.duration),
-      weights,
+      walk_10_minutes,
+      {
+        body: _dot1(cal10W.body / 2.2),
+        ruck: _dot1(cal10W.ruck / 2.2),
+        water: (cal10W.water === 0) ? 0 : cal10W.water / 2.2,
+      },
     )
     const cal10 = pandolfCalories(
       walk_10.features[0].geometry.coordinates,
@@ -855,7 +924,6 @@ describe('First test suite for calories package', async () => {
       },
     )
     const simple = walk_10.features[0].properties.simpleCalories
-    const walk_10_minutes = m2m(walk_10.features[0].properties.duration)
     const date_10 = new Date(walk_10.features[0].properties.date)
       .toLocaleDateString('en-US', {
         month: '2-digit',
@@ -922,9 +990,9 @@ describe('First test suite for calories package', async () => {
     console.log(`name: ${walk_11.features[0].properties.name}`)
     const cal11W = walk_11.features[0].properties.weights
     console.log('cal11W weights in lbs are:', cal11W)
+    const walk_11_minutes = m2m(walk_11.features[0].properties.duration)
     const walk11Simple = simpleCalories(
-      m2m(walk_11.features[0].properties.duration),
-      // weights,
+      walk_11_minutes,
       {
         body: _dot1(cal11W.body / 2.2),
         ruck: _dot1(cal11W.ruck / 2.2),
@@ -941,7 +1009,6 @@ describe('First test suite for calories package', async () => {
       },
     )
     const simple = walk_11.features[0].properties.simpleCalories
-    const walk_11_minutes = m2m(walk_11.features[0].properties.duration)
     const date_11 = new Date(walk_11.features[0].properties.date)
       .toLocaleDateString('en-US', {
         month: '2-digit',
@@ -1006,11 +1073,11 @@ describe('First test suite for calories package', async () => {
   it('Advanced calorie comparison test - walk_12', async () => {
     console.log('')
     console.log(`name: ${walk_12.features[0].properties.name}`)
+    const walk_12_minutes = m2m(walk_12.features[0].properties.duration)
     const cal12W = walk_12.features[0].properties.weights
     console.log('cal12W weights in lbs are:', cal12W)
     const walk12Simple = simpleCalories(
-      m2m(walk_12.features[0].properties.duration),
-      // weights,
+      walk_12_minutes,
       {
         body: _dot1(cal12W.body / 2.2),
         ruck: _dot1(cal12W.ruck / 2.2),
@@ -1027,7 +1094,6 @@ describe('First test suite for calories package', async () => {
       },
     )
     const simple = walk_12.features[0].properties.simpleCalories
-    const walk_12_minutes = m2m(walk_12.features[0].properties.duration)
     const date_12 = new Date(walk_12.features[0].properties.date)
       .toLocaleDateString('en-US', {
         month: '2-digit',
@@ -1130,7 +1196,7 @@ describe('First test suite for calories package', async () => {
       pandolf1: _dot1(walk_13.features[0].properties.pandolfCalories.totalKcal) ?? null,
       pandolf2: _dot1(cal13.totalKcal),
       minimumMech: null,
-      apple: _dot1(walk_13.features[0].properties.apple.activity),
+      apple: _dot1(walk_13.features[0].properties?.apple?.activity) ?? 0,
     })
     console.log(`walk_13 pandolf calories: ${cal13.totalKcal} (simpleCalories: ${simple})`)
     console.log(
