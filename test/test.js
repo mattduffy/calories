@@ -27,6 +27,7 @@ import walk_10 from './walk_10-bamf-gravity-drive.json' with { type: 'json' }
 import walk_11 from './walk_11-1-ring-to-rule-the-mall.json' with { type: 'json' }
 import walk_12 from './walk_12-15-points-of-bludgeoning-damage.json' with { type: 'json' }
 import walk_13 from './walk_13-wait-you-can-fuck-your-bank.json' with { type: 'json' }
+import walk_14 from './walk_14-Its-a-little-bit-annoying.json' with { type: 'json' }
 
 // console.log(walk_1.features[0].geometry.coordinates[0])
 // console.log(walk_2.features[0].geometry.coordinates[0])
@@ -87,6 +88,14 @@ function _dot1(f) {
   return Number.parseFloat(f.toFixed(1))
 }
 
+function clipName(n) {
+  const C = 35
+  if (n.length > C) {
+    return `${n.slice(0, 35)}...`
+  }
+  return n
+}
+
 describe('First test suite for calories package', async () => {
   before(() => {
     console.log('running before the tests')
@@ -136,7 +145,7 @@ describe('First test suite for calories package', async () => {
       })
     results.push({
       date: date_1,
-      name: walk_1.features[0].properties.name,
+      name: clipName(walk_1.features[0].properties.name),
       distance: dist(walk_1.features[0].properties.distance),
       duration: _dot1(walk_1_minutes),
       weights: `b: ${_dot1(weights.body)}, r: ${_dot1(weights.ruck)}`,
@@ -165,7 +174,7 @@ describe('First test suite for calories package', async () => {
       })
     results.push({
       date: date_2,
-      name: walk_2.features[0].properties.name,
+      name: clipName(walk_2.features[0].properties.name),
       distance: dist(walk_2.features[0].properties.distance),
       duration: _dot1(walk_2_minutes),
       weights: `b: ${_dot1(weights.body)}, r: ${_dot1(weights.ruck)}`,
@@ -338,7 +347,7 @@ describe('First test suite for calories package', async () => {
       })
     results.push({
       date: date_3,
-      name: walk_3.features[0].properties.name,
+      name: clipName(walk_3.features[0].properties.name),
       distance: dist(walk_3.features[0].properties.distance),
       duration: _dot1(m2m(walk_3.features[0].properties.duration)),
       weights: `b: ${_dot1(cal3W.body / 2.2)}, r: ${_dot1(cal3W.ruck / 2.2)}`,
@@ -423,7 +432,7 @@ describe('First test suite for calories package', async () => {
       })
     results.push({
       date: date_4,
-      name: walk_4.features[0].properties.name,
+      name: clipName(walk_4.features[0].properties.name),
       distance: dist(walk_4.features[0].properties.distance),
       duration: _dot1(walk_4_minutes),
       weights: `b: ${_dot1(cal4W.body / 2.2)}, r: ${_dot1(cal4W.ruck / 2.2)}`,
@@ -507,7 +516,7 @@ describe('First test suite for calories package', async () => {
       })
     results.push({
       date: date_5,
-      name: walk_5.features[0].properties.name,
+      name: clipName(walk_5.features[0].properties.name),
       distance: dist(walk_5.features[0].properties.distance),
       duration: _dot1(walk_5_minutes),
       weights: `b: ${cal5W.body / 2.2}, r: ${_dot1(cal5W.ruck / 2.2)}`,
@@ -592,7 +601,7 @@ describe('First test suite for calories package', async () => {
       })
     results.push({
       date: date_6,
-      name: walk_6.features[0].properties.name,
+      name: clipName(walk_6.features[0].properties.name),
       distance: dist(walk_6.features[0].properties.distance),
       duration: _dot1(walk_6_minutes),
       weights: `b: ${_dot1(cal6W.body / 2.2)}, r: ${_dot1(cal6W.ruck / 2.2)}`,
@@ -677,7 +686,7 @@ describe('First test suite for calories package', async () => {
       })
     results.push({
       date: date_7,
-      name: walk_7.features[0].properties.name,
+      name: clipName(walk_7.features[0].properties.name),
       distance: dist(walk_7.features[0].properties.distance),
       duration: _dot1(walk_7_minutes),
       weights: `b: ${_dot1(cal7W.body / 2.2)}, r: ${_dot1(cal7W.ruck / 2.2)}`,
@@ -762,7 +771,7 @@ describe('First test suite for calories package', async () => {
       })
     results.push({
       date: date_8,
-      name: walk_8.features[0].properties.name,
+      name: clipName(walk_8.features[0].properties.name),
       distance: dist(walk_8.features[0].properties.distance),
       duration: _dot1(walk_8_minutes),
       weights: `b: ${_dot1(cal8W.body / 2.2)}, r: ${cal8W.ruck / 2.2}`,
@@ -847,7 +856,7 @@ describe('First test suite for calories package', async () => {
       })
     results.push({
       date: date_9,
-      name: walk_9.features[0].properties.name,
+      name: clipName(walk_9.features[0].properties.name),
       distance: dist(walk_9.features[0].properties.distance),
       duration: _dot1(walk_9_minutes),
       weights: `b: ${_dot1(cal9W.body / 2.2)}, r: ${_dot1(cal9W.ruck / 2.2)}`,
@@ -932,7 +941,7 @@ describe('First test suite for calories package', async () => {
       })
     results.push({
       date: date_10,
-      name: walk_10.features[0].properties.name,
+      name: clipName(walk_10.features[0].properties.name),
       distance: dist(walk_10.features[0].properties.distance),
       duration: _dot1(walk_10_minutes),
       weights: `b: ${_dot1(cal10W.body / 2.2)}, r: ${_dot1(cal10W.ruck / 2.2)}`,
@@ -1017,7 +1026,7 @@ describe('First test suite for calories package', async () => {
       })
     results.push({
       date: date_11,
-      name: walk_11.features[0].properties.name,
+      name: clipName(walk_11.features[0].properties.name),
       distance: dist(walk_11.features[0].properties.distance),
       duration: _dot1(walk_11_minutes),
       weights: `b: ${_dot1(cal11W.body / 2.2)}, r: ${_dot1(cal11W.ruck / 2.2)}`,
@@ -1102,7 +1111,7 @@ describe('First test suite for calories package', async () => {
       })
     results.push({
       date: date_12,
-      name: walk_12.features[0].properties.name,
+      name: clipName(walk_12.features[0].properties.name),
       distance: dist(walk_12.features[0].properties.distance),
       duration: _dot1(walk_12_minutes),
       weights: `b: ${_dot1(cal12W.body / 2.2)}, r: ${_dot1(cal12W.ruck / 2.2)}`,
@@ -1187,7 +1196,7 @@ describe('First test suite for calories package', async () => {
       })
     results.push({
       date: date_13,
-      name: walk_13.features[0].properties.name,
+      name: clipName(walk_13.features[0].properties.name),
       distance: dist(walk_13.features[0].properties.distance),
       duration: _dot1(walk_13_minutes),
       weights: `b: ${_dot1(cal13W.body / 2.2)}, r: ${_dot1(cal13W.ruck / 2.2)}`,
@@ -1228,6 +1237,91 @@ describe('First test suite for calories package', async () => {
     )
     console.log('within10 calories:', within10(cal13.totalKcal, walk13Simple))
     cal13.segments.map((seg, i) => {
+      if (seg.kcal > calClamp) {
+        console.log(
+          `seg # ${i}, `
+          + `seg kcal ${seg.kcal}, `
+          + `distance ${seg.horizontalDistance}, `
+          + `time ${seg.durationSec}`,
+        )
+      }
+      return 0
+    })
+  })
+
+  it('Advanced calorie comparison test - walk_14', async () => {
+    console.log('')
+    console.log(`name: ${walk_14.features[0].properties.name}`)
+    const cal14W = walk_14.features[0].properties.weights
+    const walk_14_minutes = m2m(walk_14.features[0].properties.duration)
+    console.log('cal14W weights in lbs are:', cal14W)
+    const walk14Simple = simpleCalories(
+      walk_14_minutes,
+      {
+        body: _dot1(cal14W.body / 2.2),
+        ruck: _dot1(cal14W.ruck / 2.2),
+        water: (cal14W.water === 0) ? 0 : cal14W.water / 2.2,
+      },
+    )
+    const cal14 = pandolfCalories(
+      walk_14.features[0].geometry.coordinates,
+      {
+        bodyWeightKg: (cal14W.body / 2.2),
+        loadKg: (cal14W.ruck / 2.2),
+        waterKg: (cal14W.water / 2.2),
+        terrain: 1.1,
+      },
+    )
+    const simple = walk_14.features[0].properties.simpleCalories
+    const date_14 = new Date(walk_14.features[0].properties.date)
+      .toLocaleDateString('en-US', {
+        month: '2-digit',
+        day: '2-digit',
+        year: 'numeric',
+      })
+    results.push({
+      date: date_14,
+      name: clipName(walk_14.features[0].properties.name),
+      distance: dist(walk_14.features[0].properties.distance),
+      duration: _dot1(walk_14_minutes),
+      weights: `b: ${_dot1(cal14W.body / 2.2)}, r: ${_dot1(cal14W.ruck / 2.2)}`,
+      simple1: _dot1(walk_14.features[0].properties.simpleCalories),
+      simple2: _dot1(walk14Simple),
+      pandolf1: _dot1(walk_14.features[0].properties.pandolfCalories.totalKcal) ?? null,
+      pandolf2: _dot1(cal14.totalKcal),
+      minimumMech: null,
+      apple: _dot1(walk_14.features[0].properties?.apple?.activity) ?? 0,
+    })
+    console.log(`walk_14 pandolf calories: ${cal14.totalKcal} (simpleCalories: ${simple})`)
+    console.log(
+      `walk_14 pandolf distance: calculated ${_dot1(cal14.totalDistanceM)} `
+      + `(original ${_dot1(walk_14.features[0].properties.distance)})`,
+    )
+    console.log(
+      `walk_14 pandolf duration: calculated ${_dot1(cal14.totalDurationSec)}, `
+      + `(original ${_dot1(walk_14.features[0].properties.duration / 1000)})`,
+    )
+    console.log(
+      'within5 distance:',
+      `${_dot1(cal14.totalDistanceM)}, ${_dot1(walk_14.features[0].properties.distance)}`,
+      within5(cal14.totalDistanceM, walk_14.features[0].properties.distance),
+    )
+    console.log(
+      'within10 distance:',
+      within10(cal14.totalDistanceM, walk_14.features[0].properties.distance),
+      `calculated ${_dot1(cal14.totalDistanceM)} /`,
+      `original ${_dot1(walk_14.features[0].properties.distance)} =`,
+      _dot1(cal14.totalDistanceM) / _dot1(walk_14.features[0].properties.distance),
+    )
+    console.log(
+      'within5 calories:',
+      within5(cal14.totalKcal, walk14Simple),
+      `calculated ${_dot1(cal14.totalKcal)} /`,
+      `original ${_dot1(walk14Simple)} =`,
+      _dot1(cal14.totalKcal) / _dot1(walk14Simple),
+    )
+    console.log('within10 calories:', within10(cal14.totalKcal, walk14Simple))
+    cal14.segments.map((seg, i) => {
       if (seg.kcal > calClamp) {
         console.log(
           `seg # ${i}, `
