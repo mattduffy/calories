@@ -215,7 +215,10 @@ describe('First test suite for calories package', async () => {
     const cal1 = pandolfCalories(
       walk_1.features[0].geometry.coordinates,
       {
-        bodyWeightKg: cal1W.body, loadKg: cal1W.ruck, waterKg: cal1W.water, terrain: 1.1,
+        bodyWeightKg: cal1W.body / 2.2,
+        loadKg: cal1W.ruck / 2.2,
+        waterKg: (cal1W.water === 0) ? 0 : cal1W.water / 2.2,
+        terrain: 1.1,
       },
     )
     results[1].pandolf2 = _dot1(cal1.totalKcal)
@@ -267,7 +270,10 @@ describe('First test suite for calories package', async () => {
     const cal2 = pandolfCalories(
       walk_2.features[0].geometry.coordinates,
       {
-        bodyWeightKg: cal2W.body, loadKg: cal2W.ruck, waterKg: cal2W.water, terrain: 1.1,
+        bodyWeightKg: cal2W.body / 2.2,
+        loadKg: cal2W.ruck / 2.2,
+        waterKg: (cal2W.water === 0) ? 0 : cal2W.water / 2.2,
+        terrain: 1.1,
       },
     )
     results[2].pandolf2 = _dot1(cal2.totalKcal)
