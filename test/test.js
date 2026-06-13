@@ -28,6 +28,7 @@ import walk_11 from './walk_11-1-ring-to-rule-the-mall.json' with { type: 'json'
 import walk_12 from './walk_12-15-points-of-bludgeoning-damage.json' with { type: 'json' }
 import walk_13 from './walk_13-wait-you-can-fuck-your-bank.json' with { type: 'json' }
 import walk_14 from './walk_14-Its-a-little-bit-annoying.json' with { type: 'json' }
+import walk_15 from './walk_15-we-need-to-go-in-and-find-somebody-pinker.json' with { type: 'json' }
 
 // console.log(walk_1.features[0].geometry.coordinates[0])
 // console.log(walk_2.features[0].geometry.coordinates[0])
@@ -1328,6 +1329,91 @@ describe('First test suite for calories package', async () => {
     )
     console.log('within10 calories:', within10(cal14.totalKcal, walk14Simple))
     cal14.segments.map((seg, i) => {
+      if (seg.kcal > calClamp) {
+        console.log(
+          `seg # ${i}, `
+          + `seg kcal ${seg.kcal}, `
+          + `distance ${seg.horizontalDistance}, `
+          + `time ${seg.durationSec}`,
+        )
+      }
+      return 0
+    })
+  })
+
+  it('Advanced calorie comparison test - walk_15', async () => {
+    console.log('')
+    console.log(`name: ${walk_15.features[0].properties.name}`)
+    const cal15W = walk_15.features[0].properties.weights
+    const walk_15_minutes = m2m(walk_15.features[0].properties.duration)
+    console.log('cal15W weights in lbs are:', cal15W)
+    const walk15Simple = simpleCalories(
+      walk_15_minutes,
+      {
+        body: _dot1(cal15W.body / 2.2),
+        ruck: _dot1(cal15W.ruck / 2.2),
+        water: (cal15W.water === 0) ? 0 : cal15W.water / 2.2,
+      },
+    )
+    const cal15 = pandolfCalories(
+      walk_15.features[0].geometry.coordinates,
+      {
+        bodyWeightKg: (cal15W.body / 2.2),
+        loadKg: (cal15W.ruck / 2.2),
+        waterKg: (cal15W.water / 2.2),
+        terrain: 1.1,
+      },
+    )
+    const simple = walk_15.features[0].properties.simpleCalories
+    const date_15 = new Date(walk_15.features[0].properties.date)
+      .toLocaleDateString('en-US', {
+        month: '2-digit',
+        day: '2-digit',
+        year: 'numeric',
+      })
+    results.push({
+      date: date_15,
+      name: clipName(walk_15.features[0].properties.name),
+      distance: dist(walk_15.features[0].properties.distance),
+      duration: _dot1(walk_15_minutes),
+      weights: `b: ${_dot1(cal15W.body / 2.2)}, r: ${_dot1(cal15W.ruck / 2.2)}`,
+      simple1: _dot1(walk_15.features[0].properties.simpleCalories),
+      simple2: _dot1(walk15Simple),
+      pandolf1: _dot1(walk_15.features[0].properties.pandolfCalories.totalKcal) ?? null,
+      pandolf2: _dot1(cal15.totalKcal),
+      minimumMech: null,
+      apple: _dot1(walk_15.features[0].properties?.apple?.activity) ?? 0,
+    })
+    console.log(`walk_15 pandolf calories: ${cal15.totalKcal} (simpleCalories: ${simple})`)
+    console.log(
+      `walk_15 pandolf distance: calculated ${_dot1(cal15.totalDistanceM)} `
+      + `(original ${_dot1(walk_15.features[0].properties.distance)})`,
+    )
+    console.log(
+      `walk_15 pandolf duration: calculated ${_dot1(cal15.totalDurationSec)}, `
+      + `(original ${_dot1(walk_15.features[0].properties.duration / 1000)})`,
+    )
+    console.log(
+      'within5 distance:',
+      `${_dot1(cal15.totalDistanceM)}, ${_dot1(walk_15.features[0].properties.distance)}`,
+      within5(cal15.totalDistanceM, walk_15.features[0].properties.distance),
+    )
+    console.log(
+      'within10 distance:',
+      within10(cal15.totalDistanceM, walk_15.features[0].properties.distance),
+      `calculated ${_dot1(cal15.totalDistanceM)} /`,
+      `original ${_dot1(walk_15.features[0].properties.distance)} =`,
+      _dot1(cal15.totalDistanceM) / _dot1(walk_15.features[0].properties.distance),
+    )
+    console.log(
+      'within5 calories:',
+      within5(cal15.totalKcal, walk15Simple),
+      `calculated ${_dot1(cal15.totalKcal)} /`,
+      `original ${_dot1(walk15Simple)} =`,
+      _dot1(cal15.totalKcal) / _dot1(walk15Simple),
+    )
+    console.log('within10 calories:', within10(cal15.totalKcal, walk15Simple))
+    cal15.segments.map((seg, i) => {
       if (seg.kcal > calClamp) {
         console.log(
           `seg # ${i}, `
