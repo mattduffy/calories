@@ -217,25 +217,47 @@ function simpleCalories(minutes = 1, weights = { body: 0, ruck: 0, water: 0 }, M
 }
 
 /**
+ * @summary Corrective factor for downhill (G < 0) segments of the hike.
+ * @author Matthew Duffy <mattduffy@gmail.com>
+ * @param {number} W - Body weight in kg.
+ * @param {number} L - Load carried in kg (use 0 if none).
+ * @param {number} V - Walking speed in m/s.
+ * @param {number} G - Grade as a percentage (e.g. 10 for 10% incline, -5 for decline).
+ * @param {number} n - Terrain coefficient (η).
+ * @returns {number} Corrective factor in watts.
+ */
+function santeeCorrective(W, L, V, G, n) {
+  return n * (
+    (G * (W + L) * V) / 3.5
+      - ((W + L) * (((G + 6) ** 2) / W))
+      + (25 * (V ** 2))
+  )
+}
+/**
  * @summary Calculates metabolic rate (watts) using the Pandolf-Santee equation.
  * @author Matthew Duffy <mattduffy@gmail.com>
- * @param {number} W - Body weight in kg
- * @param {number} L - Load carried in kg (use 0 if none)
- * @param {number} V - Walking speed in m/s
- * @param {number} G - Grade as a percentage (e.g. 10 for 10% incline, -5 for decline)
- * @param {number} n - Terrain coefficient (η)
- * @returns {number} Metabolic rate in watts (always >= 0)
+ * @param {number} W - Body weight in kg.
+ * @param {number} L - Load carried in kg (use 0 if none).
+ * @param {number} V - Walking speed in m/s.
+ * @param {number} G - Grade as a percentage (e.g. 10 for 10% incline, -5 for decline).
+ * @param {number} n - Terrain coefficient (η).
+ * @returns {number} Metabolic rate in watts (should always be >= 0).
  */
 function pandolfMetabolicRate(W, L, V, G, n) {
   if (V <= 0) {
     return 0
   }
   const loadRatio = L / W
-  const M = 1.5 * W + 2
-    * (W + L) * loadRatio ** 2 + n
-    * (W + L) * (1.5 * V ** 2 + 0.35 * V * G)
+  const M = 1.5 * W
+    + 2 * (W + L) * loadRatio ** 2
+    + n * (W + L) * (1.5 * V ** 2 + 0.35 * V * G)
+  let correction = 0
+  if (G < 0) {
+    correction = santeeCorrective(W, L, V, G, n)
+    // console.log('santee corrective factor for downhill segments:', correction)
+  }
   // The equation can return negative values on steep descents so clamp to 0.
-  return Math.max(0, M)
+  return Math.max(0, M - correction)
 }
 
 /**
