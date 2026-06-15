@@ -52,7 +52,7 @@ This method of estimating energy expenditure is based on the [Pandolf-Santee](ht
 
 The ``pandolfCalories()`` function expects the coordinates parameter to be an array of arrays with the following format: [longitude, latitude, heading, altitude (m), accuracy (m), timestamp (ms)].  In this particular implementation, the heading and accuracy fields are not currently being used.  Those fields can be empty or null.  The fields for longitude, latitude, altitude and timestamp must be valid, non-null values.  Altitude is measured in meters and the timestamp is Javascript default milliseconds.
 
-**Update:** The Santee correction factor for including downhill (negative grade values) is now being applied when calculating the advanced estimates.  This correction factor results in energy expenditure estimates that are typically about 16% - 20% higher when the GPS data contains significant amounts of downhill travel.
+**\*\*Update\*\*** The Santee correction factor for including downhill (negative grade values) is now being applied when calculating the advanced estimates.  This correction factor results in energy expenditure estimates that are typically about 16% - 20% higher when the GPS data contains significant amounts of downhill travel.
 
 ```javascript
 const cooords = [
