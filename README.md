@@ -41,6 +41,7 @@ const weights = {
 // Swimming:               8.0
 // Rope jumping (84/min): 10.5
 // Jogging, 6.8 mph:      11.2
+const MET = 7.5
 const calories = simpleCalories(minutes, weights, MET)
 console.log(calories)
 // 143.381765625
@@ -50,6 +51,8 @@ console.log(calories)
 This method of estimating energy expenditure is based on the [Pandolf-Santee](https://en.wikipedia.org/wiki/Pandolf_equation) equation.  The required parameters include an array of GPS coordinate data, and a body weight, measured in kilograms.  Additional values can be provided in the options parameter; including the weight of a ruck load, the weight of additional water carried, and the type of terrain covered.  There is also an option to _smooth_ out the GPS elevation data.  If the elevation data comes from a GPS sensor (rather than a barometric pressure sensor), it can be useful to smooth out the values with a rolling average because some GPS sensors can provide pretty jittery values for this field.
 
 The ``pandolfCalories()`` function expects the coordinates parameter to be an array of arrays with the following format: [longitude, latitude, heading, altitude (m), accuracy (m), timestamp (ms)].  In this particular implementation, the heading and accuracy fields are not currently being used.  Those fields can be empty or null.  The fields for longitude, latitude, altitude and timestamp must be valid, non-null values.  Altitude is measured in meters and the timestamp is Javascript default milliseconds.
+
+**Update:** The Santee correction factor for including downhill (negative grade values) is now being applied when calculating the advanced estimates.  This correction factor results in energy expenditure estimates that are typically about 16% - 20% higher when the GPS data contains significant amounts of downhill travel.
 
 ```javascript
 const cooords = [
