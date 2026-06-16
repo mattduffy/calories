@@ -9,6 +9,9 @@ let BODY_WEIGHT
 let RUCK_WEIGHT
 let COMBINED = BODY_WEIGHT + RUCK_WEIGHT
 
+const SMOOTH_DEFAULT = true
+const SMOOTH_DEFAULT_WINDOW = 5
+
 const TERRAIN_COEFFICIENTS = {
   BLACKTOP: 1.0, // Paved road / treadmill
   DIRT: 1.1, // Dirt path / packed trail
@@ -171,6 +174,27 @@ function calculateSlopeGrade(point1, point2) {
 }
 
 /**
+ * @summary Applies a simple rolling-average smoother to the altitude values in a
+ * coordinate array. Raw GPS altitude can have ±5–15 m of noise, which creates
+ * artificial grade spikes that inflate calorie estimates.
+ * @author Matthew Duffy <mattduffy@gmail.com>
+ * @param {Numver[][]} coords - Array of coordinate arrays
+ * @param {number} [windowSize=5] - Number of points to average (odd number recommended)
+ * @returns {Number[][]} New coordinate array with smoothed altitudes
+ */
+function smoothAltitude(coords, windowSize = SMOOTH_DEFAULT_WINDOW) {
+  const half = Math.floor(windowSize / 2)
+  return coords.map((coord, i) => {
+    const start = Math.max(0, i - half)
+    const end = Math.min(coords.length - 1, i + half)
+    const slice = coords.slice(start, end + 1)
+    const avgerageAltitude = slice.reduce((sum, c) => sum + c[3], 0) / slice.length
+    // Return a new array with the smoothed altitude replaced
+    return [coord[0], coord[1], coord[2], avgerageAltitude, coord[4], coord[5]]
+  })
+}
+
+/**
  * @summary The simplest calorie estimating function.  No account is given for
  * terrain type, gps factors (hill grading), uphill vs downhill efforts, etc.
  * MET - ratio of energy spent per unit time during a specific physical activity to a
@@ -224,7 +248,7 @@ function simpleCalories(minutes = 1, weights = { body: 0, ruck: 0, water: 0 }, M
  * @param {number} V - Walking speed in m/s.
  * @param {number} G - Grade as a percentage (e.g. 10 for 10% incline, -5 for decline).
  * @param {number} n - Terrain coefficient (η).
- * @returns {number} Corrective factor in watts.
+ * @returns {number} Corrective factor in Watts.
  */
 function santeeCorrective(W, L, V, G, n) {
   return n * (
@@ -233,15 +257,16 @@ function santeeCorrective(W, L, V, G, n) {
       + (25 * (V ** 2))
   )
 }
+
 /**
- * @summary Calculates metabolic rate (watts) using the Pandolf-Santee equation.
+ * @summary Calculates metabolic rate (Watts) using the Pandolf-Santee equation.
  * @author Matthew Duffy <mattduffy@gmail.com>
- * @param {number} W - Body weight in kg.
- * @param {number} L - Load carried in kg (use 0 if none).
- * @param {number} V - Walking speed in m/s.
- * @param {number} G - Grade as a percentage (e.g. 10 for 10% incline, -5 for decline).
- * @param {number} n - Terrain coefficient (η).
- * @returns {number} Metabolic rate in watts (should always be >= 0).
+ * @param {Number} W - Body weight in kg.
+ * @param {Number} L - Load carried in kg (use 0 if none).
+ * @param {Number} V - Walking speed in m/s.
+ * @param {Number} G - Grade as a percentage (e.g. 10 for 10% incline, -5 for decline).
+ * @param {Number} n - Terrain coefficient (η).
+ * @returns {Number} Metabolic rate in Watts (should always be >= 0).
  */
 function pandolfMetabolicRate(W, L, V, G, n) {
   if (V <= 0) {
@@ -261,27 +286,6 @@ function pandolfMetabolicRate(W, L, V, G, n) {
 }
 
 /**
- * @summary Applies a simple rolling-average smoother to the altitude values in a
- * coordinate array. Raw GPS altitude can have ±5–15 m of noise, which creates
- * artificial grade spikes that inflate calorie estimates.
- * @author Matthew Duffy <mattduffy@gmail.com>
- * @param {Numver[][]} coords - Array of coordinate arrays
- * @param {number} [windowSize=5] - Number of points to average (odd number recommended)
- * @returns {Number[][]} New coordinate array with smoothed altitudes
- */
-function smoothAltitude(coords, windowSize = 5) {
-  const half = Math.floor(windowSize / 2)
-  return coords.map((coord, i) => {
-    const start = Math.max(0, i - half)
-    const end = Math.min(coords.length - 1, i + half)
-    const slice = coords.slice(start, end + 1)
-    const avgerageAltitude = slice.reduce((sum, c) => sum + c[3], 0) / slice.length
-    // Return a new array with the smoothed altitude replaced
-    return [coord[0], coord[1], coord[2], avgerageAltitude, coord[4], coord[5]]
-  })
-}
-
-/**
  * @summary Processes a single segment (two consecutive GPS points) and returns metabolic and
  * distance data for that segment.
  * @author Matthew Duffy <mattduffy@gmail.com>
@@ -290,10 +294,10 @@ function smoothAltitude(coords, windowSize = 5) {
  * @param {Number} W - Body weight in kg.
  * @param {Number} L - Load carried in kg.
  * @param {Number} H2O - Water carried in kg.
- * @param {Number} n - Terrain coefficient
- * @returns {Object|null} - Segment result, or null if the segment should be skipped.
+ * @param {Number} n - Terrain coefficient.
+ * @returns {Object|null} Segment result, or null if the segment should be skipped.
  */
-function processSegment(point1, point2, W, L, H2O, n) {
+function processPandolfSegment(point1, point2, W, L, H2O, n) {
   const [lon1, lat1, , alt1, , t1] = point1
   const [lon2, lat2, , alt2, , t2] = point2
 
@@ -314,7 +318,7 @@ function processSegment(point1, point2, W, L, H2O, n) {
   // Derived speed - clamped to MAX_SPEED_MS to guard against GPS outliers.
   const speed = Math.min(horizontalDistance / durationSec, MAX_SPEED_MS)
 
-  // Metabolic rate for this segment (watts)
+  // Metabolic rate for this segment (Watts)
   const combinedL = L + H2O
   const metabolicRateWatts = pandolfMetabolicRate(W, combinedL, speed, grade, n)
 
@@ -327,13 +331,14 @@ function processSegment(point1, point2, W, L, H2O, n) {
     grade, // percentage
     speed, // m/s
     durationSec, // seconds
-    metabolicRateWatts, // watts
+    metabolicRateWatts, // Watts
     kcal, // kilocalories
   }
 }
 
 /**
- * @summary Calculates total and per-segment calorie expenditure for a GPS track.
+ * @summary Use the Pandolf-Santee model to calculate the total and per-segment
+ *          calorie expenditure for a GPS track.
  * @author Matthew Duffy <mattduffy@gmail.com>
  * @param {Number[][]} coords - GPS coordinate array. Each element:
  *                              [
@@ -359,24 +364,30 @@ function processSegment(point1, point2, W, L, H2O, n) {
  *     totalDistanceM : Number, // Total horizontal distance (meters)
  *     totalDurationSec: Number, // Total elapsed time (seconds)
  *     avgSpeedMs : Number, // Average speed (m/s)
- *     segments : Number[] // Per-segment breakdown (see processSegment return shape)
+ *     segments : Number[] // Per-segment breakdown (see processPandolfSegment return shape)
  *   }
  */
-function pandolfCalories(coords, options = {}) {
+function pandolfCalories(coords, options = {
+  loadKg: 0,
+  waterKg: 0,
+  terrain: TERRAIN_COEFFICIENTS.DIRT,
+  smooth: SMOOTH_DEFAULT,
+  smoothWindow: SMOOTH_DEFAULT_WINDOW,
+}) {
   const {
     bodyWeightKg,
-    loadKg = 0,
-    waterKg = 0,
-    terrain = TERRAIN_COEFFICIENTS.DIRT,
-    smooth = true,
-    smoothWindow = 5,
+    loadKg,
+    waterKg,
+    terrain,
+    smooth,
+    smoothWindow,
   } = options
 
   if (coords.length < 2) {
     throw new Error('At least 2 coordinate points are required.')
   }
   if (!bodyWeightKg || bodyWeightKg <= 0) {
-    throw new Error('weightKg is required and must be a positive number.')
+    throw new Error('options.bodyWeightKg is required and must be a positive number.')
   }
   const track = (smooth) ? smoothAltitude(coords, smoothWindow) : coords
   const segments = []
@@ -385,7 +396,14 @@ function pandolfCalories(coords, options = {}) {
   let totalDurationSec = 0
 
   for (let i = 1; i < track.length; i += 1) {
-    const seg = processSegment(track[i - 1], track[i], bodyWeightKg, loadKg, waterKg, terrain)
+    const seg = processPandolfSegment(
+      track[i - 1],
+      track[i],
+      bodyWeightKg,
+      loadKg,
+      waterKg,
+      terrain,
+    )
     if (seg) {
       totalKcal += seg.kcal
       totalDistanceM += seg.horizontalDistance
@@ -408,37 +426,200 @@ function pandolfCalories(coords, options = {}) {
  *          it was renamed pandolfCalories(), to make room for additional advanced calorie
  *          estimating models.
  * @author Matthew Duffy <mattduffy@gmail.com>
- * @param {Number[][]} coords - GPS coordinate array. Each element:
- *                              [
- *                                longitude,
- *                                latitude,
- *                                heading,
- *                                altitude (m),
- *                                accuracy (m),
- *                                timestamp (ms),
- *                              ]
- * @param {Object} - options
- * @param {Number} options.bodyWeightKg - Body weight in kg (required).
- * @param {Number} [options.loadKg=0] - Load/pack weight in kg.
- * @param {Number} [options.waterKg=0] - Water weight in kg carried.
- * @param {Number} [options.terrain=1.1]  - Terrain coefficient (n). Use TERRAIN_COEFFICIENTS.
- * @param {Boolean} [options.smooth=true] - Whether to smooth GPS altitude before calculating.
- * @param {Number} [options.smoothWindow=5] - Rolling average size for altitude smoothing.
- * @throws {Error} - Throws error if not enough coordinates.
- * @throws {Error} - Throws error if body weight is not provided.
- * @returns {Object} Result object:
- *   {
- *     totalKcal : Number, // Total calories burned
- *     totalDistanceM : Number, // Total horizontal distance (meters)
- *     totalDurationSec: Number, // Total elapsed time (seconds)
- *     avgSpeedMs : Number, // Average speed (m/s)
- *     segments : Number[] // Per-segment breakdown (see processSegment return shape)
- *   }
+ * @see {@link pandolfCalories}
+ * @see pandolfCalories
  */
 function calculateCalories(coords, options = {}) {
   return pandolfCalories(coords, options)
 }
 
+/**
+ * @todo Add function for calculating resting metabolic rate.
+ * @summary Calculate the resting metabolic rate based on inputs provided.
+ * @author Matthew Duffy <mattduffy@gmail.com>
+ * @param {Number} height - Body height, measured in cm.
+ * @param {Number} weight - Body weight, measured in kg.
+ * @param {Number} age - Age, in years.
+ * @param {('m'|'f')} [sex='m'] - Male or female.
+ * @return {Number} Resting metabolic rate in Watts per kg.
+ */
+function mResting(height, weight, age, sex) {
+  const s = (sex === 'm') ? 5 : -161
+  const kcals = (10 * weight) + (6.25 * height) - (5 * age) + s
+  const joules = kcals * 4184
+  const watts = joules / 86400
+  return watts / weight
+}
+
+/**
+ * @todo
+ * @summary Calculate metabolic rate (Watts) using the LCDA predictive model.
+ * @author Matthew Duffy <mattduffy@gmail.com>
+ * @param {Number} L - Combined weight of body and load.
+ * @param {Number} S - Walking speed, in m/s.
+ * @param {Number} G - Grade as a percentage (e.g. 10 for 10% incline, -5 for decline).
+ * @param {Number} n - Terrain coeffcient (η).
+ * @param {Object} rM - Values for calculating resting metabolic rate.
+ * @param {Number} rM.height - Body height in cm.
+ * @param {Number} rM.weight - Body weight in kg.
+ * @param {Number} rM.age - Age, in years.
+ * @param {('m'|'f')} rM.sex - Male of female.
+ * @returns {Number} Metabolic rate in Watts (should always be >= 0).
+ */
+function lcdaMetabolicRate(L, S, G, n, rM) {
+  function GRADE(s, g) {
+    // return (34 * s * g) * (1 - 1.05 ** (1 - 1.1 ** (100 * g + 32)))
+    return (34 * s * g) * (1 - 1.05 ** (1 - 1.1 ** (g + 32)))
+  }
+  if (S <= 0) {
+    return 0
+  }
+  /* eslint-disable camelcase */
+  const M_resting = mResting(rM.height, rM.weight, rM.age, rM.sex)
+  const M = M_resting
+    + [0.19 + n * (
+      1.78 * S ** 0.58 + 0.27 * S ** 4 + GRADE(S, G)
+    )]
+   * (1 + 1.96 * L ** 1.36)
+
+  return Math.max(0, M)
+}
+
+/**
+ * @todo
+ * @summary Process a single segment (two consecutive GPS points) and return metabolic and
+ *          distance data for that segment.
+ * @author Matthew Duffy <mattduffy@gmail.com>
+ * @param {Number[]} point1 - [longitude, latitude, heading, altitude, accuracy, timestamp]
+ * @param {Number[]} point2 - [longitude, latitude, heading, altitude, accuracy, timestamp]
+ * @param {Number} W - Body weight in kg.
+ * @param {Number} L - Load carried in kg.
+ * @param {Number} H2O - Water carried in kg.
+ * @param {Number} n - Terrain coeffcient (η).
+ * @param {Object} rM - Values for calculating resting metabolic rate.
+ * @param {Number} rM.height - Body height in cm.
+ * @param {Number} rM.weight - Body weight in kg.
+ * @param {Number} rM.age - Age, in years.
+ * @param {('m'|'f')} rM.sex - Male of female.
+ * @returns {Object|null} Segment result, or null if the segment should be skipped.
+ */
+function processLcdaSegment(point1, point2, W, L, H2O, n, rM) {
+  const [lon1, lat1, , alt1, , t1] = point1
+  const [lon2, lat2, , alt2, , t2] = point2
+
+  const p1 = { longitude: lon1, latitude: lat1, altitude: alt1 }
+  const p2 = { longitude: lon2, latitude: lat2, altitude: alt2 }
+  const horizontalDistance = pointDistance(p1, p2)
+  const durationSec = (t2 - t1) / 1000 // seconds
+
+  // Skip GPS jitter, stationary points, or out-of-order timestamps.
+  if (durationSec <= 0 || horizontalDistance < MIN_SEGMENT_DIST_M) return null
+
+  // Find the elevation change as slope between two points.
+  const slopeGrade = calculateSlopeGrade(p1, p2)
+  const { grade } = slopeGrade
+  // Uses horizontal distance as the "run" (standard for hiking/trail grade).
+  const altitudeDiff = alt2 - alt1
+
+  // Derived speed - clamped to MAX_SPEED_MS to guard against GPS outliers.
+  const speed = Math.min(horizontalDistance / durationSec, MAX_SPEED_MS)
+
+  // Metabolic rate for this segment (Watts)
+  const combinedW = W + L + H2O
+  const metabolicRateWatts = lcdaMetabolicRate(combinedW, speed, grade, n, rM)
+
+  // Energy expended = power × time (joules), converted to kcal.
+  const kcal = (metabolicRateWatts * durationSec) / JOULES_PER_KCAL
+
+  return {
+    horizontalDistance, // meters
+    altitudeDiff, // meters
+    grade, // percentage
+    speed, // m/s
+    durationSec, // seconds
+    metabolicRateWatts, // Watts
+    kcal, // kilocalories
+  }
+}
+
+/**
+ * @todo create the lcda predictive model.
+ * @summary Use the LCDA predictive model to estimate calories burned.
+ * @author Matthew Duffy <mattduffy@gmail.com>
+ * @param {Number[][]} coords - GPS coordinate array.
+ * @param {Object} BMR - Values for calculating resting metabolic rate.
+ * @param {Number} BMR.height - Body height in cm.
+ * @param {Number} BMR.weight - Body weight in kg.
+ * @param {Number} BMR.age - Age, in years.
+ * @param {('m'|'f')} BMR.sex - Male of female.
+ * @param {Object} options
+ * @param {Number} options.bodyWeightKg - Body weight in kg (required).
+ * @param {Number} [options.loadKg=0] - Load/ruck weight in kg.
+ * @param {Number} [options.waterKg=0] - Water weight carried in kg.
+ * @param {Number} [options.terrain=1.1] - Terrain coefficient (n) Use TERRAIN_COEFFICIENTS.
+ * @param {Boolean} [options.smooth=true] - Whether to smooth GPS altitude before calculating.
+ * @param {Number} [options.smoothWindow=5] - Rolling average size for altitude smoothing.
+ * @throws {Error} - Throws error if not enough coordinates.
+ * @throws {Error} - Throws error if body weight is not provided.
+ * @return {Object} Result object.
+ */
+function lcdaCalories(coords, BMR, options = {
+  loadKg: 0,
+  waterKg: 0,
+  terrain: TERRAIN_COEFFICIENTS.DIRT,
+  smooth: SMOOTH_DEFAULT,
+  smoothWindow: SMOOTH_DEFAULT_WINDOW,
+}) {
+  const {
+    bodyWeightKg, loadKg, waterKg,
+    terrain, smooth, smoothWindow,
+  } = options
+  if (coords.length < 2) {
+    throw new Error('At least 2 coordinate points are required.')
+  }
+  if (!bodyWeightKg || bodyWeightKg <= 0) {
+    throw new Error('options.bodyWeightKg is required and must be a positive number.')
+  }
+  const track = (smooth) ? smoothAltitude(coords, smoothWindow) : coords
+  const segments = []
+  let totalKcal = 0
+  let totalDistanceM = 0
+  let totalDurationSec = 0
+  for (let i = 1; i < track.length; i += 1) {
+    const seg = processLcdaSegment(
+      track[i - 1],
+      track[i],
+      bodyWeightKg,
+      loadKg,
+      waterKg,
+      terrain,
+      BMR,
+    )
+    if (seg) {
+      totalKcal += seg.kcal
+      totalDistanceM += seg.horizontalDistance
+      totalDurationSec += seg.durationSec
+      segments.push(seg)
+    }
+  }
+  const avgSpeedMs = (totalDurationSec > 0) ? totalDistanceM / totalDurationSec : 0
+  return {
+    totalKcal,
+    totalDistanceM,
+    totalDurationSec,
+    avgSpeedMs,
+    // segments,
+  }
+}
+
+/**
+ * @todo
+ * @summary Use the Minimum Mechanics Model to estimate calrories burned.
+ * @author Matthew Duffy <mattduffy@gmail.com>
+ * @param
+ * @throws
+ * @return
+ */
 function minimumMechanicCalories() {
   // https://blog.smu.edu/research/2017/10/17/study-new-simple-method-determines-rate-burn-
   // calories-walking-uphill-downhill-level-ground/
@@ -453,6 +634,7 @@ export {
   rads,
   within5,
   within10,
+  lcdaCalories,
   simpleCalories,
   pandolfCalories,
   calculateCalories,
