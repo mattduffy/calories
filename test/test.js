@@ -10,6 +10,7 @@ import {
   m2m,
   within5,
   within10,
+  lcdaCalories,
   simpleCalories,
   pandolfCalories,
   calculateSlopeGrade,
@@ -1550,6 +1551,24 @@ describe('First test suite for calories package', async () => {
         return 0
       })
     }
+  })
+
+  it('Test the lcda predictive model with walk_16', async () => {
+    console.log('')
+    console.log(`name: ${walk_16.features[0].properties.name}`)
+    const coords = walk_16.features[0].geometry.coordinates
+    const bodyW = 165 / 2.2
+    const bmr = {
+      height: 64 * 2.54, weight: bodyW, age: 53, sex: 'm',
+    }
+    const details = {
+      bodyWeightKg: bodyW,
+      loadKg: 30 / 2.2,
+      waterKg: 0,
+      terrain: 1.1,
+    }
+    const lcda = lcdaCalories(coords, bmr, details)
+    console.log(lcda)
   })
 
   it('Display the results of all the walks tested.', async () => {
