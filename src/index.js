@@ -5,6 +5,7 @@
  * @file src/index.js
  */
 
+/* eslint-disable camelcase */
 let BODY_WEIGHT
 let RUCK_WEIGHT
 let COMBINED = BODY_WEIGHT + RUCK_WEIGHT
@@ -164,12 +165,17 @@ function calculateSlopeGrade(point1, point2) {
     // Vertical ascent/descent
     return { grade: Infinity, angleDegrees: 90 }
   }
-  // const slopePercentage =
-  // const slopeAngleRadians =
-  // const slopeAngleDegrees = (slopeAngleRadians * 180) / Math.PI
+  const slope = verticalInterval / horizontalDistance
+  const grade = (slope * 100 <= 100) ? slope * 100 : 100
+  const angle = Math.atan(slope) * 180
+  console.log(
+    `grade: (${verticalInterval} / ${horizontalDistance}) * 100 =`,
+    slope * 100,
+  )
   return {
-    grade: (verticalInterval / horizontalDistance) * 100,
-    angleDegrees: (Math.atan(verticalInterval / horizontalDistance) * 180) / Math.PI,
+    // grade: (verticalInterval / horizontalDistance) * 100,
+    grade,
+    angleDegrees: angle / Math.PI,
   }
 }
 
@@ -467,22 +473,31 @@ function mResting(height, weight, age, sex) {
  * @returns {Number} Metabolic rate in Watts (should always be >= 0).
  */
 function lcdaMetabolicRate(L, S, G, n, rM) {
-  function GRADE(s, g) {
+  console.log('lcdaMetabolicRate parameters:', L, S, G, n, rM)
+  function M_grade(s, g) {
+    console.log(`s: ${s}, g: ${g}`)
     // return (34 * s * g) * (1 - 1.05 ** (1 - 1.1 ** (100 * g + 32)))
-    return (34 * s * g) * (1 - 1.05 ** (1 - 1.1 ** (g + 32)))
+    // return 34 * s * g * (1 - 1.05 ** (1 - 1.1 * (100 * g + 32)))
+    return 34 * s * g * (1 - 1.05 ** (1 - 1.1 * (g + 32)))
+    // return (34 * s * g) * (1 - 1.05 ** (1 - 1.1 ** (g + 32)))
   }
   if (S <= 0) {
     return 0
   }
-  /* eslint-disable camelcase */
   const M_resting = mResting(rM.height, rM.weight, rM.age, rM.sex)
-  const M = M_resting
-    + [0.19 + n * (
-      1.78 * S ** 0.58 + 0.27 * S ** 4 + GRADE(S, G)
-    )]
-   * (1 + 1.96 * L ** 1.36)
+  const m_grade = M_grade(S, G)
+  console.log(`mbs: ${M_resting}, m_grade: ${m_grade}`)
+  // const M = M_resting
+  //   + (0.19
+  //     + n * (1.78 * S ** 0.58 + 0.27 * S ** 4 + m_grade))
+  //  * (1 + 1.96 * L ** 1.36)
 
-  return Math.max(0, M)
+  // return Math.max(0, M)
+  const speedTerms = 1.78 * S ** 0.58 + 0.27 * S ** 4
+  const gradeTerms = M_grade(S, G)
+  const loadFactor = 1 + 1.96 * L ** 1.36
+
+  return M_resting + (0.19 + n * (speedTerms + gradeTerms)) * loadFactor
 }
 
 /**
@@ -504,6 +519,7 @@ function lcdaMetabolicRate(L, S, G, n, rM) {
  * @returns {Object|null} Segment result, or null if the segment should be skipped.
  */
 function processLcdaSegment(point1, point2, W, L, H2O, n, rM) {
+  // console.log(W, L, H2O)
   const [lon1, lat1, , alt1, , t1] = point1
   const [lon2, lat2, , alt2, , t2] = point2
 
@@ -526,10 +542,11 @@ function processLcdaSegment(point1, point2, W, L, H2O, n, rM) {
 
   // Metabolic rate for this segment (Watts)
   const combinedW = W + L + H2O
-  const metabolicRateWatts = lcdaMetabolicRate(combinedW, speed, grade, n, rM)
-
+  // console.log('processLcdaSegment combinedW:', combinedW)
+  const lcdaMetabolicRateWatts = lcdaMetabolicRate(combinedW, speed, grade, n, rM)
+  // console.log('lcdaMetabolicRateWatts:', lcdaMetabolicRateWatts)
   // Energy expended = power × time (joules), converted to kcal.
-  const kcal = (metabolicRateWatts * durationSec) / JOULES_PER_KCAL
+  const kcal = (lcdaMetabolicRateWatts * durationSec) / JOULES_PER_KCAL
 
   return {
     horizontalDistance, // meters
@@ -537,7 +554,7 @@ function processLcdaSegment(point1, point2, W, L, H2O, n, rM) {
     grade, // percentage
     speed, // m/s
     durationSec, // seconds
-    metabolicRateWatts, // Watts
+    lcdaMetabolicRateWatts, // Watts
     kcal, // kilocalories
   }
 }
@@ -570,12 +587,32 @@ function lcdaCalories(coords, BMR, options = {
   smooth: SMOOTH_DEFAULT,
   smoothWindow: SMOOTH_DEFAULT_WINDOW,
 }) {
+  const defaults = {
+    loadKg: 0,
+    waterKg: 0,
+    terrain: TERRAIN_COEFFICIENTS.DIRT,
+    smooth: true,
+    smoothWindow: SMOOTH_DEFAULT_WINDOW,
+  }
   const {
     bodyWeightKg, loadKg, waterKg,
     terrain, smooth, smoothWindow,
-  } = options
-  if (coords.length < 2) {
+  } = { ...options, ...defaults }
+  console.log('lcda parameters:')
+  console.log(bodyWeightKg, loadKg, waterKg)
+  console.log(terrain)
+  console.log(smooth, smoothWindow)
+  console.log('bmr', BMR)
+  if (!coords || coords?.length < 2) {
     throw new Error('At least 2 coordinate points are required.')
+  }
+  if (!BMR || BMR.height <= 0 || BMR.weight <= 0 || BMR.age <= 0 || !/m|f/i.test(BMR.sex)) {
+    const msg = 'BMR must include the following properties: \n'
+      + '       height: positive number (cm)\n'
+      + '       weight: positive number (kg)\n'
+      + '          age: positive number (years)\n'
+      + '          sex: string \'m|f\''
+    throw new Error(msg)
   }
   if (!bodyWeightKg || bodyWeightKg <= 0) {
     throw new Error('options.bodyWeightKg is required and must be a positive number.')
@@ -590,13 +627,14 @@ function lcdaCalories(coords, BMR, options = {
       track[i - 1],
       track[i],
       bodyWeightKg,
-      loadKg,
-      waterKg,
+      loadKg || 0,
+      waterKg || 0,
       terrain,
       BMR,
     )
     if (seg) {
       totalKcal += seg.kcal
+      console.log(`adding seg.kcal: ${seg.kcal} (${totalKcal})`)
       totalDistanceM += seg.horizontalDistance
       totalDurationSec += seg.durationSec
       segments.push(seg)
