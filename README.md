@@ -1,10 +1,9 @@
 # Estimating Energy Expenditure and Calories Burned
+This package is a dependency-free ES module library that estimates calories burned during physical activities (walking, hiking, rucking, etc) with functions for both simple calorie estimates, and more advanced methods utilizing GPS data.
 
-Creating accurate estimates of the number of calories burned during a physical activity period is notoriously difficult, especially when attempting to incorporate positional data.  Most instances of estimating calories burned are simply calculated as an exertion effort based on body weight, time duration and a known __MET__ ([Metabolic Equivalent Task](https://en.wikipedia.org/wiki/Metabolic_equivalent_of_task)) value for a given activity.  This method doesn't include positional data such as distance, velocity or elevation changes.  This can be considered a simple calorie estimate.
+Creating accurate estimates of the number of calories burned during a physical activity period is notoriously difficult, especially when attempting to incorporate positional data.  Most instances of estimating calories burned are simply calculated as an exertion effort based on body weight, time duration and a known **MET** ([Metabolic Equivalent Task](https://en.wikipedia.org/wiki/Metabolic_equivalent_of_task)) value for a given activity.  This method doesn't include positional data such as distance, velocity or elevation changes.  This can be considered a simple calorie estimate.
 
-There are several, more advanced methods for estimating calories burned that do attempt to incorporate GPS data for a richer, more nuanced estimate.  The Pandolf-Santee equation is one such approach and is the one used in this package.
-
-This package is a dependency-free ES module library that estimates calories burned during physical activities (walking, hiking, rucking, etc) with functions for both simple calorie estimates, and a more advanced method based on the Pandolf-Santee formula.
+There are several, more advanced methods for estimating calories burned that do attempt to incorporate GPS data for a richer, more nuanced estimate.  This package provides more advanced functions to calculate calories burned using either the Pandolf-Santee or LCDA predictive models.
 
 ## Using 
 
@@ -13,7 +12,7 @@ npm install --save @mattduffy/calories
 ```
 
 ```javascript
-import { simpleCalories, pandolfCalories } from '@mattduffy/calories'
+import { simpleCalories, pandolfCalories, lcdaCalories } from '@mattduffy/calories'
 ```
 
 ## Simple Calories
@@ -97,9 +96,9 @@ console.log(pandolf_calories)
 ```
 
 ### The LCDA Predicitve Model
-A much more recently developed predictive model for calculating energy expenditure over distance, while carrying a load is the **L**oad **C**arrying **D**ecision **A**id model. LCDA is considered to be slightly more accurate than the Pandolf model at the extra expense of requiring parameters to calculate basal metabolic rate.
+A much more recently developed predictive model for calculating energy expenditure over distance, while carrying a load is the **L**oad **C**arrying **D**ecision **A**id model. [LCDA](https://pmc.ncbi.nlm.nih.gov/articles/PMC8919998/) is considered to be slightly more accurate than the Pandolf model at the extra expense of requiring parameters to calculate basal metabolic rate.
 
-The ``coords`` and ``options`` parameters for ``lcdaCalories()`` are the same as for the above ``pandolfCalories()`` function.  The values in the ``BMR`` parameter are used to create a value for basal metabolic rate using the Mifflin-St Jeor equation.
+The ``coords`` and ``options`` parameters for ``lcdaCalories()`` are the same as for the above ``pandolfCalories()`` function.  The values in the ``BMR`` parameter object are used to create a value for basal metabolic rate using the [Mifflin-St Jeor equation](https://www.jandonline.org/article/S0002-8223(05)00149-5/abstract).
 
 ```javascript
 const coords = [
