@@ -264,7 +264,7 @@ describe('First test suite for calories package', async () => {
     })
   })
 
-  it('Advanced calorie comparison test - walk_02', async () => {
+  it('Pandolf calorie comparison test - walk_02', async () => {
     console.log('')
     console.log(`name: ${walk_2.features[0].properties.name}`)
     const cal2W = walk_2.features[0].properties.weights
@@ -332,7 +332,7 @@ describe('First test suite for calories package', async () => {
     })
   })
 
-  it('Advanced calorie comparison test - walk_03', async () => {
+  it('Pandolf calorie comparison test - walk_03', async () => {
     console.log('')
     console.log(`name: ${walk_3.features[0].properties.name}`)
     const cal3W = walk_3.features[0].properties.weights
@@ -419,7 +419,7 @@ describe('First test suite for calories package', async () => {
     })
   })
 
-  it('Advanced calorie comparison test - walk_04', async () => {
+  it('Pandolf calorie comparison test - walk_04', async () => {
     console.log('')
     console.log(`name: ${walk_4.features[0].properties.name}`)
     const cal4W = walk_4.features[0].properties.weights ?? weights
@@ -505,7 +505,7 @@ describe('First test suite for calories package', async () => {
     })
   })
 
-  it('Advanced calorie comparison test - walk_05', async () => {
+  it('Pandolf calorie comparison test - walk_05', async () => {
     console.log('')
     console.log(`name: ${walk_5.features[0].properties.name}`)
     const cal5W = walk_5.features[0].properties.weights ?? weights
@@ -592,7 +592,7 @@ describe('First test suite for calories package', async () => {
     })
   })
 
-  it('Advanced calorie comparison test - walk_06', async () => {
+  it('Pandolf calorie comparison test - walk_06', async () => {
     console.log('')
     console.log(`name: ${walk_6.features[0].properties.name}`)
     const walk_6_minutes = m2m(walk_6.features[0].properties.duration)
@@ -679,7 +679,7 @@ describe('First test suite for calories package', async () => {
     })
   })
 
-  it('Advanced calorie comparison test - walk_07', async () => {
+  it('Pandolf calorie comparison test - walk_07', async () => {
     console.log('')
     console.log(`name: ${walk_7.features[0].properties.name}`)
     const walk_7_minutes = m2m(walk_7.features[0].properties.duration)
@@ -766,7 +766,7 @@ describe('First test suite for calories package', async () => {
     })
   })
 
-  it('Advanced calorie comparison test - walk_08', async () => {
+  it('Pandolf calorie comparison test - walk_08', async () => {
     console.log('')
     console.log(`name: ${walk_8.features[0].properties.name}`)
     const cal8W = walk_8.features[0].properties.weights ?? weights
@@ -853,7 +853,7 @@ describe('First test suite for calories package', async () => {
     })
   })
 
-  it('Advanced calorie comparison test - walk_09', async () => {
+  it('Pandolf calorie comparison test - walk_09', async () => {
     console.log('')
     console.log(`name: ${walk_9.features[0].properties.name}`)
     const walk_9_minutes = m2m(walk_9.features[0].properties.duration)
@@ -940,7 +940,7 @@ describe('First test suite for calories package', async () => {
     })
   })
 
-  it('Advanced calorie comparison test - walk_10', async () => {
+  it('Pandolf calorie comparison test - walk_10', async () => {
     console.log('')
     console.log(`name: ${walk_10.features[0].properties.name}`)
     const walk_10_minutes = m2m(walk_10.features[0].properties.duration)
@@ -1027,7 +1027,7 @@ describe('First test suite for calories package', async () => {
     })
   })
 
-  it('Advanced calorie comparison test - walk_11', async () => {
+  it('Pandolf calorie comparison test - walk_11', async () => {
     console.log('')
     console.log(`name: ${walk_11.features[0].properties.name}`)
     const cal11W = walk_11.features[0].properties.weights
@@ -1114,7 +1114,7 @@ describe('First test suite for calories package', async () => {
     })
   })
 
-  it('Advanced calorie comparison test - walk_12', async () => {
+  it('Pandolf calorie comparison test - walk_12', async () => {
     console.log('')
     console.log(`name: ${walk_12.features[0].properties.name}`)
     const walk_12_minutes = m2m(walk_12.features[0].properties.duration)
@@ -1201,7 +1201,7 @@ describe('First test suite for calories package', async () => {
     })
   })
 
-  it('Advanced calorie comparison test - walk_13', async () => {
+  it('Pandolf calorie comparison test - walk_13', async () => {
     console.log('')
     console.log(`name: ${walk_13.features[0].properties.name}`)
     const cal13W = walk_13.features[0].properties.weights
@@ -1288,7 +1288,7 @@ describe('First test suite for calories package', async () => {
     })
   })
 
-  it('Advanced calorie comparison test - walk_14', async () => {
+  it('Pandolf calorie comparison test - walk_14', async () => {
     console.log('')
     console.log(`name: ${walk_14.features[0].properties.name}`)
     const cal14W = walk_14.features[0].properties.weights
@@ -1375,7 +1375,7 @@ describe('First test suite for calories package', async () => {
     })
   })
 
-  it('Advanced calorie comparison test - walk_15', async () => {
+  it('Pandolf calorie comparison test - walk_15', async () => {
     console.log('')
     console.log(`name: ${walk_15.features[0].properties.name}`)
     const cal15W = walk_15.features[0].properties.weights
@@ -1462,7 +1462,7 @@ describe('First test suite for calories package', async () => {
     })
   })
 
-  it('Advanced calorie comparison test - walk_16', async () => {
+  it('Pandolf calorie comparison test - walk_16', async () => {
     console.log('')
     console.log(`name: ${walk_16.features[0].properties.name}`)
     const cal16W = walk_16.features[0].properties.weights
@@ -1551,7 +1551,7 @@ describe('First test suite for calories package', async () => {
     }
   })
 
-  it('Advanced calorie comparison test - walk_17', async () => {
+  it('Pandolf calorie comparison test - walk_17', async () => {
     console.log('')
     console.log(`name: ${walk_17.features[0].properties.name}`)
     const cal17W = walk_17.features[0].properties.weights
@@ -1640,22 +1640,361 @@ describe('First test suite for calories package', async () => {
     }
   })
 
-  it('Test the lcda predictive model with walk_16', { skip: true }, async () => {
+  it('Lcda predictive model with walk_1', async () => {
     console.log('')
-    console.log(`name: ${walk_16.features[0].properties.name}`)
-    const coords = walk_16.features[0].geometry.coordinates
-    const bodyW = 165 / 2.2
+    console.log(`name: ${walk_1.features[0].properties.name}`)
+    const coords = walk_1.features[0].geometry.coordinates
+    const weight = walk_1.features[0].properties.weights
+    const bodyW = _dot1(weight.body / 2.2)
+    const ruckW = _dot1(weight.ruck / 2.2)
     const bmr = {
       height: 64 * 2.54, weight: bodyW, age: 53, sex: 'm',
     }
     const details = {
       bodyWeightKg: bodyW,
-      loadKg: 30 / 2.2,
+      loadKg: ruckW,
       waterKg: 0,
       terrain: 1.1,
     }
     const lcda = lcdaCalories(coords, bmr, details)
     console.log(lcda)
+    results[1].lcda = _dot1(lcda.totalKcal)
+  })
+
+  it('Lcda predictive model with walk_2', async () => {
+    console.log('')
+    console.log(`name: ${walk_2.features[0].properties.name}`)
+    const coords = walk_2.features[0].geometry.coordinates
+    const weight = walk_2.features[0].properties.weights
+    const bodyW = _dot1(weight.body / 2.2)
+    const ruckW = _dot1(weight.ruck / 2.2)
+    const bmr = {
+      height: 64 * 2.54, weight: bodyW, age: 53, sex: 'm',
+    }
+    const details = {
+      bodyWeightKg: bodyW,
+      loadKg: ruckW,
+      waterKg: 0,
+      terrain: 1.1,
+    }
+    const lcda = lcdaCalories(coords, bmr, details)
+    console.log(lcda)
+    results[2].lcda = _dot1(lcda.totalKcal)
+  })
+
+  it('Lcda predictive model with walk_3', async () => {
+    console.log('')
+    console.log(`name: ${walk_3.features[0].properties.name}`)
+    const coords = walk_3.features[0].geometry.coordinates
+    const weight = walk_3.features[0].properties.weights
+    const bodyW = _dot1(weight.body / 2.2)
+    const ruckW = _dot1(weight.ruck / 2.2)
+    const bmr = {
+      height: 64 * 2.54, weight: bodyW, age: 53, sex: 'm',
+    }
+    const details = {
+      bodyWeightKg: bodyW,
+      loadKg: ruckW,
+      waterKg: 0,
+      terrain: 1.1,
+    }
+    const lcda = lcdaCalories(coords, bmr, details)
+    console.log(lcda)
+    results[3].lcda = _dot1(lcda.totalKcal)
+  })
+
+  it('Lcda predictive model with walk_4', async () => {
+    console.log('')
+    console.log(`name: ${walk_4.features[0].properties.name}`)
+    const coords = walk_4.features[0].geometry.coordinates
+    const weight = walk_4.features[0].properties.weights
+    const bodyW = _dot1(weight.body / 2.2)
+    const ruckW = _dot1(weight.ruck / 2.2)
+    const bmr = {
+      height: 64 * 2.54, weight: bodyW, age: 53, sex: 'm',
+    }
+    const details = {
+      bodyWeightKg: bodyW,
+      loadKg: ruckW,
+      waterKg: 0,
+      terrain: 1.1,
+    }
+    const lcda = lcdaCalories(coords, bmr, details)
+    console.log(lcda)
+    results[4].lcda = _dot1(lcda.totalKcal)
+  })
+
+  it('Lcda predictive model with walk_5', async () => {
+    console.log('')
+    console.log(`name: ${walk_5.features[0].properties.name}`)
+    const coords = walk_5.features[0].geometry.coordinates
+    const weight = walk_5.features[0].properties.weights
+    const bodyW = _dot1(weight.body / 2.2)
+    const ruckW = _dot1(weight.ruck / 2.2)
+    const bmr = {
+      height: 64 * 2.54, weight: bodyW, age: 53, sex: 'm',
+    }
+    const details = {
+      bodyWeightKg: bodyW,
+      loadKg: ruckW,
+      waterKg: 0,
+      terrain: 1.1,
+    }
+    const lcda = lcdaCalories(coords, bmr, details)
+    console.log(lcda)
+    results[5].lcda = _dot1(lcda.totalKcal)
+  })
+
+  it('Lcda predictive model with walk_6', async () => {
+    console.log('')
+    console.log(`name: ${walk_6.features[0].properties.name}`)
+    const coords = walk_6.features[0].geometry.coordinates
+    const weight = walk_6.features[0].properties.weights
+    const bodyW = _dot1(weight.body / 2.2)
+    const ruckW = _dot1(weight.ruck / 2.2)
+    const bmr = {
+      height: 64 * 2.54, weight: bodyW, age: 53, sex: 'm',
+    }
+    const details = {
+      bodyWeightKg: bodyW,
+      loadKg: ruckW,
+      waterKg: 0,
+      terrain: 1.1,
+    }
+    const lcda = lcdaCalories(coords, bmr, details)
+    console.log(lcda)
+    results[6].lcda = _dot1(lcda.totalKcal)
+  })
+
+  it('Lcda predictive model with walk_7', async () => {
+    console.log('')
+    console.log(`name: ${walk_7.features[0].properties.name}`)
+    const coords = walk_7.features[0].geometry.coordinates
+    const weight = walk_7.features[0].properties.weights
+    const bodyW = _dot1(weight.body / 2.2)
+    const ruckW = _dot1(weight.ruck / 2.2)
+    const bmr = {
+      height: 64 * 2.54, weight: bodyW, age: 53, sex: 'm',
+    }
+    const details = {
+      bodyWeightKg: bodyW,
+      loadKg: ruckW,
+      waterKg: 0,
+      terrain: 1.1,
+    }
+    const lcda = lcdaCalories(coords, bmr, details)
+    console.log(lcda)
+    results[7].lcda = _dot1(lcda.totalKcal)
+  })
+
+  it('Lcda predictive model with walk_8', async () => {
+    console.log('')
+    console.log(`name: ${walk_8.features[0].properties.name}`)
+    const coords = walk_8.features[0].geometry.coordinates
+    const weight = walk_8.features[0].properties.weights
+    const bodyW = _dot1(weight.body / 2.2)
+    const ruckW = _dot1(weight.ruck / 2.2)
+    const bmr = {
+      height: 64 * 2.54, weight: bodyW, age: 53, sex: 'm',
+    }
+    const details = {
+      bodyWeightKg: bodyW,
+      loadKg: ruckW,
+      waterKg: 0,
+      terrain: 1.1,
+    }
+    const lcda = lcdaCalories(coords, bmr, details)
+    console.log(lcda)
+    results[8].lcda = _dot1(lcda.totalKcal)
+  })
+
+  it('Lcda predictive model with walk_9', async () => {
+    console.log('')
+    console.log(`name: ${walk_9.features[0].properties.name}`)
+    const coords = walk_9.features[0].geometry.coordinates
+    const weight = walk_9.features[0].properties.weights
+    const bodyW = _dot1(weight.body / 2.2)
+    const ruckW = _dot1(weight.ruck / 2.2)
+    const bmr = {
+      height: 64 * 2.54, weight: bodyW, age: 53, sex: 'm',
+    }
+    const details = {
+      bodyWeightKg: bodyW,
+      loadKg: ruckW,
+      waterKg: 0,
+      terrain: 1.1,
+    }
+    const lcda = lcdaCalories(coords, bmr, details)
+    console.log(lcda)
+    results[9].lcda = _dot1(lcda.totalKcal)
+  })
+
+  it('Lcda predictive model with walk_10', async () => {
+    console.log('')
+    console.log(`name: ${walk_10.features[0].properties.name}`)
+    const coords = walk_10.features[0].geometry.coordinates
+    const weight = walk_10.features[0].properties.weights
+    const bodyW = _dot1(weight.body / 2.2)
+    const ruckW = _dot1(weight.ruck / 2.2)
+    const bmr = {
+      height: 64 * 2.54, weight: bodyW, age: 53, sex: 'm',
+    }
+    const details = {
+      bodyWeightKg: bodyW,
+      loadKg: ruckW,
+      waterKg: 0,
+      terrain: 1.1,
+    }
+    const lcda = lcdaCalories(coords, bmr, details)
+    console.log(lcda)
+    results[10].lcda = _dot1(lcda.totalKcal)
+  })
+
+  it('Lcda predictive model with walk_11', async () => {
+    console.log('')
+    console.log(`name: ${walk_11.features[0].properties.name}`)
+    const coords = walk_11.features[0].geometry.coordinates
+    const weight = walk_11.features[0].properties.weights
+    const bodyW = _dot1(weight.body / 2.2)
+    const ruckW = _dot1(weight.ruck / 2.2)
+    const bmr = {
+      height: 64 * 2.54, weight: bodyW, age: 53, sex: 'm',
+    }
+    const details = {
+      bodyWeightKg: bodyW,
+      loadKg: ruckW,
+      waterKg: 0,
+      terrain: 1.1,
+    }
+    const lcda = lcdaCalories(coords, bmr, details)
+    console.log(lcda)
+    results[11].lcda = _dot1(lcda.totalKcal)
+  })
+
+  it('Lcda predictive model with walk_12', async () => {
+    console.log('')
+    console.log(`name: ${walk_12.features[0].properties.name}`)
+    const coords = walk_12.features[0].geometry.coordinates
+    const weight = walk_12.features[0].properties.weights
+    const bodyW = _dot1(weight.body / 2.2)
+    const ruckW = _dot1(weight.ruck / 2.2)
+    const bmr = {
+      height: 64 * 2.54, weight: bodyW, age: 53, sex: 'm',
+    }
+    const details = {
+      bodyWeightKg: bodyW,
+      loadKg: ruckW,
+      waterKg: 0,
+      terrain: 1.1,
+    }
+    const lcda = lcdaCalories(coords, bmr, details)
+    console.log(lcda)
+    results[12].lcda = _dot1(lcda.totalKcal)
+  })
+
+  it('Lcda predictive model with walk_14', async () => {
+    console.log('')
+    console.log(`name: ${walk_13.features[0].properties.name}`)
+    const coords = walk_13.features[0].geometry.coordinates
+    const weight = walk_13.features[0].properties.weights
+    const bodyW = _dot1(weight.body / 2.2)
+    const ruckW = _dot1(weight.ruck / 2.2)
+    const bmr = {
+      height: 64 * 2.54, weight: bodyW, age: 53, sex: 'm',
+    }
+    const details = {
+      bodyWeightKg: bodyW,
+      loadKg: ruckW,
+      waterKg: 0,
+      terrain: 1.1,
+    }
+    const lcda = lcdaCalories(coords, bmr, details)
+    console.log(lcda)
+    results[13].lcda = _dot1(lcda.totalKcal)
+  })
+
+  it('Lcda predictive model with walk_14', async () => {
+    console.log('')
+    console.log(`name: ${walk_14.features[0].properties.name}`)
+    const coords = walk_14.features[0].geometry.coordinates
+    const weight = walk_14.features[0].properties.weights
+    const bodyW = _dot1(weight.body / 2.2)
+    const ruckW = _dot1(weight.ruck / 2.2)
+    const bmr = {
+      height: 64 * 2.54, weight: bodyW, age: 53, sex: 'm',
+    }
+    const details = {
+      bodyWeightKg: bodyW,
+      loadKg: ruckW,
+      waterKg: 0,
+      terrain: 1.1,
+    }
+    const lcda = lcdaCalories(coords, bmr, details)
+    console.log(lcda)
+    results[14].lcda = _dot1(lcda.totalKcal)
+  })
+
+  it('Lcda predictive model with walk_15', async () => {
+    console.log('')
+    console.log(`name: ${walk_15.features[0].properties.name}`)
+    const coords = walk_15.features[0].geometry.coordinates
+    const weight = walk_15.features[0].properties.weights
+    const bodyW = _dot1(weight.body / 2.2)
+    const ruckW = _dot1(weight.ruck / 2.2)
+    const bmr = {
+      height: 64 * 2.54, weight: bodyW, age: 53, sex: 'm',
+    }
+    const details = {
+      bodyWeightKg: bodyW,
+      loadKg: ruckW,
+      waterKg: 0,
+      terrain: 1.1,
+    }
+    const lcda = lcdaCalories(coords, bmr, details)
+    console.log(lcda)
+    results[15].lcda = _dot1(lcda.totalKcal)
+  })
+
+  it('Lcda predictive model with walk_16', async () => {
+    console.log('')
+    console.log(`name: ${walk_16.features[0].properties.name}`)
+    const coords = walk_16.features[0].geometry.coordinates
+    const weight = walk_16.features[0].properties.weights
+    const bodyW = _dot1(weight.body / 2.2)
+    const ruckW = _dot1(weight.ruck / 2.2)
+    const bmr = {
+      height: 64 * 2.54, weight: bodyW, age: 53, sex: 'm',
+    }
+    const details = {
+      bodyWeightKg: bodyW,
+      loadKg: ruckW,
+      waterKg: 0,
+      terrain: 1.1,
+    }
+    const lcda = lcdaCalories(coords, bmr, details)
+    console.log(lcda)
+    results[16].lcda = _dot1(lcda.totalKcal)
+  })
+
+  it('Lcda predictive model with walk_17', async () => {
+    console.log('')
+    console.log(`name: ${walk_17.features[0].properties.name}`)
+    const coords = walk_17.features[0].geometry.coordinates
+    const weight = walk_17.features[0].properties.weights
+    const bodyW = _dot1(weight.body / 2.2)
+    const ruckW = _dot1(weight.ruck / 2.2)
+    const bmr = {
+      height: 64 * 2.54, weight: bodyW, age: 53, sex: 'm',
+    }
+    const details = {
+      bodyWeightKg: bodyW,
+      loadKg: ruckW,
+      waterKg: 0,
+      terrain: 1.1,
+    }
+    const lcda = lcdaCalories(coords, bmr, details)
+    console.log(lcda)
+    results[17].lcda = _dot1(lcda.totalKcal)
   })
 
   it('Display the results of all the walks tested.', async () => {
