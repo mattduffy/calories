@@ -166,14 +166,9 @@ function calculateSlopeGrade(point1, point2) {
     return { grade: Infinity, angleDegrees: 90 }
   }
   const slope = verticalInterval / horizontalDistance
-  const grade = (slope * 100 <= 100) ? slope * 100 : 100
+  const grade = slope * 100
   const angle = Math.atan(slope) * 180
-  console.log(
-    `grade: (${verticalInterval} / ${horizontalDistance}) * 100 =`,
-    slope * 100,
-  )
   return {
-    // grade: (verticalInterval / horizontalDistance) * 100,
     grade,
     angleDegrees: angle / Math.PI,
   }
@@ -194,7 +189,10 @@ function smoothAltitude(coords, windowSize = SMOOTH_DEFAULT_WINDOW) {
     const start = Math.max(0, i - half)
     const end = Math.min(coords.length - 1, i + half)
     const slice = coords.slice(start, end + 1)
-    const avgerageAltitude = slice.reduce((sum, c) => sum + c[3], 0) / slice.length
+    const validAlts = slice.map(c => c[3]).filter(a => a !== null)
+    const avgerageAltitude = validAlts.length > 0
+      ? validAlts.reduce((sum, a) => sum + a, 0) / validAlts.length
+      : coord[3]
     // Return a new array with the smoothed altitude replaced
     return [coord[0], coord[1], coord[2], avgerageAltitude, coord[4], coord[5]]
   })
@@ -373,20 +371,14 @@ function processPandolfSegment(point1, point2, W, L, H2O, n) {
  *     segments : Number[] // Per-segment breakdown (see processPandolfSegment return shape)
  *   }
  */
-function pandolfCalories(coords, options = {
-  loadKg: 0,
-  waterKg: 0,
-  terrain: TERRAIN_COEFFICIENTS.DIRT,
-  smooth: SMOOTH_DEFAULT,
-  smoothWindow: SMOOTH_DEFAULT_WINDOW,
-}) {
+function pandolfCalories(coords, options = {}) {
   const {
     bodyWeightKg,
-    loadKg,
-    waterKg,
-    terrain,
-    smooth,
-    smoothWindow,
+    loadKg = 0,
+    waterKg = 0,
+    terrain = TERRAIN_COEFFICIENTS.DIRT,
+    smooth = true,
+    smoothWindow = SMOOTH_DEFAULT_WINDOW,
   } = options
 
   if (coords.length < 2) {
