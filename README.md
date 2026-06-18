@@ -17,6 +17,7 @@ import { simpleCalories, pandolfCalories } from '@mattduffy/calories'
 ```
 
 ## Simple Calories
+### Using Metabolic Equivalent Tasks
 The simple calories calculation takes 3 parameters: ``minutes``, ``weights``, and ``MET``, and returns a positive floating point value.  The function throws an ``Error`` if the required parameters are missing, or of the wrong type.  You need to know the ``MET`` value for any specific activity you are measuring.  A good list of ``MET`` values can be found at the [Compendium of Physical Activities](https://pacompendium.com).  The required body weight parameter is measured in kilograms.
 
 ```javascript
@@ -27,7 +28,9 @@ const minutes = 35
 // required.  If a ruck weight was carried, include
 // that too.  Optionally include weight of water
 // carried as well.
-// useful conversions: 1Kg == 2.2lbs or 1lbs === 0.45359Kg
+// useful conversions:
+//   1Kg == 2.2lbs or 1lbs === 0.45359Kg
+//   1 fl oz of water === 1.042oz or 15.355 fl oz === 1lbs or 33.781 fl oz === 1kg
 const weights = {
   body: 70, // required Kg
   ruck: 5,  // optional Kg
@@ -42,12 +45,13 @@ const weights = {
 // Rope jumping (84/min): 10.5
 // Jogging, 6.8 mph:      11.2
 const MET = 7.5
-const calories = simpleCalories(minutes, weights, MET)
-console.log(calories)
+const simple_calories = simpleCalories(minutes, weights, MET)
+console.log(simple_calories)
 // 143.381765625
 ```
 
-## Advanced Calories
+## Advanced Calorie Predictive Models
+### The Pandolf-Santee Model
 This method of estimating energy expenditure is based on the [Pandolf-Santee](https://en.wikipedia.org/wiki/Pandolf_equation) equation.  The required parameters include an array of GPS coordinate data, and a body weight, measured in kilograms.  Additional values can be provided in the options parameter; including the weight of a ruck load, the weight of additional water carried, and the type of terrain covered.  There is also an option to _smooth_ out the GPS elevation data.  If the elevation data comes from a GPS sensor (rather than a barometric pressure sensor), it can be useful to smooth out the values with a rolling average because some GPS sensors can provide pretty jittery values for this field.
 
 The ``pandolfCalories()`` function expects the coordinates parameter to be an array of arrays with the following format: [longitude, latitude, heading, altitude (m), accuracy (m), timestamp (ms)].  In this particular implementation, the heading and accuracy fields are not currently being used.  Those fields can be empty or null.  The fields for longitude, latitude, altitude and timestamp must be valid, non-null values.  Altitude is measured in meters and the timestamp is Javascript default milliseconds.
@@ -57,9 +61,10 @@ The ``pandolfCalories()`` function expects the coordinates parameter to be an ar
 ```javascript
 const cooords = [
 //[gps longitude,       gps latitude,      heading (in deg),   altitude (meters),  gps accuracy (m),  timestamp (ms)], 
-  [-122.20916799493806, 37.82464871910401, 319.83786864113785, 179.93365394789726, 4.686741545979877, 1774574231034],
-  [-122.20917657092433, 37.82465534833951, 324.6530349132338, 180.06493252050132, 4.686741545979877, 1774574232038],
-  [-122.20918544242693, 37.82466679792683, 331.23548521700536, 180.14162773638964, 4.686741545979877, 1774574233040],
+  [-122.18413372578239, 37.82762389320808, 289.500900176593, 410.60703301243484, 6.935079779936697, 1781733047033],
+  [-122.18414765202105, 37.827625731095864, 291.71648070840496, 411.11239344626665, 6.935079779936697, 1781733048037],
+  [-122.1841647535281, 37.82762780033335, 286.09169894511865, 410.85964420530945, 7.091013324104003, 1781733049031],
+  [-122.18417633225566, 37.827625146283225, 284.4996500921467, 411.22145825996995, 7.091013324104003, 1781733050034],
   ...,
 ]
 // Optional terrain characterization values include:
@@ -81,7 +86,49 @@ const options = {
   smooth: true,     // optional, smooth GSP elvation values
   smoothWindow: 5,  // optional, default value = 5
 }
-const calories = pandofCalories(coords, options)
-console.log(calories)
-// 206.18971995918972
+const pandolf_calories = pandofCalories(coords, options)
+console.log(pandolf_calories)
+// {
+//   totalKcal: 581.492205191523,
+//   totalDistanceM: 5544.758689134893,
+//   totalDurationSec: 3829.9640000000027,
+//   avgSpeedMs: 1.4477312813214143
+// }
+```
+
+### The LCDA Predicitve Model
+A much more recently developed predictive model for calculating energy expenditure over distance, while carrying a load is the **L**oad **C**arrying **D**ecision **A**id model. LCDA is considered to be slightly more accurate than the Pandolf model at the extra expense of requiring parameters to calculate basal metabolic rate.
+
+The ``coords`` and ``options`` parameters for ``lcdaCalories()`` are the same as for the above ``pandolfCalories()`` function.  The values in the ``BMR`` parameter are used to create a value for basal metabolic rate using the Mifflin-St Jeor equation.
+
+```javascript
+const coords = [
+//[gps longitude,       gps latitude,      heading (in deg),   altitude (meters),  gps accuracy (m),  timestamp (ms)], 
+  [-122.18413372578239, 37.82762389320808, 289.500900176593, 410.60703301243484, 6.935079779936697, 1781733047033],
+  [-122.18414765202105, 37.827625731095864, 291.71648070840496, 411.11239344626665, 6.935079779936697, 1781733048037],
+  [-122.1841647535281, 37.82762780033335, 286.09169894511865, 410.85964420530945, 7.091013324104003, 1781733049031],
+  [-122.18417633225566, 37.827625146283225, 284.4996500921467, 411.22145825996995, 7.091013324104003, 1781733050034],
+]
+const BMR = {
+  height: 162.5 // Required, measured in centimeters
+  weight: 70    // Required, measured in kilograms
+  age: 45       // Required, measured in years
+  sex: 'm'      // Required, either 'm' or 'f'
+}
+const options = {
+  bodyWeightKg: 70, // Required, measured in kilograms
+  loadKg: 13.6,     // optional, measured in kilograms
+  waterKg: 0,       // optional, measured in kilograms
+  terrain: 1.1,     // optional, default value = 1.1
+  smooth: true,     // optional, smooth GSP elvation values
+  smoothWindow: 5,  // optional, default value = 5
+}
+const lcda_calories = lcdaCalories(coords, BMR, options)
+console.log(lcda_calories)
+// {
+//   totalKcal: 590.292205191523,
+//   totalDistanceM: 5544.758689134893,
+//   totalDurationSec: 3829.9640000000027,
+//   avgSpeedMs: 1.4477312813214143
+// }
 ```
