@@ -189,7 +189,7 @@ function smoothAltitude(coords, windowSize = SMOOTH_DEFAULT_WINDOW) {
     const start = Math.max(0, i - half)
     const end = Math.min(coords.length - 1, i + half)
     const slice = coords.slice(start, end + 1)
-    const validAlts = slice.map(c => c[3]).filter(a => a !== null)
+    const validAlts = slice.map((c) => c[3]).filter((a) => a !== null)
     const avgerageAltitude = validAlts.length > 0
       ? validAlts.reduce((sum, a) => sum + a, 0) / validAlts.length
       : coord[3]
@@ -450,68 +450,58 @@ function mResting(height, weight, age, sex) {
 }
 
 /**
- * @todo
- * @summary Calculate metabolic rate (Watts) using the LCDA predictive model.
+ * @summary Calculate metabolic rate (W·kg⁻¹) using the LCDA predictive model.
+ *          Implements equation 4 from Looney et al. (2022), which combines the
+ *          level-walking LCDA backpacking equation (eq. 2) with the LCDA-graded
+ *          walking equation (eq. 3) and terrain coefficient.
  * @author Matthew Duffy <mattduffy@gmail.com>
- * @param {Number} L - Combined weight of body and load.
+ * @param {Number} L_Bp - Backpack load divided by body mass (dimensionless ratio,
+ *                        e.g. 0.18 for a load equal to 18% of body mass).
  * @param {Number} S - Walking speed, in m/s.
- * @param {Number} G - Grade as a percentage (e.g. 10 for 10% incline, -5 for decline).
- * @param {Number} n - Terrain coeffcient (η).
+ * @param {Number} G - Grade as decimal (rise/run, e.g. .05 for 5% incline, -.05 for decline).
+ * @param {Number} n - Terrain coefficient (η).
  * @param {Object} rM - Values for calculating resting metabolic rate.
  * @param {Number} rM.height - Body height in cm.
  * @param {Number} rM.weight - Body weight in kg.
  * @param {Number} rM.age - Age, in years.
- * @param {('m'|'f')} rM.sex - Male of female.
- * @returns {Number} Metabolic rate in Watts (should always be >= 0).
+ * @param {('m'|'f')} rM.sex - Male or female.
+ * @returns {Number} Body-mass-specific metabolic rate in W·kg⁻¹ (>= 0).
  */
-function lcdaMetabolicRate(L, S, G, n, rM) {
-  console.log('lcdaMetabolicRate parameters:', L, S, G, n, rM)
+function lcdaMetabolicRate(L_Bp, S, G, n, rM) {
+  // Eq. 3 — LCDA-graded walking term (W·kg⁻¹); G is decimal grade (rise/run).
   function M_grade(s, g) {
-    console.log(`s: ${s}, g: ${g}`)
-    // return (34 * s * g) * (1 - 1.05 ** (1 - 1.1 ** (100 * g + 32)))
-    // return 34 * s * g * (1 - 1.05 ** (1 - 1.1 * (100 * g + 32)))
-    return 34 * s * g * (1 - 1.05 ** (1 - 1.1 * (g + 32)))
-    // return (34 * s * g) * (1 - 1.05 ** (1 - 1.1 ** (g + 32)))
+    return 34 * s * g * (1 - 1.05 ** (1 - 1.1 ** (100 * g + 32)))
   }
   if (S <= 0) {
     return 0
   }
   const M_resting = mResting(rM.height, rM.weight, rM.age, rM.sex)
-  const m_grade = M_grade(S, G)
-  console.log(`mbs: ${M_resting}, m_grade: ${m_grade}`)
-  // const M = M_resting
-  //   + (0.19
-  //     + n * (1.78 * S ** 0.58 + 0.27 * S ** 4 + m_grade))
-  //  * (1 + 1.96 * L ** 1.36)
-
-  // return Math.max(0, M)
   const speedTerms = 1.78 * S ** 0.58 + 0.27 * S ** 4
   const gradeTerms = M_grade(S, G)
-  const loadFactor = 1 + 1.96 * L ** 1.36
+  const loadFactor = 1 + 1.96 * L_Bp ** 1.36
 
-  return M_resting + (0.19 + n * (speedTerms + gradeTerms)) * loadFactor
+  // Eq. 4 — combined LCDA backpacking + graded + terrain equation (W·kg⁻¹)
+  return Math.max(0, M_resting + (0.19 + n * (speedTerms + gradeTerms)) * loadFactor)
 }
 
 /**
- * @todo
  * @summary Process a single segment (two consecutive GPS points) and return metabolic and
  *          distance data for that segment.
  * @author Matthew Duffy <mattduffy@gmail.com>
  * @param {Number[]} point1 - [longitude, latitude, heading, altitude, accuracy, timestamp]
  * @param {Number[]} point2 - [longitude, latitude, heading, altitude, accuracy, timestamp]
  * @param {Number} W - Body weight in kg.
- * @param {Number} L - Load carried in kg.
+ * @param {Number} L - Load carried in kg (pack, excluding water).
  * @param {Number} H2O - Water carried in kg.
- * @param {Number} n - Terrain coeffcient (η).
+ * @param {Number} n - Terrain coefficient (η).
  * @param {Object} rM - Values for calculating resting metabolic rate.
  * @param {Number} rM.height - Body height in cm.
  * @param {Number} rM.weight - Body weight in kg.
  * @param {Number} rM.age - Age, in years.
- * @param {('m'|'f')} rM.sex - Male of female.
+ * @param {('m'|'f')} rM.sex - Male or female.
  * @returns {Object|null} Segment result, or null if the segment should be skipped.
  */
 function processLcdaSegment(point1, point2, W, L, H2O, n, rM) {
-  // console.log(W, L, H2O)
   const [lon1, lat1, , alt1, , t1] = point1
   const [lon2, lat2, , alt2, , t2] = point2
 
@@ -532,11 +522,15 @@ function processLcdaSegment(point1, point2, W, L, H2O, n, rM) {
   // Derived speed - clamped to MAX_SPEED_MS to guard against GPS outliers.
   const speed = Math.min(horizontalDistance / durationSec, MAX_SPEED_MS)
 
-  // Metabolic rate for this segment (Watts)
-  const combinedW = W + L + H2O
-  // console.log('processLcdaSegment combinedW:', combinedW)
-  const lcdaMetabolicRateWatts = lcdaMetabolicRate(combinedW, speed, grade, n, rM)
-  // console.log('lcdaMetabolicRateWatts:', lcdaMetabolicRateWatts)
+  // LCDA equation uses L_Bp = load/body_mass (dimensionless).
+  const L_Bp = (L + H2O) / W
+  // LCDA equation uses grade as decimal (not %).
+  const decimalGrade = grade / 100
+
+  // lcdaMetabolicRate returns W·kg⁻¹; multiply by body mass to get total Watts.
+  const metabolicRatePerKg = lcdaMetabolicRate(L_Bp, speed, decimalGrade, n, rM)
+  const lcdaMetabolicRateWatts = metabolicRatePerKg * W
+
   // Energy expended = power × time (joules), converted to kcal.
   const kcal = (lcdaMetabolicRateWatts * durationSec) / JOULES_PER_KCAL
 
@@ -552,7 +546,6 @@ function processLcdaSegment(point1, point2, W, L, H2O, n, rM) {
 }
 
 /**
- * @todo create the lcda predictive model.
  * @summary Use the LCDA predictive model to estimate calories burned.
  * @author Matthew Duffy <mattduffy@gmail.com>
  * @param {Number[][]} coords - GPS coordinate array.
@@ -572,24 +565,16 @@ function processLcdaSegment(point1, point2, W, L, H2O, n, rM) {
  * @throws {Error} - Throws error if body weight is not provided.
  * @return {Object} Result object.
  */
-function lcdaCalories(coords, BMR, options = {
-  loadKg: 0,
-  waterKg: 0,
-  terrain: TERRAIN_COEFFICIENTS.DIRT,
-  smooth: SMOOTH_DEFAULT,
-  smoothWindow: SMOOTH_DEFAULT_WINDOW,
-}) {
-  const defaults = {
-    loadKg: 0,
-    waterKg: 0,
-    terrain: TERRAIN_COEFFICIENTS.DIRT,
-    smooth: true,
-    smoothWindow: SMOOTH_DEFAULT_WINDOW,
-  }
+function lcdaCalories(coords, BMR, options = {}) {
   const {
-    bodyWeightKg, loadKg, waterKg,
-    terrain, smooth, smoothWindow,
-  } = { ...options, ...defaults }
+    bodyWeightKg,
+    loadKg = 0,
+    waterKg = 0,
+    terrain = TERRAIN_COEFFICIENTS.DIRT,
+    smooth = SMOOTH_DEFAULT,
+    smoothWindow = SMOOTH_DEFAULT_WINDOW,
+  } = options
+
   console.log('lcda parameters:')
   console.log(bodyWeightKg, loadKg, waterKg)
   console.log(terrain)
@@ -626,7 +611,7 @@ function lcdaCalories(coords, BMR, options = {
     )
     if (seg) {
       totalKcal += seg.kcal
-      console.log(`adding seg.kcal: ${seg.kcal} (${totalKcal})`)
+      // console.log(`adding seg.kcal: ${seg.kcal} (${totalKcal})`)
       totalDistanceM += seg.horizontalDistance
       totalDurationSec += seg.durationSec
       segments.push(seg)
