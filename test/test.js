@@ -33,11 +33,9 @@ import walk_15 from './walk_15-we-need-to-go-in-and-find-somebody-pinker.json' w
 import walk_16 from './walk_16-maybe-just-a-quick-kiss-to-break-the-tension.json' with {
   type: 'json',
 }
-
-// console.log(walk_1.features[0].geometry.coordinates[0])
-// console.log(walk_2.features[0].geometry.coordinates[0])
-// console.log(walk_3.features[0].geometry.coordinates[0])
-// console.log(walk_4.features[0].geometry.coordinates[0])
+import walk_17 from './walk_17-when-you-have-nothing-to-loose-there-is-a-certain.json' with {
+  type: 'json',
+}
 
 const results = [
   {
@@ -1553,7 +1551,96 @@ describe('First test suite for calories package', async () => {
     }
   })
 
-  it('Test the lcda predictive model with walk_16', async () => {
+  it('Advanced calorie comparison test - walk_17', async () => {
+    console.log('')
+    console.log(`name: ${walk_17.features[0].properties.name}`)
+    const cal17W = walk_17.features[0].properties.weights
+    const walk_17_minutes = m2m(walk_17.features[0].properties.duration)
+    console.log('cal17W weights in lbs are:', cal17W)
+    const walk17Simple = simpleCalories(
+      walk_17_minutes,
+      {
+        body: _dot1(cal17W.body / 2.2),
+        ruck: _dot1(cal17W.ruck / 2.2),
+        water: (cal17W.water === 0) ? 0 : cal17W.water / 2.2,
+      },
+    )
+    const cal17 = pandolfCalories(
+      walk_17.features[0].geometry.coordinates,
+      {
+        bodyWeightKg: (cal17W.body / 2.2),
+        loadKg: (cal17W.ruck / 2.2),
+        waterKg: (cal17W.water / 2.2),
+        terrain: 1.1,
+      },
+    )
+    const simple = walk_17.features[0].properties.simpleCalories
+    const date_17 = new Date(walk_17.features[0].properties.date)
+      .toLocaleDateString('en-US', {
+        month: '2-digit',
+        day: '2-digit',
+        year: 'numeric',
+      })
+    results.push({
+      date: date_17,
+      name: clipName(walk_17.features[0].properties.name),
+      distance: dist(walk_17.features[0].properties.distance),
+      duration: _dot1(walk_17_minutes),
+      avgSpd: _dot1(cal17.avgSpeedMs),
+      weights: `b: ${_dot1(cal17W.body / 2.2)}, r: ${_dot1(cal17W.ruck / 2.2)}`,
+      simple1: _dot1(walk_17.features[0].properties.simpleCalories),
+      simple2: _dot1(walk17Simple),
+      pandolf1: _dot1(walk_17.features[0].properties.pandolfCalories.totalKcal) ?? null,
+      pandolf2: _dot1(cal17.totalKcal),
+      minMech: null,
+      lcda: null,
+      apple: _dot1(walk_17.features[0].properties?.apple?.activity) ?? 0,
+    })
+    console.log(`walk_17 pandolf calories: ${cal17.totalKcal} (simpleCalories: ${simple})`)
+    console.log(
+      `walk_17 pandolf distance: calculated ${_dot1(cal17.totalDistanceM)} `
+      + `(original ${_dot1(walk_17.features[0].properties.distance)})`,
+    )
+    console.log(
+      `walk_17 pandolf duration: calculated ${_dot1(cal17.totalDurationSec)}, `
+      + `(original ${_dot1(walk_17.features[0].properties.duration / 1000)})`,
+    )
+    console.log(
+      'within5 distance:',
+      `${_dot1(cal17.totalDistanceM)}, ${_dot1(walk_17.features[0].properties.distance)}`,
+      within5(cal17.totalDistanceM, walk_17.features[0].properties.distance),
+    )
+    console.log(
+      'within10 distance:',
+      within10(cal17.totalDistanceM, walk_17.features[0].properties.distance),
+      `calculated ${_dot1(cal17.totalDistanceM)} /`,
+      `original ${_dot1(walk_17.features[0].properties.distance)} =`,
+      _dot1(cal17.totalDistanceM) / _dot1(walk_17.features[0].properties.distance),
+    )
+    console.log(
+      'within5 calories:',
+      within5(cal17.totalKcal, walk17Simple),
+      `calculated ${_dot1(cal17.totalKcal)} /`,
+      `original ${_dot1(walk17Simple)} =`,
+      _dot1(cal17.totalKcal) / _dot1(walk17Simple),
+    )
+    console.log('within10 calories:', within10(cal17.totalKcal, walk17Simple))
+    if (cal17.segments.length > 0) {
+      cal17.segments.map((seg, i) => {
+        if (seg.kcal > calClamp) {
+          console.log(
+            `seg # ${i}, `
+            + `seg kcal ${seg.kcal}, `
+            + `distance ${seg.horizontalDistance}, `
+            + `time ${seg.durationSec}`,
+          )
+        }
+        return 0
+      })
+    }
+  })
+
+  it('Test the lcda predictive model with walk_16', { skip: true }, async () => {
     console.log('')
     console.log(`name: ${walk_16.features[0].properties.name}`)
     const coords = walk_16.features[0].geometry.coordinates
