@@ -642,12 +642,11 @@ function minimumMechanicCalories() {
   // https://pubmed.ncbi.nlm.nih.gov/28729390/
   // https://pmc.ncbi.nlm.nih.gov/articles/PMC8560389/
   // https://journals.physiology.org/doi/full/10.1152/japplphysiol.00504.2017
-  return
 }
 
 /**
  * @todo Create a function entrypoint that calculates the calorie estimate for each available
- *       predictive model, passing over the coords array just once, but processing each 
+ *       predictive model, passing over the coords array just once, but processing each
  *       coordinate segment with each calorie model.
  * @summary Return an ensemble result of each of the available predicitive models, given a single
  *          array of coordinates.
@@ -678,7 +677,8 @@ function minimumMechanicCalories() {
 
  */
 function calorieEnsemble(coords, options) {
-  return
+  console.log(coords.length)
+  console.log(options)
 }
 
 export {
@@ -690,7 +690,8 @@ export {
   lcdaCalories,
   simpleCalories,
   pandolfCalories,
+  calorieEnsemble,
   calculateCalories,
   calculateSlopeGrade,
-  // minimumMechanicCalories,
+  minimumMechanicCalories,
 }
