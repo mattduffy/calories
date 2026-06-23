@@ -628,9 +628,10 @@ function lcdaCalories(coords, BMR, options = {}) {
 }
 
 /**
- * @todo
+ * @todo Create the calculation workflow for the minimum mechanics predictive model.
  * @summary Use the Minimum Mechanics Model to estimate calrories burned.
  * @author Matthew Duffy <mattduffy@gmail.com>
+ * @param {Number[][]} coords - GPS coordinate array.
  * @param
  * @throws
  * @return
@@ -641,6 +642,43 @@ function minimumMechanicCalories() {
   // https://pubmed.ncbi.nlm.nih.gov/28729390/
   // https://pmc.ncbi.nlm.nih.gov/articles/PMC8560389/
   // https://journals.physiology.org/doi/full/10.1152/japplphysiol.00504.2017
+  return
+}
+
+/**
+ * @todo Create a function entrypoint that calculates the calorie estimate for each available
+ *       predictive model, passing over the coords array just once, but processing each 
+ *       coordinate segment with each calorie model.
+ * @summary Return an ensemble result of each of the available predicitive models, given a single
+ *          array of coordinates.
+ * @author Matthew Duffy <mattduffy@gmail.com>
+ * @param {Number[][]} coords - GPS coordinate array.
+ * @param {Object} options
+ * @param {Number} options.bodyWeightKg - Body weight in kg (required).
+ * @param {Number} [options.loadKg=0] - Load/pack weight in kg.
+ * @param {Number} [options.waterKg=0] - Water weight in kg carried.
+ * @param {Number} [options.terrain=1.1]  - Terrain coefficient (n). Use TERRAIN_COEFFICIENTS.
+ * @param {Boolean} [options.smooth=true] - Whether to smooth GPS altitude before calculating.
+ * @param {Number} [options.smoothWindow=5] - Rolling average size for altitude smoothing.
+ * @param {Object} [options.BMR] - Values for calculating resting metabolic rate.
+ * @param {Number} [options.BMR.height] - BMR body height in cm.
+ * @param {Number} [options.BMR.weight] - BMR body weight in kg.
+ * @param {Number} [options.BMR.age] - BMR age, in years.
+ * @param {('m'|'f')} [options.BMR.sex] - BMR sex Male of female.
+ * @throws {Error} - Throws error if not enough coordinates.
+ * @throws {Error} - Throws error if body weight is not provided.
+ * @returns {Object} Result object:
+ *   {
+ *     totalPandolfKcal : Number, // Total pandolf calories burned
+ *     totalLCDAKcal : Number, // Total LCDA calories burned
+ *     totalDistanceM : Number, // Total horizontal distance (meters)
+ *     totalDurationSec: Number, // Total elapsed time (seconds)
+ *     avgSpeedMs : Number, // Average speed (m/s)
+ *   }
+
+ */
+function calorieEnsemble(coords, options) {
+  return
 }
 
 export {
@@ -654,5 +692,5 @@ export {
   pandolfCalories,
   calculateCalories,
   calculateSlopeGrade,
-  minimumMechanicCalories,
+  // minimumMechanicCalories,
 }
