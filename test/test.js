@@ -36,6 +36,8 @@ import walk_16 from './walk_16-maybe-just-a-quick-kiss-to-break-the-tension.json
 import walk_17 from './walk_17-when-you-have-nothing-to-loose-there-is-a-certain.json' with {
   type: 'json',
 }
+import walk_18 from './walk_18-your-new-roommate-is-this-fashion-model.json' with { type: 'json' }
+import walk_19 from './walk_19-a-petty-neighbor-murder.json' with { type: 'json' }
 
 const results = [
   {
@@ -1640,6 +1642,184 @@ describe('First test suite for calories package', async () => {
     }
   })
 
+  it('Pandolf calorie comparison test - walk_18', async () => {
+    console.log('')
+    console.log(`name: ${walk_18.features[0].properties.name}`)
+    const cal18W = walk_18.features[0].properties.weights
+    const walk_18_minutes = m2m(walk_18.features[0].properties.duration)
+    console.log('cal18W weights in lbs are:', cal18W)
+    const walk18Simple = simpleCalories(
+      walk_18_minutes,
+      {
+        body: _dot1(cal18W.body / 2.2),
+        ruck: _dot1(cal18W.ruck / 2.2),
+        water: (cal18W.water === 0) ? 0 : cal18W.water / 2.2,
+      },
+    )
+    const cal18 = pandolfCalories(
+      walk_18.features[0].geometry.coordinates,
+      {
+        bodyWeightKg: (cal18W.body / 2.2),
+        loadKg: (cal18W.ruck / 2.2),
+        waterKg: (cal18W.water / 2.2),
+        terrain: 1.1,
+      },
+    )
+    const simple = walk_18.features[0].properties.simpleCalories
+    const date_18 = new Date(walk_18.features[0].properties.date)
+      .toLocaleDateString('en-US', {
+        month: '2-digit',
+        day: '2-digit',
+        year: 'numeric',
+      })
+    results.push({
+      date: date_18,
+      name: clipName(walk_18.features[0].properties.name),
+      distance: dist(walk_18.features[0].properties.distance),
+      duration: _dot1(walk_18_minutes),
+      avgSpd: _dot1(cal18.avgSpeedMs),
+      weights: `b: ${_dot1(cal18W.body / 2.2)}, r: ${_dot1(cal18W.ruck / 2.2)}`,
+      simple1: _dot1(walk_18.features[0].properties.simpleCalories),
+      simple2: _dot1(walk18Simple),
+      pandolf1: _dot1(walk_18.features[0].properties.pandolfCalories.totalKcal) ?? null,
+      pandolf2: _dot1(cal18.totalKcal),
+      minMech: null,
+      lcda: null,
+      apple: _dot1(walk_18.features[0].properties?.apple?.activity) ?? 0,
+    })
+    console.log(`walk_18 pandolf calories: ${cal18.totalKcal} (simpleCalories: ${simple})`)
+    console.log(
+      `walk_18 pandolf distance: calculated ${_dot1(cal18.totalDistanceM)} `
+      + `(original ${_dot1(walk_18.features[0].properties.distance)})`,
+    )
+    console.log(
+      `walk_18 pandolf duration: calculated ${_dot1(cal18.totalDurationSec)}, `
+      + `(original ${_dot1(walk_18.features[0].properties.duration / 1000)})`,
+    )
+    console.log(
+      'within5 distance:',
+      `${_dot1(cal18.totalDistanceM)}, ${_dot1(walk_18.features[0].properties.distance)}`,
+      within5(cal18.totalDistanceM, walk_18.features[0].properties.distance),
+    )
+    console.log(
+      'within10 distance:',
+      within10(cal18.totalDistanceM, walk_18.features[0].properties.distance),
+      `calculated ${_dot1(cal18.totalDistanceM)} /`,
+      `original ${_dot1(walk_18.features[0].properties.distance)} =`,
+      _dot1(cal18.totalDistanceM) / _dot1(walk_18.features[0].properties.distance),
+    )
+    console.log(
+      'within5 calories:',
+      within5(cal18.totalKcal, walk18Simple),
+      `calculated ${_dot1(cal18.totalKcal)} /`,
+      `original ${_dot1(walk18Simple)} =`,
+      _dot1(cal18.totalKcal) / _dot1(walk18Simple),
+    )
+    console.log('within10 calories:', within10(cal18.totalKcal, walk18Simple))
+    if (cal18.segments.length > 0) {
+      cal18.segments.map((seg, i) => {
+        if (seg.kcal > calClamp) {
+          console.log(
+            `seg # ${i}, `
+            + `seg kcal ${seg.kcal}, `
+            + `distance ${seg.horizontalDistance}, `
+            + `time ${seg.durationSec}`,
+          )
+        }
+        return 0
+      })
+    }
+  })
+
+  it('Pandolf calorie comparison test - walk_19', async () => {
+    console.log('')
+    console.log(`name: ${walk_19.features[0].properties.name}`)
+    const cal19W = walk_19.features[0].properties.weights
+    const walk_19_minutes = m2m(walk_19.features[0].properties.duration)
+    console.log('cal19W weights in lbs are:', cal19W)
+    const walk19Simple = simpleCalories(
+      walk_19_minutes,
+      {
+        body: _dot1(cal19W.body / 2.2),
+        ruck: _dot1(cal19W.ruck / 2.2),
+        water: (cal19W.water === 0) ? 0 : cal19W.water / 2.2,
+      },
+    )
+    const cal19 = pandolfCalories(
+      walk_19.features[0].geometry.coordinates,
+      {
+        bodyWeightKg: (cal19W.body / 2.2),
+        loadKg: (cal19W.ruck / 2.2),
+        waterKg: (cal19W.water / 2.2),
+        terrain: 1.1,
+      },
+    )
+    const simple = walk_19.features[0].properties.simpleCalories
+    const date_19 = new Date(walk_19.features[0].properties.date)
+      .toLocaleDateString('en-US', {
+        month: '2-digit',
+        day: '2-digit',
+        year: 'numeric',
+      })
+    results.push({
+      date: date_19,
+      name: clipName(walk_19.features[0].properties.name),
+      distance: dist(walk_19.features[0].properties.distance),
+      duration: _dot1(walk_19_minutes),
+      avgSpd: _dot1(cal19.avgSpeedMs),
+      weights: `b: ${_dot1(cal19W.body / 2.2)}, r: ${_dot1(cal19W.ruck / 2.2)}`,
+      simple1: _dot1(walk_19.features[0].properties.simpleCalories),
+      simple2: _dot1(walk19Simple),
+      pandolf1: _dot1(walk_19.features[0].properties.pandolfCalories.totalKcal) ?? null,
+      pandolf2: _dot1(cal19.totalKcal),
+      minMech: null,
+      lcda: null,
+      apple: _dot1(walk_19.features[0].properties?.apple?.activity) ?? 0,
+    })
+    console.log(`walk_19 pandolf calories: ${cal19.totalKcal} (simpleCalories: ${simple})`)
+    console.log(
+      `walk_19 pandolf distance: calculated ${_dot1(cal19.totalDistanceM)} `
+      + `(original ${_dot1(walk_19.features[0].properties.distance)})`,
+    )
+    console.log(
+      `walk_19 pandolf duration: calculated ${_dot1(cal19.totalDurationSec)}, `
+      + `(original ${_dot1(walk_19.features[0].properties.duration / 1000)})`,
+    )
+    console.log(
+      'within5 distance:',
+      `${_dot1(cal19.totalDistanceM)}, ${_dot1(walk_19.features[0].properties.distance)}`,
+      within5(cal19.totalDistanceM, walk_19.features[0].properties.distance),
+    )
+    console.log(
+      'within10 distance:',
+      within10(cal19.totalDistanceM, walk_19.features[0].properties.distance),
+      `calculated ${_dot1(cal19.totalDistanceM)} /`,
+      `original ${_dot1(walk_19.features[0].properties.distance)} =`,
+      _dot1(cal19.totalDistanceM) / _dot1(walk_19.features[0].properties.distance),
+    )
+    console.log(
+      'within5 calories:',
+      within5(cal19.totalKcal, walk19Simple),
+      `calculated ${_dot1(cal19.totalKcal)} /`,
+      `original ${_dot1(walk19Simple)} =`,
+      _dot1(cal19.totalKcal) / _dot1(walk19Simple),
+    )
+    console.log('within10 calories:', within10(cal19.totalKcal, walk19Simple))
+    if (cal19.segments.length > 0) {
+      cal19.segments.map((seg, i) => {
+        if (seg.kcal > calClamp) {
+          console.log(
+            `seg # ${i}, `
+            + `seg kcal ${seg.kcal}, `
+            + `distance ${seg.horizontalDistance}, `
+            + `time ${seg.durationSec}`,
+          )
+        }
+        return 0
+      })
+    }
+  })
+
   it('Lcda predictive model with walk_1', async () => {
     console.log('')
     console.log(`name: ${walk_1.features[0].properties.name}`)
@@ -1995,6 +2175,48 @@ describe('First test suite for calories package', async () => {
     const lcda = lcdaCalories(coords, bmr, details)
     console.log(lcda)
     results[17].lcda = _dot1(lcda.totalKcal)
+  })
+
+  it('Lcda predictive model with walk_18', async () => {
+    console.log('')
+    console.log(`name: ${walk_18.features[0].properties.name}`)
+    const coords = walk_18.features[0].geometry.coordinates
+    const weight = walk_18.features[0].properties.weights
+    const bodyW = _dot1(weight.body / 2.2)
+    const ruckW = _dot1(weight.ruck / 2.2)
+    const bmr = {
+      height: 64 * 2.54, weight: bodyW, age: 53, sex: 'm',
+    }
+    const details = {
+      bodyWeightKg: bodyW,
+      loadKg: ruckW,
+      waterKg: 0,
+      terrain: 1.1,
+    }
+    const lcda = lcdaCalories(coords, bmr, details)
+    console.log(lcda)
+    results[18].lcda = _dot1(lcda.totalKcal)
+  })
+
+  it('Lcda predictive model with walk_19', async () => {
+    console.log('')
+    console.log(`name: ${walk_19.features[0].properties.name}`)
+    const coords = walk_19.features[0].geometry.coordinates
+    const weight = walk_19.features[0].properties.weights
+    const bodyW = _dot1(weight.body / 2.2)
+    const ruckW = _dot1(weight.ruck / 2.2)
+    const bmr = {
+      height: 64 * 2.54, weight: bodyW, age: 53, sex: 'm',
+    }
+    const details = {
+      bodyWeightKg: bodyW,
+      loadKg: ruckW,
+      waterKg: 0,
+      terrain: 1.1,
+    }
+    const lcda = lcdaCalories(coords, bmr, details)
+    console.log(lcda)
+    results[19].lcda = _dot1(lcda.totalKcal)
   })
 
   it('Display the results of all the walks tested.', async () => {
