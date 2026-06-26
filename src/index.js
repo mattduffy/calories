@@ -291,7 +291,7 @@ function pandolfMetabolicRate(W, L, V, G, n) {
 
 /**
  * @summary Processes a single segment (two consecutive GPS points) and returns metabolic and
- * distance data for that segment.
+ *          distance data for that segment.
  * @author Matthew Duffy <mattduffy@gmail.com>
  * @param {Number[]} point1 - [longitude, latitude, heading, altitude, accuracy, timestamp]
  * @param {Number[]} point2 - [longitude, latitude, heading, altitude, accuracy, timestamp]
@@ -514,9 +514,8 @@ function processLcdaSegment(point1, point2, W, L, H2O, n, rM) {
   if (durationSec <= 0 || horizontalDistance < MIN_SEGMENT_DIST_M) return null
 
   // Find the elevation change as slope between two points.
-  const slopeGrade = calculateSlopeGrade(p1, p2)
-  const { grade } = slopeGrade
-  // Uses horizontal distance as the "run" (standard for hiking/trail grade).
+  const { grade } = calculateSlopeGrade(p1, p2)
+  // Uses horizontal distance as the run (standard for hiking/trail grade).
   const altitudeDiff = alt2 - alt1
 
   // Derived speed - clamped to MAX_SPEED_MS to guard against GPS outliers.
