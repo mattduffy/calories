@@ -50,13 +50,13 @@ const results = [
     duration: null,
     avgSpd: null,
     weights: null,
+    apple: null,
     simple1: null,
     simple2: null,
     pandolf1: null,
     pandolf2: null,
-    minMech: null,
     lcda: null,
-    apple: null,
+    minMech: null,
   },
 ]
 
@@ -160,13 +160,13 @@ describe('First test suite for calories package', async () => {
       duration: _dot1(walk_1_minutes),
       avgSpd: null,
       weights: `b: ${_dot1(weights.body)}, r: ${_dot1(weights.ruck)}`,
+      apple: null,
       simple1: _dot1(walk_1.features[0].properties.simpleCalories),
       simple2: _dot1(cals_1),
       pandolf1: _dot1(walk_1.features[0].properties?.pandolfCalories?.totalKcal) ?? null,
       pandolf2: null,
-      minMech: null,
       lcda: null,
-      apple: null,
+      minMech: null,
     })
     const walk_2_minutes = m2m(walk_2.features[0].properties.duration)
     const walk_2_timediff = m2m(walk_2.features[0].properties.endTime)
@@ -191,13 +191,13 @@ describe('First test suite for calories package', async () => {
       duration: _dot1(walk_2_minutes),
       avgSpd: null,
       weights: `b: ${_dot1(weights.body)}, r: ${_dot1(weights.ruck)}`,
+      apple: null,
       simple1: _dot1(walk_2.features[0].properties.simpleCalories),
       simple2: _dot1(cals_2),
       pandolf1: _dot1(walk_2.features[0].properties?.pandolfCalories?.totalKcal) ?? null,
       pandolf2: null,
-      minMech: null,
       lcda: null,
-      apple: null,
+      minMech: null,
     })
     assert(!Number.isNaN(cals_1) && cals_1 > 0)
     assert(!Number.isNaN(cals_2) && cals_2 > 0)
@@ -374,13 +374,13 @@ describe('First test suite for calories package', async () => {
       duration: _dot1(m2m(walk_3.features[0].properties.duration)),
       avgSpd: _dot1(cal3.avgSpeedMs),
       weights: `b: ${_dot1(cal3W.body / 2.2)}, r: ${_dot1(cal3W.ruck / 2.2)}`,
+      apple: _dot1(walk_3.features[0].properties?.apple?.activity) ?? 0,
       simple1: _dot1(walk3Simple),
       simple2: _dot1(walk_3.features[0].properties.simpleCalories),
       pandolf1: _dot1(walk_3.features[0].properties?.pandolfCalories?.totalKcal) ?? null,
       pandolf2: _dot1(cal3.totalKcal),
-      minMech: null,
       lcda: null,
-      apple: _dot1(walk_3.features[0].properties?.apple?.activity) ?? 0,
+      minMech: null,
     })
     console.log(`walk_3 pandolf calories: ${cal3.totalKcal} (simpleCalories: ${simple})`)
     console.log(
@@ -461,13 +461,13 @@ describe('First test suite for calories package', async () => {
       duration: _dot1(walk_4_minutes),
       avgSpd: _dot1(cal4.avgSpeedMs),
       weights: `b: ${_dot1(cal4W.body / 2.2)}, r: ${_dot1(cal4W.ruck / 2.2)}`,
+      apple: _dot1(walk_4.features[0].properties?.apple?.activity) ?? 0,
       simple1: _dot1(simple),
       simple2: _dot1(walk4Simple),
       pandolf1: _dot1(walk_4.features[0].properties?.pandolfCalories?.totalKcal) ?? null,
       pandolf2: _dot1(cal4.totalKcal),
-      minMech: null,
       lcda: null,
-      apple: _dot1(walk_4.features[0].properties?.apple?.activity) ?? 0,
+      minMech: null,
     })
     console.log(`walk_4 pandolf calories: ${cal4.totalKcal} (simpleCalories: ${simple})`)
     console.log(
@@ -547,13 +547,13 @@ describe('First test suite for calories package', async () => {
       duration: _dot1(walk_5_minutes),
       avgSpd: _dot1(cal5.avgSpeedMs),
       weights: `b: ${cal5W.body / 2.2}, r: ${_dot1(cal5W.ruck / 2.2)}`,
+      apple: _dot1(walk_5.features[0].properties?.apple?.activity) ?? 0,
       simple1: _dot1(walk_1.features[0].properties.simpleCalories),
       simple2: _dot1(walk5Simple),
       pandolf1: _dot1(walk_5.features[0].properties?.pandolfCalories?.totalKcal) ?? null,
       pandolf2: _dot1(cal5.totalKcal),
-      minMech: null,
       lcda: null,
-      apple: _dot1(walk_5.features[0].properties?.apple?.activity) ?? 0,
+      minMech: null,
     })
     console.log(`walk_5 pandolf calories: ${cal5.totalKcal} (simpleCalories: ${simple})`)
     console.log(
@@ -634,13 +634,13 @@ describe('First test suite for calories package', async () => {
       duration: _dot1(walk_6_minutes),
       avgSpd: _dot1(cal6.avgSpeedMs),
       weights: `b: ${_dot1(cal6W.body / 2.2)}, r: ${_dot1(cal6W.ruck / 2.2)}`,
+      apple: _dot1(walk_6.features[0].properties?.apple?.activity) ?? 0,
       simple1: _dot1(walk_1.features[0].properties.simpleCalories),
       simple2: _dot1(walk6Simple),
       pandolf1: _dot1(walk_6.features[0].properties?.pandolfCalories?.totalKcal) ?? null,
       pandolf2: _dot1(cal6.totalKcal),
-      minMech: null,
       lcda: null,
-      apple: _dot1(walk_6.features[0].properties?.apple?.activity) ?? 0,
+      minMech: null,
     })
     console.log(`walk_6 pandolf calories: ${cal6.totalKcal} (simpleCalories: ${simple})`)
     console.log(
@@ -721,13 +721,13 @@ describe('First test suite for calories package', async () => {
       duration: _dot1(walk_7_minutes),
       avgSpd: _dot1(cal7.avgSpeedMs),
       weights: `b: ${_dot1(cal7W.body / 2.2)}, r: ${_dot1(cal7W.ruck / 2.2)}`,
+      apple: _dot1(walk_7.features[0].properties?.apple?.activity) ?? 0,
       simple1: _dot1(walk_7.features[0].properties.simpleCalories),
       simple2: _dot1(walk7Simple),
       pandolf1: _dot1(walk_7.features[0].properties?.pandolfCalories?.totalKcal) ?? null,
       pandolf2: _dot1(cal7.totalKcal),
-      minMech: null,
       lcda: null,
-      apple: _dot1(walk_7.features[0].properties?.apple?.activity) ?? 0,
+      minMech: null,
     })
     console.log(`walk_7 pandolf calories: ${cal7.totalKcal} (simpleCalories: ${simple})`)
     console.log(
@@ -808,13 +808,13 @@ describe('First test suite for calories package', async () => {
       duration: _dot1(walk_8_minutes),
       avgSpd: _dot1(cal8.avgSpeedMs),
       weights: `b: ${_dot1(cal8W.body / 2.2)}, r: ${cal8W.ruck / 2.2}`,
+      apple: _dot1(walk_8.features[0].properties?.apple?.activity) ?? 0,
       simple1: _dot1(walk_8.features[0].properties.simpleCalories),
       simple2: _dot1(walk8Simple),
       pandolf1: _dot1(walk_8.features[0].properties?.pandolfCalories?.totalKcal) ?? null,
       pandolf2: _dot1(cal8.totalKcal),
-      minMech: null,
       lcda: null,
-      apple: _dot1(walk_8.features[0].properties?.apple?.activity) ?? 0,
+      minMech: null,
     })
     console.log(`walk_8 pandolf calories: ${cal8.totalKcal} (simpleCalories: ${simple})`)
     console.log(
@@ -895,13 +895,13 @@ describe('First test suite for calories package', async () => {
       duration: _dot1(walk_9_minutes),
       avgSpd: _dot1(cal9.avgSpeedMs),
       weights: `b: ${_dot1(cal9W.body / 2.2)}, r: ${_dot1(cal9W.ruck / 2.2)}`,
+      apple: _dot1(walk_9.features[0].properties.apple.activity),
       simple1: _dot1(walk_9.features[0].properties.simpleCalories),
       simple2: _dot1(walk9Simple),
       pandolf1: _dot1(walk_9.features[0].properties.pandolfCalories.totalKcal) ?? null,
       pandolf2: _dot1(cal9.totalKcal),
-      minMech: null,
       lcda: null,
-      apple: _dot1(walk_9.features[0].properties.apple.activity),
+      minMech: null,
     })
     console.log(`walk_9 pandolf calories: ${cal9.totalKcal} (simpleCalories: ${simple})`)
     console.log(
@@ -982,13 +982,13 @@ describe('First test suite for calories package', async () => {
       duration: _dot1(walk_10_minutes),
       avgSpd: _dot1(cal10.avgSpeedMs),
       weights: `b: ${_dot1(cal10W.body / 2.2)}, r: ${_dot1(cal10W.ruck / 2.2)}`,
+      apple: _dot1(walk_10.features[0].properties.apple.activity),
       simple1: _dot1(walk_10.features[0].properties.simpleCalories),
       simple2: _dot1(walk10Simple),
       pandolf1: _dot1(walk_10.features[0].properties.pandolfCalories.totalKcal) ?? null,
       pandolf2: _dot1(cal10.totalKcal),
-      minMech: null,
       lcda: null,
-      apple: _dot1(walk_10.features[0].properties.apple.activity),
+      minMech: null,
     })
     console.log(`walk_10 pandolf calories: ${cal10.totalKcal} (simpleCalories: ${simple})`)
     console.log(
@@ -1069,13 +1069,13 @@ describe('First test suite for calories package', async () => {
       duration: _dot1(walk_11_minutes),
       avgSpd: _dot1(cal11.avgSpeedMs),
       weights: `b: ${_dot1(cal11W.body / 2.2)}, r: ${_dot1(cal11W.ruck / 2.2)}`,
+      apple: _dot1(walk_11.features[0].properties.apple.activity),
       simple1: _dot1(walk_11.features[0].properties.simpleCalories),
       simple2: _dot1(walk11Simple),
       pandolf1: _dot1(walk_11.features[0].properties.pandolfCalories.totalKcal) ?? null,
       pandolf2: _dot1(cal11.totalKcal),
-      minMech: null,
       lcda: null,
-      apple: _dot1(walk_11.features[0].properties.apple.activity),
+      minMech: null,
     })
     console.log(`walk_11 pandolf calories: ${cal11.totalKcal} (simpleCalories: ${simple})`)
     console.log(
@@ -1156,13 +1156,13 @@ describe('First test suite for calories package', async () => {
       duration: _dot1(walk_12_minutes),
       avgSpd: _dot1(cal12.avgSpeedMs),
       weights: `b: ${_dot1(cal12W.body / 2.2)}, r: ${_dot1(cal12W.ruck / 2.2)}`,
+      apple: _dot1(walk_12.features[0].properties.apple.activity),
       simple1: _dot1(walk_12.features[0].properties.simpleCalories),
       simple2: _dot1(walk12Simple),
       pandolf1: _dot1(walk_12.features[0].properties.pandolfCalories.totalKcal) ?? null,
       pandolf2: _dot1(cal12.totalKcal),
-      minMech: null,
       lcda: null,
-      apple: _dot1(walk_12.features[0].properties.apple.activity),
+      minMech: null,
     })
     console.log(`walk_12 pandolf calories: ${cal12.totalKcal} (simpleCalories: ${simple})`)
     console.log(
@@ -1243,13 +1243,13 @@ describe('First test suite for calories package', async () => {
       duration: _dot1(walk_13_minutes),
       avgSpd: _dot1(cal13.avgSpeedMs),
       weights: `b: ${_dot1(cal13W.body / 2.2)}, r: ${_dot1(cal13W.ruck / 2.2)}`,
+      apple: _dot1(walk_13.features[0].properties?.apple?.activity) ?? 0,
       simple1: _dot1(walk_13.features[0].properties.simpleCalories),
       simple2: _dot1(walk13Simple),
       pandolf1: _dot1(walk_13.features[0].properties.pandolfCalories.totalKcal) ?? null,
       pandolf2: _dot1(cal13.totalKcal),
-      minMech: null,
       lcda: null,
-      apple: _dot1(walk_13.features[0].properties?.apple?.activity) ?? 0,
+      minMech: null,
     })
     console.log(`walk_13 pandolf calories: ${cal13.totalKcal} (simpleCalories: ${simple})`)
     console.log(
@@ -1330,13 +1330,13 @@ describe('First test suite for calories package', async () => {
       duration: _dot1(walk_14_minutes),
       avgSpd: _dot1(cal14.avgSpeedMs),
       weights: `b: ${_dot1(cal14W.body / 2.2)}, r: ${_dot1(cal14W.ruck / 2.2)}`,
+      apple: _dot1(walk_14.features[0].properties?.apple?.activity) ?? 0,
       simple1: _dot1(walk_14.features[0].properties.simpleCalories),
       simple2: _dot1(walk14Simple),
       pandolf1: _dot1(walk_14.features[0].properties.pandolfCalories.totalKcal) ?? null,
       pandolf2: _dot1(cal14.totalKcal),
-      minMech: null,
       lcda: null,
-      apple: _dot1(walk_14.features[0].properties?.apple?.activity) ?? 0,
+      minMech: null,
     })
     console.log(`walk_14 pandolf calories: ${cal14.totalKcal} (simpleCalories: ${simple})`)
     console.log(
@@ -1417,13 +1417,13 @@ describe('First test suite for calories package', async () => {
       duration: _dot1(walk_15_minutes),
       avgSpd: _dot1(cal15.avgSpeedMs),
       weights: `b: ${_dot1(cal15W.body / 2.2)}, r: ${_dot1(cal15W.ruck / 2.2)}`,
+      apple: _dot1(walk_15.features[0].properties?.apple?.activity) ?? 0,
       simple1: _dot1(walk_15.features[0].properties.simpleCalories),
       simple2: _dot1(walk15Simple),
       pandolf1: _dot1(walk_15.features[0].properties.pandolfCalories.totalKcal) ?? null,
       pandolf2: _dot1(cal15.totalKcal),
-      minMech: null,
       lcda: null,
-      apple: _dot1(walk_15.features[0].properties?.apple?.activity) ?? 0,
+      minMech: null,
     })
     console.log(`walk_15 pandolf calories: ${cal15.totalKcal} (simpleCalories: ${simple})`)
     console.log(
@@ -1504,13 +1504,13 @@ describe('First test suite for calories package', async () => {
       duration: _dot1(walk_16_minutes),
       avgSpd: _dot1(cal16.avgSpeedMs),
       weights: `b: ${_dot1(cal16W.body / 2.2)}, r: ${_dot1(cal16W.ruck / 2.2)}`,
+      apple: _dot1(walk_16.features[0].properties?.apple?.activity) ?? 0,
       simple1: _dot1(walk_16.features[0].properties.simpleCalories),
       simple2: _dot1(walk16Simple),
       pandolf1: _dot1(walk_16.features[0].properties.pandolfCalories.totalKcal) ?? null,
       pandolf2: _dot1(cal16.totalKcal),
-      minMech: null,
       lcda: null,
-      apple: _dot1(walk_16.features[0].properties?.apple?.activity) ?? 0,
+      minMech: null,
     })
     console.log(`walk_16 pandolf calories: ${cal16.totalKcal} (simpleCalories: ${simple})`)
     console.log(
@@ -1593,13 +1593,13 @@ describe('First test suite for calories package', async () => {
       duration: _dot1(walk_17_minutes),
       avgSpd: _dot1(cal17.avgSpeedMs),
       weights: `b: ${_dot1(cal17W.body / 2.2)}, r: ${_dot1(cal17W.ruck / 2.2)}`,
+      apple: _dot1(walk_17.features[0].properties?.apple?.activity) ?? 0,
       simple1: _dot1(walk_17.features[0].properties.simpleCalories),
       simple2: _dot1(walk17Simple),
       pandolf1: _dot1(walk_17.features[0].properties.pandolfCalories.totalKcal) ?? null,
       pandolf2: _dot1(cal17.totalKcal),
-      minMech: null,
       lcda: null,
-      apple: _dot1(walk_17.features[0].properties?.apple?.activity) ?? 0,
+      minMech: null,
     })
     console.log(`walk_17 pandolf calories: ${cal17.totalKcal} (simpleCalories: ${simple})`)
     console.log(
@@ -1682,13 +1682,13 @@ describe('First test suite for calories package', async () => {
       duration: _dot1(walk_18_minutes),
       avgSpd: _dot1(cal18.avgSpeedMs),
       weights: `b: ${_dot1(cal18W.body / 2.2)}, r: ${_dot1(cal18W.ruck / 2.2)}`,
+      apple: _dot1(walk_18.features[0].properties?.apple?.activity) ?? 0,
       simple1: _dot1(walk_18.features[0].properties.simpleCalories),
       simple2: _dot1(walk18Simple),
       pandolf1: _dot1(walk_18.features[0].properties.pandolfCalories.totalKcal) ?? null,
       pandolf2: _dot1(cal18.totalKcal),
-      minMech: null,
       lcda: null,
-      apple: _dot1(walk_18.features[0].properties?.apple?.activity) ?? 0,
+      minMech: null,
     })
     console.log(`walk_18 pandolf calories: ${cal18.totalKcal} (simpleCalories: ${simple})`)
     console.log(
@@ -1771,13 +1771,13 @@ describe('First test suite for calories package', async () => {
       duration: _dot1(walk_19_minutes),
       avgSpd: _dot1(cal19.avgSpeedMs),
       weights: `b: ${_dot1(cal19W.body / 2.2)}, r: ${_dot1(cal19W.ruck / 2.2)}`,
+      apple: _dot1(walk_19.features[0].properties?.apple?.activity) ?? 0,
       simple1: _dot1(walk_19.features[0].properties.simpleCalories),
       simple2: _dot1(walk19Simple),
       pandolf1: _dot1(walk_19.features[0].properties.pandolfCalories.totalKcal) ?? null,
       pandolf2: _dot1(cal19.totalKcal),
-      minMech: null,
       lcda: null,
-      apple: _dot1(walk_19.features[0].properties?.apple?.activity) ?? 0,
+      minMech: null,
     })
     console.log(`walk_19 pandolf calories: ${cal19.totalKcal} (simpleCalories: ${simple})`)
     console.log(
@@ -1860,13 +1860,13 @@ describe('First test suite for calories package', async () => {
       duration: _dot1(walk_20_minutes),
       avgSpd: _dot1(cal20.avgSpeedMs),
       weights: `b: ${_dot1(cal20W.body / 2.2)}, r: ${_dot1(cal20W.ruck / 2.2)}`,
+      apple: _dot1(walk_20.features[0].properties?.apple?.activity) ?? 0,
       simple1: _dot1(walk_20.features[0].properties.simpleCalories),
       simple2: _dot1(walk20Simple),
       pandolf1: _dot1(walk_20.features[0].properties.pandolfCalories.totalKcal) ?? null,
       pandolf2: _dot1(cal20.totalKcal),
-      minMech: null,
       lcda: null,
-      apple: _dot1(walk_20.features[0].properties?.apple?.activity) ?? 0,
+      minMech: null,
     })
     console.log(`walk_20 pandolf calories: ${cal20.totalKcal} (simpleCalories: ${simple})`)
     console.log(
