@@ -41,6 +41,7 @@ import walk_19 from './walk_19-a-petty-neighbor-murder.json' with { type: 'json'
 import walk_20 from './walk_20-the-de-googled-chromium-browser-youve-been-looking-for.json' with {
   type: 'json'
 }
+import walk_21 from './walk_21-warehouse-there-house.json' with { type: 'json' }
 
 const results = [
   {
@@ -1912,6 +1913,95 @@ describe('First test suite for calories package', async () => {
     }
   })
 
+  it('Pandolf calorie comparison test - walk_21', async () => {
+    console.log('')
+    console.log(`name: ${walk_21.features[0].properties.name}`)
+    const cal21W = walk_21.features[0].properties.weights
+    const walk_21_minutes = m2m(walk_21.features[0].properties.duration)
+    console.log('cal21W weights in lbs are:', cal21W)
+    const walk21Simple = simpleCalories(
+      walk_21_minutes,
+      {
+        body: _dot1(cal21W.body / 2.2),
+        ruck: _dot1(cal21W.ruck / 2.2),
+        water: (cal21W.water === 0) ? 0 : cal21W.water / 2.2,
+      },
+    )
+    const cal21 = pandolfCalories(
+      walk_21.features[0].geometry.coordinates,
+      {
+        bodyWeightKg: (cal21W.body / 2.2),
+        loadKg: (cal21W.ruck / 2.2),
+        waterKg: (cal21W.water / 2.2),
+        terrain: 1.1,
+      },
+    )
+    const simple = walk_21.features[0].properties.simpleCalories
+    const date_21 = new Date(walk_21.features[0].properties.date)
+      .toLocaleDateString('en-US', {
+        month: '2-digit',
+        day: '2-digit',
+        year: 'numeric',
+      })
+    results.push({
+      date: date_21,
+      name: clipName(walk_21.features[0].properties.name),
+      distance: dist(walk_21.features[0].properties.distance),
+      duration: _dot1(walk_21_minutes),
+      avgSpd: _dot1(cal21.avgSpeedMs),
+      weights: `b: ${_dot1(cal21W.body / 2.2)}, r: ${_dot1(cal21W.ruck / 2.2)}`,
+      apple: _dot1(walk_21.features[0].properties?.apple?.activity) ?? 0,
+      simple1: _dot1(walk_21.features[0].properties.simpleCalories),
+      simple2: _dot1(walk21Simple),
+      pandolf1: _dot1(walk_21.features[0].properties.pandolfCalories.totalKcal) ?? null,
+      pandolf2: _dot1(cal21.totalKcal),
+      lcda: null,
+      minMech: null,
+    })
+    console.log(`walk_21 pandolf calories: ${cal21.totalKcal} (simpleCalories: ${simple})`)
+    console.log(
+      `walk_21 pandolf distance: calculated ${_dot1(cal21.totalDistanceM)} `
+      + `(original ${_dot1(walk_21.features[0].properties.distance)})`,
+    )
+    console.log(
+      `walk_21 pandolf duration: calculated ${_dot1(cal21.totalDurationSec)}, `
+      + `(original ${_dot1(walk_21.features[0].properties.duration / 1000)})`,
+    )
+    console.log(
+      'within5 distance:',
+      `${_dot1(cal21.totalDistanceM)}, ${_dot1(walk_21.features[0].properties.distance)}`,
+      within5(cal21.totalDistanceM, walk_21.features[0].properties.distance),
+    )
+    console.log(
+      'within10 distance:',
+      within10(cal21.totalDistanceM, walk_20.features[0].properties.distance),
+      `calculated ${_dot1(cal21.totalDistanceM)} /`,
+      `original ${_dot1(walk_21.features[0].properties.distance)} =`,
+      _dot1(cal21.totalDistanceM) / _dot1(walk_21.features[0].properties.distance),
+    )
+    console.log(
+      'within5 calories:',
+      within5(cal21.totalKcal, walk21Simple),
+      `calculated ${_dot1(cal21.totalKcal)} /`,
+      `original ${_dot1(walk21Simple)} =`,
+      _dot1(cal21.totalKcal) / _dot1(walk21Simple),
+    )
+    console.log('within10 calories:', within10(cal21.totalKcal, walk21Simple))
+    if (cal21.segments.length > 0) {
+      cal21.segments.map((seg, i) => {
+        if (seg.kcal > calClamp) {
+          console.log(
+            `seg # ${i}, `
+            + `seg kcal ${seg.kcal}, `
+            + `distance ${seg.horizontalDistance}, `
+            + `time ${seg.durationSec}`,
+          )
+        }
+        return 0
+      })
+    }
+  })
+
   it('Lcda predictive model with walk_1', async () => {
     console.log('')
     console.log(`name: ${walk_1.features[0].properties.name}`)
@@ -2330,6 +2420,27 @@ describe('First test suite for calories package', async () => {
     const lcda = lcdaCalories(coords, bmr, details)
     console.log(lcda)
     results[20].lcda = _dot1(lcda.totalKcal)
+  })
+
+  it('Lcda predictive model with walk_21', async () => {
+    console.log('')
+    console.log(`name: ${walk_21.features[0].properties.name}`)
+    const coords = walk_21.features[0].geometry.coordinates
+    const weight = walk_21.features[0].properties.weights
+    const bodyW = _dot1(weight.body / 2.2)
+    const ruckW = _dot1(weight.ruck / 2.2)
+    const bmr = {
+      height: 64 * 2.54, weight: bodyW, age: 53, sex: 'm',
+    }
+    const details = {
+      bodyWeightKg: bodyW,
+      loadKg: ruckW,
+      waterKg: 0,
+      terrain: 1.1,
+    }
+    const lcda = lcdaCalories(coords, bmr, details)
+    console.log(lcda)
+    results[21].lcda = _dot1(lcda.totalKcal)
   })
 
   it('Display the results of all the walks tested.', async () => {
