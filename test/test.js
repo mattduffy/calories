@@ -13,6 +13,7 @@ import {
   lcdaCalories,
   simpleCalories,
   pandolfCalories,
+  calorieEnsemble,
   calculateSlopeGrade,
 } from '../src/index.js'
 import walk_1 from './walk_01-back-in-the-game.json' with { type: 'json' }
@@ -62,6 +63,10 @@ const results = [
 ]
 
 // const skip = { skip: true }
+const AGE = 53
+const HEIGHT = 64 * 2.54
+const SEX = 'm'
+
 const weights = {
   body: 70, // (160 / 2.2),
   ruck: 5, // (30 / 2.2),
@@ -2010,7 +2015,7 @@ describe('First test suite for calories package', async () => {
     const bodyW = _dot1(weight.body / 2.2)
     const ruckW = _dot1(weight.ruck / 2.2)
     const bmr = {
-      height: 64 * 2.54, weight: bodyW, age: 53, sex: 'm',
+      height: HEIGHT, weight: bodyW, age: AGE, sex: SEX,
     }
     const details = {
       bodyWeightKg: bodyW,
@@ -2031,7 +2036,7 @@ describe('First test suite for calories package', async () => {
     const bodyW = _dot1(weight.body / 2.2)
     const ruckW = _dot1(weight.ruck / 2.2)
     const bmr = {
-      height: 64 * 2.54, weight: bodyW, age: 53, sex: 'm',
+      height: HEIGHT, weight: bodyW, age: AGE, sex: SEX,
     }
     const details = {
       bodyWeightKg: bodyW,
@@ -2052,7 +2057,7 @@ describe('First test suite for calories package', async () => {
     const bodyW = _dot1(weight.body / 2.2)
     const ruckW = _dot1(weight.ruck / 2.2)
     const bmr = {
-      height: 64 * 2.54, weight: bodyW, age: 53, sex: 'm',
+      height: HEIGHT, weight: bodyW, age: AGE, sex: SEX,
     }
     const details = {
       bodyWeightKg: bodyW,
@@ -2073,7 +2078,7 @@ describe('First test suite for calories package', async () => {
     const bodyW = _dot1(weight.body / 2.2)
     const ruckW = _dot1(weight.ruck / 2.2)
     const bmr = {
-      height: 64 * 2.54, weight: bodyW, age: 53, sex: 'm',
+      height: HEIGHT, weight: bodyW, age: AGE, sex: SEX,
     }
     const details = {
       bodyWeightKg: bodyW,
@@ -2094,7 +2099,7 @@ describe('First test suite for calories package', async () => {
     const bodyW = _dot1(weight.body / 2.2)
     const ruckW = _dot1(weight.ruck / 2.2)
     const bmr = {
-      height: 64 * 2.54, weight: bodyW, age: 53, sex: 'm',
+      height: HEIGHT, weight: bodyW, age: AGE, sex: SEX,
     }
     const details = {
       bodyWeightKg: bodyW,
@@ -2115,7 +2120,7 @@ describe('First test suite for calories package', async () => {
     const bodyW = _dot1(weight.body / 2.2)
     const ruckW = _dot1(weight.ruck / 2.2)
     const bmr = {
-      height: 64 * 2.54, weight: bodyW, age: 53, sex: 'm',
+      height: HEIGHT, weight: bodyW, age: AGE, sex: SEX,
     }
     const details = {
       bodyWeightKg: bodyW,
@@ -2136,7 +2141,7 @@ describe('First test suite for calories package', async () => {
     const bodyW = _dot1(weight.body / 2.2)
     const ruckW = _dot1(weight.ruck / 2.2)
     const bmr = {
-      height: 64 * 2.54, weight: bodyW, age: 53, sex: 'm',
+      height: HEIGHT, weight: bodyW, age: AGE, sex: SEX,
     }
     const details = {
       bodyWeightKg: bodyW,
@@ -2157,7 +2162,7 @@ describe('First test suite for calories package', async () => {
     const bodyW = _dot1(weight.body / 2.2)
     const ruckW = _dot1(weight.ruck / 2.2)
     const bmr = {
-      height: 64 * 2.54, weight: bodyW, age: 53, sex: 'm',
+      height: HEIGHT, weight: bodyW, age: AGE, sex: SEX,
     }
     const details = {
       bodyWeightKg: bodyW,
@@ -2178,7 +2183,7 @@ describe('First test suite for calories package', async () => {
     const bodyW = _dot1(weight.body / 2.2)
     const ruckW = _dot1(weight.ruck / 2.2)
     const bmr = {
-      height: 64 * 2.54, weight: bodyW, age: 53, sex: 'm',
+      height: HEIGHT, weight: bodyW, age: AGE, sex: SEX,
     }
     const details = {
       bodyWeightKg: bodyW,
@@ -2199,7 +2204,7 @@ describe('First test suite for calories package', async () => {
     const bodyW = _dot1(weight.body / 2.2)
     const ruckW = _dot1(weight.ruck / 2.2)
     const bmr = {
-      height: 64 * 2.54, weight: bodyW, age: 53, sex: 'm',
+      height: HEIGHT, weight: bodyW, age: AGE, sex: SEX,
     }
     const details = {
       bodyWeightKg: bodyW,
@@ -2220,7 +2225,8 @@ describe('First test suite for calories package', async () => {
     const bodyW = _dot1(weight.body / 2.2)
     const ruckW = _dot1(weight.ruck / 2.2)
     const bmr = {
-      height: 64 * 2.54, weight: bodyW, age: 53, sex: 'm',
+      height: HEIGHT, weight: bodyW, age: AGE, sex: SEX,
+
     }
     const details = {
       bodyWeightKg: bodyW,
@@ -2241,7 +2247,7 @@ describe('First test suite for calories package', async () => {
     const bodyW = _dot1(weight.body / 2.2)
     const ruckW = _dot1(weight.ruck / 2.2)
     const bmr = {
-      height: 64 * 2.54, weight: bodyW, age: 53, sex: 'm',
+      height: HEIGHT, weight: bodyW, age: AGE, sex: SEX,
     }
     const details = {
       bodyWeightKg: bodyW,
@@ -2262,7 +2268,7 @@ describe('First test suite for calories package', async () => {
     const bodyW = _dot1(weight.body / 2.2)
     const ruckW = _dot1(weight.ruck / 2.2)
     const bmr = {
-      height: 64 * 2.54, weight: bodyW, age: 53, sex: 'm',
+      height: HEIGHT, weight: bodyW, age: AGE, sex: SEX,
     }
     const details = {
       bodyWeightKg: bodyW,
@@ -2283,7 +2289,7 @@ describe('First test suite for calories package', async () => {
     const bodyW = _dot1(weight.body / 2.2)
     const ruckW = _dot1(weight.ruck / 2.2)
     const bmr = {
-      height: 64 * 2.54, weight: bodyW, age: 53, sex: 'm',
+      height: HEIGHT, weight: bodyW, age: AGE, sex: SEX,
     }
     const details = {
       bodyWeightKg: bodyW,
@@ -2304,7 +2310,7 @@ describe('First test suite for calories package', async () => {
     const bodyW = _dot1(weight.body / 2.2)
     const ruckW = _dot1(weight.ruck / 2.2)
     const bmr = {
-      height: 64 * 2.54, weight: bodyW, age: 53, sex: 'm',
+      height: HEIGHT, weight: bodyW, age: AGE, sex: SEX,
     }
     const details = {
       bodyWeightKg: bodyW,
@@ -2325,7 +2331,7 @@ describe('First test suite for calories package', async () => {
     const bodyW = _dot1(weight.body / 2.2)
     const ruckW = _dot1(weight.ruck / 2.2)
     const bmr = {
-      height: 64 * 2.54, weight: bodyW, age: 53, sex: 'm',
+      height: HEIGHT, weight: bodyW, age: AGE, sex: SEX,
     }
     const details = {
       bodyWeightKg: bodyW,
@@ -2346,7 +2352,7 @@ describe('First test suite for calories package', async () => {
     const bodyW = _dot1(weight.body / 2.2)
     const ruckW = _dot1(weight.ruck / 2.2)
     const bmr = {
-      height: 64 * 2.54, weight: bodyW, age: 53, sex: 'm',
+      height: HEIGHT, weight: bodyW, age: AGE, sex: SEX,
     }
     const details = {
       bodyWeightKg: bodyW,
@@ -2367,7 +2373,7 @@ describe('First test suite for calories package', async () => {
     const bodyW = _dot1(weight.body / 2.2)
     const ruckW = _dot1(weight.ruck / 2.2)
     const bmr = {
-      height: 64 * 2.54, weight: bodyW, age: 53, sex: 'm',
+      height: HEIGHT, weight: bodyW, age: AGE, sex: SEX,
     }
     const details = {
       bodyWeightKg: bodyW,
@@ -2388,7 +2394,7 @@ describe('First test suite for calories package', async () => {
     const bodyW = _dot1(weight.body / 2.2)
     const ruckW = _dot1(weight.ruck / 2.2)
     const bmr = {
-      height: 64 * 2.54, weight: bodyW, age: 53, sex: 'm',
+      height: HEIGHT, weight: bodyW, age: AGE, sex: SEX,
     }
     const details = {
       bodyWeightKg: bodyW,
@@ -2409,7 +2415,7 @@ describe('First test suite for calories package', async () => {
     const bodyW = _dot1(weight.body / 2.2)
     const ruckW = _dot1(weight.ruck / 2.2)
     const bmr = {
-      height: 64 * 2.54, weight: bodyW, age: 53, sex: 'm',
+      height: HEIGHT, weight: bodyW, age: AGE, sex: SEX,
     }
     const details = {
       bodyWeightKg: bodyW,
@@ -2430,7 +2436,7 @@ describe('First test suite for calories package', async () => {
     const bodyW = _dot1(weight.body / 2.2)
     const ruckW = _dot1(weight.ruck / 2.2)
     const bmr = {
-      height: 64 * 2.54, weight: bodyW, age: 53, sex: 'm',
+      height: HEIGHT, weight: bodyW, age: AGE, sex: SEX,
     }
     const details = {
       bodyWeightKg: bodyW,
@@ -2443,8 +2449,29 @@ describe('First test suite for calories package', async () => {
     results[21].lcda = _dot1(lcda.totalKcal)
   })
 
+  it('calorieEnsemble test', async () => {
+    console.log('')
+    console.log('calorie ensemble function test using walk_21 data file')
+    const coords = walk_21.features[0].geometry.coordinates
+    const weight = walk_21.features[0].properties.weights
+    const bodyW = _dot1(weight.body / 2.2)
+    const ruckW = _dot1(weight.ruck / 2.2)
+    const bmr = {
+      height: HEIGHT, weight: bodyW, age: AGE, sex: SEX,
+    }
+    const details = {
+      bodyWeightKg: bodyW,
+      loadKg: ruckW,
+      waterKg: 0,
+      terrain: 1.1,
+      BMR: bmr,
+    }
+    const resultSet = calorieEnsemble(coords, details)
+    console.log(resultSet)
+  })
+
   it('Display the results of all the walks tested.', async () => {
-    console.log('pandolf function is using seconds instead of milliseconds.')
+    // console.log('pandolf function is using seconds instead of milliseconds.')
     console.table(results)
     // assert(false)
   })
