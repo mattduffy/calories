@@ -117,7 +117,7 @@ describe('First test suite for calories package', async () => {
     console.log('running before the tests')
   })
   after(() => {
-    console.log('running after after the test')
+    console.log('running after the test')
   })
 
   it('Missing required parameters: minutes - simpleCalories', async () => {
@@ -222,8 +222,10 @@ describe('First test suite for calories package', async () => {
     // pandolfCalories(coords, options)
     assert.throws(() => { pandolfCalories(coords, options) })
   })
+})
 
-  it('Advanced calorie comparison test - walk_01', async () => {
+describe('Pandolf-Santee predictive model tests', async () => {
+  it('Pandolf calorie comparison test - walk_01', async () => {
     // const cal1RawDuration = walk_1.features[0].properties.duration
     // const cal2RawDuration = walk_2.features[0].properties.duration
     // const cal3RawDuration = walk_3.features[0].properties.duration
@@ -2006,7 +2008,9 @@ describe('First test suite for calories package', async () => {
       })
     }
   })
+})
 
+describe('LCDA predictive model suite', async () => {
   it('Lcda predictive model with walk_1', async () => {
     console.log('')
     console.log(`name: ${walk_1.features[0].properties.name}`)
@@ -2448,7 +2452,9 @@ describe('First test suite for calories package', async () => {
     console.log(lcda)
     results[21].lcda = _dot1(lcda.totalKcal)
   })
+})
 
+describe('Calorie ensemble tests', async() => {
   it('calorieEnsemble test', async () => {
     console.log('')
     console.log('calorie ensemble function test using walk_21 data file')
@@ -2469,7 +2475,9 @@ describe('First test suite for calories package', async () => {
     const resultSet = calorieEnsemble(coords, details)
     console.log(resultSet)
   })
+})
 
+describe('Results table', async () => {
   it('Display the results of all the walks tested.', async () => {
     // console.log('pandolf function is using seconds instead of milliseconds.')
     console.table(results)
