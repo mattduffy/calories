@@ -656,8 +656,8 @@ function minimumMechanicCalories() {
  * @param {Number} [options.loadKg=0] - Load/pack weight in kg.
  * @param {Number} [options.waterKg=0] - Water weight in kg carried.
  * @param {Number} [options.terrain=1.1]  - Terrain coefficient (n). Use TERRAIN_COEFFICIENTS.
- * @param {Boolean} [options.smooth=true] - Whether to smooth GPS altitude before calculating.
  * @param {Number} [options.smoothWindow=5] - Rolling average size for altitude smoothing.
+ * @param {Boolean} [options.smooth=true] - Whether to smooth GPS altitude before calculating.
  * @param {Object} [options.BMR] - Values for calculating resting metabolic rate.
  * @param {Number} [options.BMR.height] - BMR body height in cm.
  * @param {Number} [options.BMR.weight] - BMR body weight in kg.
@@ -676,8 +676,81 @@ function minimumMechanicCalories() {
 
  */
 function calorieEnsemble(coords, options) {
-  console.log(coords.length)
-  console.log(options)
+  const {
+    bodyWeightKg,
+    loadKg = 0,
+    waterKg = 0,
+    terrain = TERRAIN_COEFFICIENT.DIRT,
+    smooth = SMOOTH_DEFAULT,
+    smoothWindow = SMOOTH_DEFAULT_WINDOW,
+  } = options
+  const BMR = options?.BMR ?? null
+  console.log('emsemble parameters:')
+  console.log(bodyWeightKg, loadKg, waterKg)
+  console.log(terrain)
+  console.log(smooth, smoothWindow)
+  console.log('bmr', BMR)
+  if (!coords || coords?.length <= 2) {
+    throw new Error('At least 2 coordinate points are required.')
+  }
+  if (!BMR || BMR.height <= 0 || BMR.weight <= 0 || BMR.age <= 0 || !/m|f/i.test(BMR.sex)) {
+    const msg = 'BMR must include the following properties: \n'
+      + '       height: positive number (cm)\n'
+      + '       weight: positive number (kg)\n'
+      + '          age: positive number (years)\n'
+      + '          sex: string \'m|f\''
+    throw new Error(msg)
+  }
+  if (!bodyWeightKg || bodyWeightKg <= 0) {
+    throw new Error('options.bodyWeightKg is required and must be a positive number.')
+  }
+  const track = (smooth) ? smoothAltitude(coords, smoothWindow) : coords
+  const segments = []
+  const results = {
+    pandolf: { totalKcal: 0, totalDistanceM: 0, totalDurationSec: 0 },
+    lcda: { totalKcal: 0, totalDistanceM: 0, totalDurationSec: 0 },
+  }
+  for (let i = 1; i < track.length; i += 1) {
+    const pandolfSeg = processPandolfSegment(
+      track[i - 1],
+      track[i],
+      bodyWeightKg,
+      loadKg || 0,
+      waterKg || 0,
+      terrain,
+    )
+    if (pandolfSeg) {
+      results.pandolf.totalKcal += pandolfSeg.kcal
+      // console.log(`adding pandolfSeg.kcal: ${pandolfSeg.kcal} (${totalKcal})`)
+      results.pandolf.totalDistanceM += pandolfSeg.horizontalDistance
+      results.pandolf.totalDurationSec += pandolfSeg.durationSec
+      // segments.push(pandolfSeg)
+    }
+    const lcdaSeg = processLcdaSegment(
+      track[i - 1],
+      track[i],
+      bodyWeightKg,
+      loadKg || 0,
+      waterKg || 0,
+      terrain,
+      BMR,
+    )
+    if (lcdaSeg) {
+      results.lcda.totalKcal += lcdaSeg.kcal
+      // console.log(`adding lcdaSeg.kcal: ${lcdaSeg.kcal} (${totalKcal})`)
+      results.lcda.totalDistanceM += lcdaSeg.horizontalDistance
+      results.lcda.totalDurationSec += lcdaSeg.durationSec
+      // segments.push(lcdaSeg)
+    }
+  }
+  results.pandolf.avgSpeedMs = (results.pandolf.totalDurationSec > 0)
+    ? results.pandolf.totalDistanceM / results.pandolf.totalDurationSec
+    : 0
+  results.lcda.avgSpeedMs = (results.lcda.totalDurationSec > 0)
+    ? results.lcda.totalDistanceM / results.lcda.totalDurationSec
+    : 0
+
+  return results
 }
 
 export {
