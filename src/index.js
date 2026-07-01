@@ -444,7 +444,7 @@ function calculateCalories(coords, options = {}) {
 function mResting(height, weight, age, sex) {
   const s = (sex === 'm') ? 5 : -161
   const kcals = (10 * weight) + (6.25 * height) - (5 * age) + s
-  const joules = kcals * 4184
+  const joules = kcals * JOULES_PER_KCAL
   const watts = joules / 86400
   return watts / weight
 }
@@ -465,7 +465,7 @@ function mResting(height, weight, age, sex) {
  * @param {Number} rM.weight - Body weight in kg.
  * @param {Number} rM.age - Age, in years.
  * @param {('m'|'f')} rM.sex - Male or female.
- * @returns {Number} Body-mass-specific metabolic rate in W·kg⁻¹ (>= 0).
+ * @returns {Number} Body-mass-specific metabolic rate in Watts per kg (>= 0).
  */
 function lcdaMetabolicRate(L_Bp, S, G, n, rM) {
   // Eq. 3 — LCDA-graded walking term (W·kg⁻¹); G is decimal grade (rise/run).
@@ -526,7 +526,7 @@ function processLcdaSegment(point1, point2, W, L, H2O, n, rM) {
   // LCDA equation uses grade as decimal (not %).
   const decimalGrade = grade / 100
 
-  // lcdaMetabolicRate returns W·kg⁻¹; multiply by body mass to get total Watts.
+  // lcdaMetabolicRate returns Watts per kg; multiply by body mass to get total Watts.
   const metabolicRatePerKg = lcdaMetabolicRate(L_Bp, speed, decimalGrade, n, rM)
   const lcdaMetabolicRateWatts = metabolicRatePerKg * W
 
@@ -565,20 +565,6 @@ function processLcdaSegment(point1, point2, W, L, H2O, n, rM) {
  * @return {Object} Result object.
  */
 function lcdaCalories(coords, BMR, options = {}) {
-  const {
-    bodyWeightKg,
-    loadKg = 0,
-    waterKg = 0,
-    terrain = TERRAIN_COEFFICIENTS.DIRT,
-    smooth = SMOOTH_DEFAULT,
-    smoothWindow = SMOOTH_DEFAULT_WINDOW,
-  } = options
-
-  console.log('lcda parameters:')
-  console.log(bodyWeightKg, loadKg, waterKg)
-  console.log(terrain)
-  console.log(smooth, smoothWindow)
-  console.log('bmr', BMR)
   if (!coords || coords?.length < 2) {
     throw new Error('At least 2 coordinate points are required.')
   }
@@ -590,9 +576,23 @@ function lcdaCalories(coords, BMR, options = {}) {
       + '          sex: string \'m|f\''
     throw new Error(msg)
   }
+  const {
+    bodyWeightKg,
+    loadKg = 0,
+    waterKg = 0,
+    terrain = TERRAIN_COEFFICIENTS.DIRT,
+    smooth = SMOOTH_DEFAULT,
+    smoothWindow = SMOOTH_DEFAULT_WINDOW,
+  } = options
   if (!bodyWeightKg || bodyWeightKg <= 0) {
     throw new Error('options.bodyWeightKg is required and must be a positive number.')
   }
+  console.log('lcda parameters:')
+  console.log(bodyWeightKg, loadKg, waterKg)
+  console.log(terrain)
+  console.log(smooth, smoothWindow)
+  console.log('bmr', BMR)
+  
   const track = (smooth) ? smoothAltitude(coords, smoothWindow) : coords
   const segments = []
   let totalKcal = 0
@@ -631,16 +631,56 @@ function lcdaCalories(coords, BMR, options = {}) {
  * @summary Use the Minimum Mechanics Model to estimate calrories burned.
  * @author Matthew Duffy <mattduffy@gmail.com>
  * @param {Number[][]} coords - GPS coordinate array.
- * @param
- * @throws
- * @return
+ * @param {Object} BMR - Values for calculating resting metabolic rate.
+ * @param {Number} BMR.height - Body height in cm.
+ * @param {Number} BMR.weight - Body weight in kg.
+ * @param {Number} BMR.age - Age, in years.
+ * @param {('m'|'f')} BMR.sex - Male of female.
+ * @param {Object} options
+ * @param {Number} options.bodyWeightKg - Body weight in kg (required).
+ * @param {Number} [options.loadKg=0] - Load/ruck weight in kg.
+ * @param {Number} [options.waterKg=0] - Water weight carried in kg.
+ * @param {Number} [options.terrain=1.1] - Terrain coefficient (n) Use TERRAIN_COEFFICIENTS.
+ * @param {Boolean} [options.smooth=true] - Whether to smooth GPS altitude before calculating.
+ * @param {Number} [options.smoothWindow=5] - Rolling average size for altitude smoothing.
+ * @throws {Error} - Throws error if not enough coordinates.
+ * @throws {Error} - Throws error if body weight is not provided.
+ * @return {Object} Result object.
  */
-function minimumMechanicCalories() {
+function minimumMechanicCalories(coords, BMR, options = {}) {
   // https://blog.smu.edu/research/2017/10/17/study-new-simple-method-determines-rate-burn-
   // calories-walking-uphill-downhill-level-ground/
   // https://pubmed.ncbi.nlm.nih.gov/28729390/
   // https://pmc.ncbi.nlm.nih.gov/articles/PMC8560389/
   // https://journals.physiology.org/doi/full/10.1152/japplphysiol.00504.2017
+  if (!coords || coords?.length < 2) {
+    throw new Error('At least 2 coordinate points are required.')
+  }
+  if (!BMR || BMR.height <= 0 || BMR.weight <= 0 || BMR.age <= 0 || !/m|f/i.test(BMR.sex)) {
+    const msg = 'BMR must include the following properties: \n'
+      + '       height: positive number (cm)\n'
+      + '       weight: positive number (kg)\n'
+      + '          age: positive number (years)\n'
+      + '          sex: string \'m|f\''
+    throw new Error(msg)
+  }
+  const {
+    bodyWeightKg = 0,
+    loadKg = 0,
+    waterKg = 0,
+    terrain = TERRAIN_COEFFICIENT.DIRT,
+    smooth = SMOOTH_DEFAULT,
+    smoothWindow = SMOOTH_DEFAULT_WINDOW,
+  } = options
+  if (!bodyWeightKg || bodyWeightKg <= 0) {
+    throw new Error('options.bodyWeightKg is required and must be a positive number.')
+  }
+  console.log('minimum mechanics parameters:')
+  console.log(bodyWeightKg, loadKg, waterKg)
+  console.log(terrain)
+  console.log(smooth, smoothWindow)
+  console.log('bmr', BMR)
+
 }
 
 /**
