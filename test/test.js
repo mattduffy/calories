@@ -15,6 +15,7 @@ import {
   pandolfCalories,
   calorieEnsemble,
   calculateSlopeGrade,
+  minimumMechanicCalories,
 } from '../src/index.js'
 import walk_1 from './walk_01-back-in-the-game.json' with { type: 'json' }
 import walk_2 from './walk_02-4-genies-and-a-pea.json' with { type: 'json' }
@@ -2564,6 +2565,27 @@ describe('LCDA predictive model suite', async () => {
     const lcda = lcdaCalories(coords, bmr, details)
     console.log(lcda)
     results[22].lcda = _dot1(lcda.totalKcal)
+  })
+})
+
+describe('Minimum Mechanics predictive model', async () => {
+  it('missing parameters should fail', async () => {
+    const coords = latest.features[0].geometry.coordinates
+    const bmr = {
+      height: HEIGHT, age: AGE, sex: SEX,
+      weight: latest.features[0].properties.weights.body / 2.2,
+    }
+    const options = {
+      bodyWeightKg: latest.features[0].properties.weights.body / 2.2,
+      loadKg: latest.features[0].properties.weights.ruck / 2.2,
+      waterkg: 0,
+      terrain: 1.1,
+    }
+    assert.throws(() => { minimumMechanicCalories([], bmr, options) })
+    assert.throws(() => { minimumMechanicCalories(coords, null, options) })
+    assert.throws(() => { minimumMechanicCalories(coords, bmr, null) })
+    const minMac = minimumMechanicCalories(coords, bmr, options)
+    console.log('minMac', minMac)
   })
 })
 
