@@ -458,7 +458,6 @@ function calculateCalories(coords, options = {}) {
 }
 
 /**
- * @todo Add function for calculating resting metabolic rate.
  * @summary Calculate the resting metabolic rate based on inputs provided.
  * @author Matthew Duffy <mattduffy@gmail.com>
  * @param {Number} height - Body height, measured in cm.
@@ -749,7 +748,7 @@ function processMinimumMechanicsSegment(point1, point2, W, L, H2O, restVO2) {
 }
 
 /**
- * @todo Create the calculation workflow for the minimum mechanics predictive model.
+ * Create the calculation workflow for the minimum mechanics predictive model.
  * @summary Use the Minimum Mechanics Model to estimate calrories burned.
  * @author Matthew Duffy <mattduffy@gmail.com>
  * @param {Number[][]} coords - GPS coordinate array.
@@ -810,11 +809,11 @@ function minimumMechanicCalories(coords, BMR, options = {}) {
   console.log('restVO2', restVO2)
 
   const track = (smooth) ? smoothAltitude(coords, smoothWindow) : coords
-  const segments = []
+  // const segments = []
   let totalKcal = 0
   let totalDistanceM = 0
   let totalDurationSec = 0
- 
+
   for (let i = 1; i < track.length; i += 1) {
     const seg = processMinimumMechanicsSegment(
       track[i - 1],
@@ -919,7 +918,7 @@ function calorieEnsemble(coords, options) {
       bodyWeightKg,
       loadKg || 0,
       waterKg || 0,
-      terrain,
+      restVO2,
     )
     if (minMechSeg) {
       results.minMech.totalKcal += minMechSeg.kcal
