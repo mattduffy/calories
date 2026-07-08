@@ -441,7 +441,7 @@ function pandolfCalories(coords, options = {}) {
     totalDistanceM,
     totalDurationSec,
     avgSpeedMs,
-    segments,
+    // segments,
   }
 }
 
