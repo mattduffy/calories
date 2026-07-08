@@ -2811,6 +2811,509 @@ describe('Minimum Mechanics predictive model', async () => {
     const minMac = minimumMechanicCalories(coords, bmr, options)
     console.log('minMac', minMac)
   })
+
+  it('Minimum Mechanics predictive model with walk_1', async () => {
+    console.log('')
+    console.log(`name: ${walk_1.features[0].properties.name}`)
+    const coords = walk_1.features[0].geometry.coordinates
+    const weight = walk_1.features[0].properties.weights
+    const bodyW = _dot1(weight.body / 2.2)
+    const ruckW = _dot1(weight.ruck / 2.2)
+    const bmr = {
+      height: HEIGHT, weight: bodyW, age: AGE, sex: SEX,
+    }
+    const details = {
+      bodyWeightKg: bodyW,
+      loadKg: ruckW,
+      waterKg: 0,
+      terrain: 1.1,
+    }
+    const minMech = minimumMechanicCalories(coords, bmr, details)
+    console.log(minMech)
+    results[1].minMech = _dot1(minMech.totalKcal)
+  })
+
+  it('Minimum Mechanics predictive model with walk_2', async () => {
+    console.log('')
+    console.log(`name: ${walk_2.features[0].properties.name}`)
+    const coords = walk_2.features[0].geometry.coordinates
+    const weight = walk_2.features[0].properties.weights
+    const bodyW = _dot1(weight.body / 2.2)
+    const ruckW = _dot1(weight.ruck / 2.2)
+    const bmr = {
+      height: HEIGHT, weight: bodyW, age: AGE, sex: SEX,
+    }
+    const details = {
+      bodyWeightKg: bodyW,
+      loadKg: ruckW,
+      waterKg: 0,
+      terrain: 1.1,
+    }
+    const minMech = minimumMechanicCalories(coords, bmr, details)
+    console.log(minMech)
+    results[2].minMech = _dot1(minMech.totalKcal)
+  })
+
+  it('Minimum Mechanics predictive model with walk_3', async () => {
+    console.log('')
+    console.log(`name: ${walk_3.features[0].properties.name}`)
+    const coords = walk_3.features[0].geometry.coordinates
+    const weight = walk_3.features[0].properties.weights
+    const bodyW = _dot1(weight.body / 2.2)
+    const ruckW = _dot1(weight.ruck / 2.2)
+    const bmr = {
+      height: HEIGHT, weight: bodyW, age: AGE, sex: SEX,
+    }
+    const details = {
+      bodyWeightKg: bodyW,
+      loadKg: ruckW,
+      waterKg: 0,
+      terrain: 1.1,
+    }
+    const minMech = minimumMechanicCalories(coords, bmr, details)
+    console.log(minMech)
+    results[3].minMech = _dot1(minMech.totalKcal)
+  })
+
+  it('Minimum Mechanics predictive model with walk_4', async () => {
+    console.log('')
+    console.log(`name: ${walk_4.features[0].properties.name}`)
+    const coords = walk_4.features[0].geometry.coordinates
+    const weight = walk_4.features[0].properties.weights
+    const bodyW = _dot1(weight.body / 2.2)
+    const ruckW = _dot1(weight.ruck / 2.2)
+    const bmr = {
+      height: HEIGHT, weight: bodyW, age: AGE, sex: SEX,
+    }
+    const details = {
+      bodyWeightKg: bodyW,
+      loadKg: ruckW,
+      waterKg: 0,
+      terrain: 1.1,
+    }
+    const minMech = minimumMechanicCalories(coords, bmr, details)
+    console.log(minMech)
+    results[4].minMech = _dot1(minMech.totalKcal)
+  })
+
+  it('Minimum Mechanics predictive model with walk_5', async () => {
+    console.log('')
+    console.log(`name: ${walk_5.features[0].properties.name}`)
+    const coords = walk_5.features[0].geometry.coordinates
+    const weight = walk_5.features[0].properties.weights
+    const bodyW = _dot1(weight.body / 2.2)
+    const ruckW = _dot1(weight.ruck / 2.2)
+    const bmr = {
+      height: HEIGHT, weight: bodyW, age: AGE, sex: SEX,
+    }
+    const details = {
+      bodyWeightKg: bodyW,
+      loadKg: ruckW,
+      waterKg: 0,
+      terrain: 1.1,
+    }
+    const minMech = minimumMechanicCalories(coords, bmr, details)
+    console.log(minMech)
+    results[5].minMech = _dot1(minMech.totalKcal)
+  })
+
+  it('Minimum Mechanics predictive model with walk_6', async () => {
+    console.log('')
+    console.log(`name: ${walk_6.features[0].properties.name}`)
+    const coords = walk_6.features[0].geometry.coordinates
+    const weight = walk_6.features[0].properties.weights
+    const bodyW = _dot1(weight.body / 2.2)
+    const ruckW = _dot1(weight.ruck / 2.2)
+    const bmr = {
+      height: HEIGHT, weight: bodyW, age: AGE, sex: SEX,
+    }
+    const details = {
+      bodyWeightKg: bodyW,
+      loadKg: ruckW,
+      waterKg: 0,
+      terrain: 1.1,
+    }
+    const minMech = minimumMechanicCalories(coords, bmr, details)
+    console.log(minMech)
+    results[6].minMech = _dot1(minMech.totalKcal)
+  })
+
+  it('Minimum Mechanics predictive model with walk_7', async () => {
+    console.log('')
+    console.log(`name: ${walk_7.features[0].properties.name}`)
+    const coords = walk_7.features[0].geometry.coordinates
+    const weight = walk_7.features[0].properties.weights
+    const bodyW = _dot1(weight.body / 2.2)
+    const ruckW = _dot1(weight.ruck / 2.2)
+    const bmr = {
+      height: HEIGHT, weight: bodyW, age: AGE, sex: SEX,
+    }
+    const details = {
+      bodyWeightKg: bodyW,
+      loadKg: ruckW,
+      waterKg: 0,
+      terrain: 1.1,
+    }
+    const minMech = minimumMechanicCalories(coords, bmr, details)
+    console.log(minMech)
+    results[7].minMech = _dot1(minMech.totalKcal)
+  })
+
+  it('Minimum Mechanics predictive model with walk_8', async () => {
+    console.log('')
+    console.log(`name: ${walk_8.features[0].properties.name}`)
+    const coords = walk_8.features[0].geometry.coordinates
+    const weight = walk_8.features[0].properties.weights
+    const bodyW = _dot1(weight.body / 2.2)
+    const ruckW = _dot1(weight.ruck / 2.2)
+    const bmr = {
+      height: HEIGHT, weight: bodyW, age: AGE, sex: SEX,
+    }
+    const details = {
+      bodyWeightKg: bodyW,
+      loadKg: ruckW,
+      waterKg: 0,
+      terrain: 1.1,
+    }
+    const minMech = minimumMechanicCalories(coords, bmr, details)
+    console.log(minMech)
+    results[8].minMech = _dot1(minMech.totalKcal)
+  })
+
+  it('Minimum Mechanics predictive model with walk_9', async () => {
+    console.log('')
+    console.log(`name: ${walk_9.features[0].properties.name}`)
+    const coords = walk_9.features[0].geometry.coordinates
+    const weight = walk_9.features[0].properties.weights
+    const bodyW = _dot1(weight.body / 2.2)
+    const ruckW = _dot1(weight.ruck / 2.2)
+    const bmr = {
+      height: HEIGHT, weight: bodyW, age: AGE, sex: SEX,
+    }
+    const details = {
+      bodyWeightKg: bodyW,
+      loadKg: ruckW,
+      waterKg: 0,
+      terrain: 1.1,
+    }
+    const minMech = minimumMechanicCalories(coords, bmr, details)
+    console.log(minMech)
+    results[9].minMech = _dot1(minMech.totalKcal)
+  })
+
+  it('Minimum Mechanics predictive model with walk_10', async () => {
+    console.log('')
+    console.log(`name: ${walk_10.features[0].properties.name}`)
+    const coords = walk_10.features[0].geometry.coordinates
+    const weight = walk_10.features[0].properties.weights
+    const bodyW = _dot1(weight.body / 2.2)
+    const ruckW = _dot1(weight.ruck / 2.2)
+    const bmr = {
+      height: HEIGHT, weight: bodyW, age: AGE, sex: SEX,
+    }
+    const details = {
+      bodyWeightKg: bodyW,
+      loadKg: ruckW,
+      waterKg: 0,
+      terrain: 1.1,
+    }
+    const minMech = minimumMechanicCalories(coords, bmr, details)
+    console.log(minMech)
+    results[10].minMech = _dot1(minMech.totalKcal)
+  })
+
+  it('Minimum Mechanics predictive model with walk_11', async () => {
+    console.log('')
+    console.log(`name: ${walk_11.features[0].properties.name}`)
+    const coords = walk_11.features[0].geometry.coordinates
+    const weight = walk_11.features[0].properties.weights
+    const bodyW = _dot1(weight.body / 2.2)
+    const ruckW = _dot1(weight.ruck / 2.2)
+    const bmr = {
+      height: HEIGHT, weight: bodyW, age: AGE, sex: SEX,
+    }
+    const details = {
+      bodyWeightKg: bodyW,
+      loadKg: ruckW,
+      waterKg: 0,
+      terrain: 1.1,
+    }
+    const minMech = minimumMechanicCalories(coords, bmr, details)
+    console.log(minMech)
+    results[11].minMech = _dot1(minMech.totalKcal)
+  })
+
+  it('Minimum Mechanics predictive model with walk_12', async () => {
+    console.log('')
+    console.log(`name: ${walk_12.features[0].properties.name}`)
+    const coords = walk_12.features[0].geometry.coordinates
+    const weight = walk_12.features[0].properties.weights
+    const bodyW = _dot1(weight.body / 2.2)
+    const ruckW = _dot1(weight.ruck / 2.2)
+    const bmr = {
+      height: HEIGHT, weight: bodyW, age: AGE, sex: SEX,
+    }
+    const details = {
+      bodyWeightKg: bodyW,
+      loadKg: ruckW,
+      waterKg: 0,
+      terrain: 1.1,
+    }
+    const minMech = minimumMechanicCalories(coords, bmr, details)
+    console.log(minMech)
+    results[12].minMech = _dot1(minMech.totalKcal)
+  })
+
+  it('Minimum Mechanics predictive model with walk_13', async () => {
+    console.log('')
+    console.log(`name: ${walk_13.features[0].properties.name}`)
+    const coords = walk_13.features[0].geometry.coordinates
+    const weight = walk_13.features[0].properties.weights
+    const bodyW = _dot1(weight.body / 2.2)
+    const ruckW = _dot1(weight.ruck / 2.2)
+    const bmr = {
+      height: HEIGHT, weight: bodyW, age: AGE, sex: SEX,
+    }
+    const details = {
+      bodyWeightKg: bodyW,
+      loadKg: ruckW,
+      waterKg: 0,
+      terrain: 1.1,
+    }
+    const minMech = minimumMechanicCalories(coords, bmr, details)
+    console.log(minMech)
+    results[13].minMech = _dot1(minMech.totalKcal)
+  })
+
+  it('Minimum Mechanics predictive model with walk_14', async () => {
+    console.log('')
+    console.log(`name: ${walk_14.features[0].properties.name}`)
+    const coords = walk_14.features[0].geometry.coordinates
+    const weight = walk_14.features[0].properties.weights
+    const bodyW = _dot1(weight.body / 2.2)
+    const ruckW = _dot1(weight.ruck / 2.2)
+    const bmr = {
+      height: HEIGHT, weight: bodyW, age: AGE, sex: SEX,
+    }
+    const details = {
+      bodyWeightKg: bodyW,
+      loadKg: ruckW,
+      waterKg: 0,
+      terrain: 1.1,
+    }
+    const minMech = minimumMechanicCalories(coords, bmr, details)
+    console.log(minMech)
+    results[14].minMech = _dot1(minMech.totalKcal)
+  })
+
+  it('Minimum Mechanics predictive model with walk_15', async () => {
+    console.log('')
+    console.log(`name: ${walk_15.features[0].properties.name}`)
+    const coords = walk_15.features[0].geometry.coordinates
+    const weight = walk_15.features[0].properties.weights
+    const bodyW = _dot1(weight.body / 2.2)
+    const ruckW = _dot1(weight.ruck / 2.2)
+    const bmr = {
+      height: HEIGHT, weight: bodyW, age: AGE, sex: SEX,
+    }
+    const details = {
+      bodyWeightKg: bodyW,
+      loadKg: ruckW,
+      waterKg: 0,
+      terrain: 1.1,
+    }
+    const minMech = minimumMechanicCalories(coords, bmr, details)
+    console.log(minMech)
+    results[15].minMech = _dot1(minMech.totalKcal)
+  })
+
+  it('Minimum Mechanics predictive model with walk_16', async () => {
+    console.log('')
+    console.log(`name: ${walk_16.features[0].properties.name}`)
+    const coords = walk_16.features[0].geometry.coordinates
+    const weight = walk_16.features[0].properties.weights
+    const bodyW = _dot1(weight.body / 2.2)
+    const ruckW = _dot1(weight.ruck / 2.2)
+    const bmr = {
+      height: HEIGHT, weight: bodyW, age: AGE, sex: SEX,
+    }
+    const details = {
+      bodyWeightKg: bodyW,
+      loadKg: ruckW,
+      waterKg: 0,
+      terrain: 1.1,
+    }
+    const minMech = minimumMechanicCalories(coords, bmr, details)
+    console.log(minMech)
+    results[16].minMech = _dot1(minMech.totalKcal)
+  })
+
+  it('Minimum Mechanics predictive model with walk_17', async () => {
+    console.log('')
+    console.log(`name: ${walk_17.features[0].properties.name}`)
+    const coords = walk_17.features[0].geometry.coordinates
+    const weight = walk_17.features[0].properties.weights
+    const bodyW = _dot1(weight.body / 2.2)
+    const ruckW = _dot1(weight.ruck / 2.2)
+    const bmr = {
+      height: HEIGHT, weight: bodyW, age: AGE, sex: SEX,
+    }
+    const details = {
+      bodyWeightKg: bodyW,
+      loadKg: ruckW,
+      waterKg: 0,
+      terrain: 1.1,
+    }
+    const minMech = minimumMechanicCalories(coords, bmr, details)
+    console.log(minMech)
+    results[17].minMech = _dot1(minMech.totalKcal)
+  })
+  it('Minimum Mechanics predictive model with walk_18', async () => {
+    console.log('')
+    console.log(`name: ${walk_18.features[0].properties.name}`)
+    const coords = walk_18.features[0].geometry.coordinates
+    const weight = walk_18.features[0].properties.weights
+    const bodyW = _dot1(weight.body / 2.2)
+    const ruckW = _dot1(weight.ruck / 2.2)
+    const bmr = {
+      height: HEIGHT, weight: bodyW, age: AGE, sex: SEX,
+    }
+    const details = {
+      bodyWeightKg: bodyW,
+      loadKg: ruckW,
+      waterKg: 0,
+      terrain: 1.1,
+    }
+    const minMech = minimumMechanicCalories(coords, bmr, details)
+    console.log(minMech)
+    results[18].minMech = _dot1(minMech.totalKcal)
+  })
+
+  it('Minimum Mechanics predictive model with walk_19', async () => {
+    console.log('')
+    console.log(`name: ${walk_19.features[0].properties.name}`)
+    const coords = walk_19.features[0].geometry.coordinates
+    const weight = walk_19.features[0].properties.weights
+    const bodyW = _dot1(weight.body / 2.2)
+    const ruckW = _dot1(weight.ruck / 2.2)
+    const bmr = {
+      height: HEIGHT, weight: bodyW, age: AGE, sex: SEX,
+    }
+    const details = {
+      bodyWeightKg: bodyW,
+      loadKg: ruckW,
+      waterKg: 0,
+      terrain: 1.1,
+    }
+    const minMech = minimumMechanicCalories(coords, bmr, details)
+    console.log(minMech)
+    results[19].minMech = _dot1(minMech.totalKcal)
+  })
+
+  it('Minimum Mechanics predictive model with walk_20', async () => {
+    console.log('')
+    console.log(`name: ${walk_20.features[0].properties.name}`)
+    const coords = walk_20.features[0].geometry.coordinates
+    const weight = walk_20.features[0].properties.weights
+    const bodyW = _dot1(weight.body / 2.2)
+    const ruckW = _dot1(weight.ruck / 2.2)
+    const bmr = {
+      height: HEIGHT, weight: bodyW, age: AGE, sex: SEX,
+    }
+    const details = {
+      bodyWeightKg: bodyW,
+      loadKg: ruckW,
+      waterKg: 0,
+      terrain: 1.1,
+    }
+    const minMech = minimumMechanicCalories(coords, bmr, details)
+    console.log(minMech)
+    results[20].minMech = _dot1(minMech.totalKcal)
+  })
+
+  it('Minimum Mechanics predictive model with walk_21', async () => {
+    console.log('')
+    console.log(`name: ${walk_21.features[0].properties.name}`)
+    const coords = walk_21.features[0].geometry.coordinates
+    const weight = walk_21.features[0].properties.weights
+    const bodyW = _dot1(weight.body / 2.2)
+    const ruckW = _dot1(weight.ruck / 2.2)
+    const bmr = {
+      height: HEIGHT, weight: bodyW, age: AGE, sex: SEX,
+    }
+    const details = {
+      bodyWeightKg: bodyW,
+      loadKg: ruckW,
+      waterKg: 0,
+      terrain: 1.1,
+    }
+    const minMech = minimumMechanicCalories(coords, bmr, details)
+    console.log(minMech)
+    results[21].minMech = _dot1(minMech.totalKcal)
+  })
+
+  it('Minimum Mechanics predictive model with walk_22', async () => {
+    console.log('')
+    console.log(`name: ${walk_22.features[0].properties.name}`)
+    const coords = walk_22.features[0].geometry.coordinates
+    const weight = walk_22.features[0].properties.weights
+    const bodyW = _dot1(weight.body / 2.2)
+    const ruckW = _dot1(weight.ruck / 2.2)
+    const bmr = {
+      height: HEIGHT, weight: bodyW, age: AGE, sex: SEX,
+    }
+    const details = {
+      bodyWeightKg: bodyW,
+      loadKg: ruckW,
+      waterKg: 0,
+      terrain: 1.1,
+    }
+    const minMech = minimumMechanicCalories(coords, bmr, details)
+    console.log(minMech)
+    results[22].minMech = _dot1(minMech.totalKcal)
+  })
+
+  it('Minimum Mechanics predictive model with walk_23', async () => {
+    console.log('')
+    console.log(`name: ${walk_23.features[0].properties.name}`)
+    const coords = walk_23.features[0].geometry.coordinates
+    const weight = walk_23.features[0].properties.weights
+    const bodyW = _dot1(weight.body / 2.2)
+    const ruckW = _dot1(weight.ruck / 2.2)
+    const bmr = {
+      height: HEIGHT, weight: bodyW, age: AGE, sex: SEX,
+    }
+    const details = {
+      bodyWeightKg: bodyW,
+      loadKg: ruckW,
+      waterKg: 0,
+      terrain: 1.1,
+    }
+    const minMech = minimumMechanicCalories(coords, bmr, details)
+    console.log(minMech)
+    results[23].minMech = _dot1(minMech.totalKcal)
+  })
+
+  it('Minimum Mechanics predictive model with walk_24', async () => {
+    console.log('')
+    console.log(`name: ${walk_24.features[0].properties.name}`)
+    const coords = walk_24.features[0].geometry.coordinates
+    const weight = walk_24.features[0].properties.weights
+    const bodyW = _dot1(weight.body / 2.2)
+    const ruckW = _dot1(weight.ruck / 2.2)
+    const bmr = {
+      height: HEIGHT, weight: bodyW, age: AGE, sex: SEX,
+    }
+    const details = {
+      bodyWeightKg: bodyW,
+      loadKg: ruckW,
+      waterKg: 0,
+      terrain: 1.1,
+    }
+    const minMech = minimumMechanicCalories(coords, bmr, details)
+    console.log(minMech)
+    results[24].minMech = _dot1(minMech.totalKcal)
+  })
 })
 
 describe('Calorie ensemble tests', async () => {
