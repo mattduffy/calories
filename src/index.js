@@ -37,6 +37,32 @@ const MIN_SEGMENT_DIST_M = 0.5
 const JOULES_PER_KCAL = 4184
 
 /**
+ * Empirically-derived coefficients for the Minimum Mechanics walking economy model
+ *  (Table 4, Ludlow & Weyand 2017).
+ */
+const MM_COEFFICIENTS = {
+  C1: 0.32, // grade influence on minimum walking metabolic rate
+  C2: 0.19, // grade influence on speed-dependent walking metabolic rate
+  C3: 2.66, // velocity-squared coefficient
+  VO2_WALK_MIN: 3.28, // ml O2 kg-total^-1 min^-1, minimum walking metabolic rate constant
+  C_DECLINE: 0.73, // fraction of level-grade walking cost applied on any decline
+}
+
+/**
+ * Mean measured supine resting metabolic rate across all 32 study subjects
+ * (ml O2 kg-body^-1 min^-1). Used as the default V̇O2-rest term when no subject-specific resting
+ * metabolic rate is supplied.
+ */
+const DEFAULT_RESTING_VO2 = 3.05
+
+/**
+ * Standard caloric equivalent of oxygen: ~5 kcal per liter O2, i.e. per
+ * 1000 ml. Expressed here per ml for direct multiplication against
+ * V̇O2 rates in ml O2 min^-1.
+ */
+const KCAL_PER_ML_O2 = 0.005
+
+/**
  * @summary Convert a number of milliseconds to minutes.
  * @author Matthew Duffy <mattduffy@gmail.com>
  * @param {Number} milliseconds - The number of milliseconds to convert to minutes.
@@ -450,7 +476,7 @@ function mResting(height, weight, age, sex) {
 }
 
 /**
- * @summary Calculate metabolic rate (W·kg⁻¹) using the LCDA predictive model.
+ * @summary Calculate metabolic rate (W·kg^-1) using the LCDA predictive model.
  *          Implements equation 4 from Looney et al. (2022), which combines the
  *          level-walking LCDA backpacking equation (eq. 2) with the LCDA-graded
  *          walking equation (eq. 3) and terrain coefficient.
@@ -468,7 +494,7 @@ function mResting(height, weight, age, sex) {
  * @returns {Number} Body-mass-specific metabolic rate in Watts per kg (>= 0).
  */
 function lcdaMetabolicRate(L_Bp, S, G, n, rM) {
-  // Eq. 3 — LCDA-graded walking term (W·kg⁻¹); G is decimal grade (rise/run).
+  // Eq. 3 — LCDA-graded walking term (W·kg^-1); G is decimal grade (rise/run).
   function M_grade(s, g) {
     return 34 * s * g * (1 - 1.05 ** (1 - 1.1 ** (100 * g + 32)))
   }
@@ -480,7 +506,7 @@ function lcdaMetabolicRate(L_Bp, S, G, n, rM) {
   const gradeTerms = M_grade(S, G)
   const loadFactor = 1 + 1.96 * L_Bp ** 1.36
 
-  // Eq. 4 — combined LCDA backpacking + graded + terrain equation (W·kg⁻¹)
+  // Eq. 4 — combined LCDA backpacking + graded + terrain equation (W·kg^-1)
   return Math.max(0, M_resting + (0.19 + n * (speedTerms + gradeTerms)) * loadFactor)
 }
 
@@ -627,6 +653,102 @@ function lcdaCalories(coords, BMR, options = {}) {
 }
 
 /**
+ * @summary Convert a Mifflin-St Jeor resting rate (W·kg^-1, from mResting()) into
+ *          ml O2 · kg^-1 · min^-1, so it can be used as the V̇O2-rest term in the
+ *          Minimum Mechanics model.
+ * @author Matthew Duffy <mattduffy@gmail.com>
+ * @param {Number} wattsPerKg - Resting metabolic rate, in Watts per kg (from mResting()).
+ * @returns {Number} Resting metabolic rate, in ml O2 · kg^-1 · min^-1.
+ */
+function vo2FromWattsPerKg(wattsPerKg) {
+  const kcalPerMinPerKg = (wattsPerKg * 60) / JOULES_PER_KCAL
+  return kcalPerMinPerKg / KCAL_PER_ML_O2
+}
+
+/**
+ * @summary Predict body-mass-specific walking oxygen uptake using the Minimum
+ *          Mechanics model (Ludlow & Weyand, 2017, Eq. 2). Positive grades follow
+ *          the fitted minimum-walking + speed-dependent-walking formula directly.
+ *          Negative grades are modeled as a fixed fraction (Cdecline) of the
+ *          level-grade (G=0) walking cost at the same speed, since the study found
+ *          no reliable difference in metabolic rate between -3° and -6° declines.
+ * @author Matthew Duffy <mattduffy@gmail.com>
+ * @param {Number} V - Walking speed, in m/s.
+ * @param {Number} G - Grade as a percentage (e.g. 10 for 10% incline, -5 for decline).
+ * @param {Number} [restVO2=DEFAULT_RESTING_VO2] - Resting metabolic rate,
+ *                                                 ml O2 · kg^-1 · min^-1.
+ * @returns {Object} { vo2Walk, vo2Gross } both in ml O2 · kg-total^-1 · min^-1.
+ */
+function minimumMechanicsVO2(V, G, restVO2 = DEFAULT_RESTING_VO2) {
+  if (V <= 0) {
+    return { vo2Walk: 0, vo2Gross: restVO2 }
+  }
+  const {
+    C1, C2, C3, VO2_WALK_MIN, C_DECLINE,
+  } = MM_COEFFICIENTS
+  let vo2Walk
+  if (G >= 0) {
+    vo2Walk = VO2_WALK_MIN * (1 + C1 * G) + (1 + C2 * G) * C3 * V ** 2
+  } else {
+    vo2Walk = C_DECLINE * (VO2_WALK_MIN + C3 * V ** 2)
+  }
+  // Guard against pathological inputs producing a negative rate.
+  vo2Walk = Math.max(0, vo2Walk)
+  return { vo2Walk, vo2Gross: restVO2 + vo2Walk }
+}
+
+/**
+ * @summary Process a single segment (two consecutive GPS points) and return metabolic
+ *          and distance data for that segment, using the Minimum Mechanics model.
+ * @author Matthew Duffy <mattduffy@gmail.com>
+ * @param {Number[]} point1 - [longitude, latitude, heading, altitude, accuracy, timestamp]
+ * @param {Number[]} point2 - [longitude, latitude, heading, altitude, accuracy, timestamp]
+ * @param {Number} W - Body weight in kg.
+ * @param {Number} L - Load carried in kg (pack, excluding water).
+ * @param {Number} H2O - Water carried in kg.
+ * @param {Number} restVO2 - Resting metabolic rate, ml O2 · kg^-1 · min^-1.
+ * @returns {Object|null} Segment result, or null if the segment should be skipped.
+ */
+function processMinimumMechanicsSegment(point1, point2, W, L, H2O, restVO2) {
+  const [lon1, lat1, , alt1, , t1] = point1
+  const [lon2, lat2, , alt2, , t2] = point2
+
+  const p1 = { longitude: lon1, latitude: lat1, altitude: alt1 }
+  const p2 = { longitude: lon2, latitude: lat2, altitude: alt2 }
+  const horizontalDistance = pointDistance(p1, p2)
+  const durationSec = (t2 - t1) / 1000 // seconds
+
+  // Skip GPS jitter, stationary points, or out-of-order timestamps.
+  if (durationSec <= 0 || horizontalDistance < MIN_SEGMENT_DIST_M) return null
+
+  const slopeGrade = calculateSlopeGrade(p1, p2)
+  const { grade } = slopeGrade
+  const altitudeDiff = alt2 - alt1
+
+  // Derived speed - clamped to MAX_SPEED_MS to guard against GPS outliers.
+  const speed = Math.min(horizontalDistance / durationSec, MAX_SPEED_MS)
+
+  // Minimum Mechanics treats each kg of load as metabolically equal to each kg
+  // of body mass, so V̇O2 is predicted per kg of total (body + pack + water) mass.
+  const totalMass = W + L + H2O
+  const { vo2Gross } = minimumMechanicsVO2(speed, grade, restVO2)
+
+  // ml O2/min for the whole person+load, over this segment's duration.
+  const mlO2PerMin = vo2Gross * totalMass
+  const kcal = mlO2PerMin * KCAL_PER_ML_O2 * (durationSec / 60)
+
+  return {
+    horizontalDistance, // meters
+    altitudeDiff, // meters
+    grade, // percentage
+    speed, // m/s
+    durationSec, // seconds
+    vo2Gross, // ml O2 kg-total^-1 min^-1
+    kcal, // kilocalories
+  }
+}
+
+/**
  * @todo Create the calculation workflow for the minimum mechanics predictive model.
  * @summary Use the Minimum Mechanics Model to estimate calrories burned.
  * @author Matthew Duffy <mattduffy@gmail.com>
@@ -648,11 +770,13 @@ function lcdaCalories(coords, BMR, options = {}) {
  * @return {Object} Result object.
  */
 function minimumMechanicCalories(coords, BMR, options = {}) {
-  // https://blog.smu.edu/research/2017/10/17/study-new-simple-method-determines-rate-burn-
-  // calories-walking-uphill-downhill-level-ground/
-  // https://pubmed.ncbi.nlm.nih.gov/28729390/
-  // https://pmc.ncbi.nlm.nih.gov/articles/PMC8560389/
-  // https://journals.physiology.org/doi/full/10.1152/japplphysiol.00504.2017
+  /**
+   * https://blog.smu.edu/research/2017/10/17/study-new-simple-method-determines-rate-burn-
+   * calories-walking-uphill-downhill-level-ground/
+   * https://pubmed.ncbi.nlm.nih.gov/28729390/
+   * https://pmc.ncbi.nlm.nih.gov/articles/PMC8560389/
+   * https://journals.physiology.org/doi/full/10.1152/japplphysiol.00504.2017
+   */
   if (!coords || coords?.length < 2) {
     throw new Error('At least 2 coordinate points are required.')
   }
@@ -675,18 +799,53 @@ function minimumMechanicCalories(coords, BMR, options = {}) {
   if (!bodyWeightKg || bodyWeightKg <= 0) {
     throw new Error('options.bodyWeightKg is required and must be a positive number.')
   }
+  let restVO2 = DEFAULT_RESTING_VO2
+  restVO2 = vo2FromWattsPerKg(mResting(BMR.height, BMR.weight, BMR.age, BMR.sex))
+
   console.log('minimum mechanics parameters:')
   console.log(bodyWeightKg, loadKg, waterKg)
   console.log(terrain)
   console.log(smooth, smoothWindow)
   console.log('bmr', BMR)
+  console.log('restVO2', restVO2)
 
+  const track = (smooth) ? smoothAltitude(coords, smoothWindow) : coords
+  const segments = []
+  let totalKcal = 0
+  let totalDistanceM = 0
+  let totalDurationSec = 0
+ 
+  for (let i = 1; i < track.length; i += 1) {
+    const seg = processMinimumMechanicsSegment(
+      track[i - 1],
+      track[i],
+      bodyWeightKg,
+      loadKg,
+      waterKg,
+      restVO2,
+    )
+    if (seg) {
+      totalKcal += seg.kcal
+      totalDistanceM += seg.horizontalDistance
+      totalDurationSec += seg.durationSec
+      segments.push(seg)
+    }
+  }
+  const avgSpeedMs = (totalDurationSec > 0) ? totalDistanceM / totalDurationSec : 0
+
+  return {
+    totalKcal,
+    totalDistanceM,
+    totalDurationSec,
+    avgSpeedMs,
+    segments,
+  }
 }
 
 /**
- * @todo Create a function entrypoint that calculates the calorie estimate for each available
- *       predictive model, passing over the coords array just once, but processing each
- *       coordinate segment with each calorie model.
+ * A function entrypoint that calculates the calorie estimate for each available predictive
+ * model, passing over the coords array just once, but processing each coordinate segment with
+ * each calorie model.
  * @summary Return an ensemble result of each of the available predicitive models, given a single
  *          array of coordinates.
  * @author Matthew Duffy <mattduffy@gmail.com>
@@ -747,10 +906,28 @@ function calorieEnsemble(coords, options) {
   const track = (smooth) ? smoothAltitude(coords, smoothWindow) : coords
   const segments = []
   const results = {
-    pandolf: { totalKcal: 0, totalDistanceM: 0, totalDurationSec: 0 },
     lcda: { totalKcal: 0, totalDistanceM: 0, totalDurationSec: 0 },
+    pandolf: { totalKcal: 0, totalDistanceM: 0, totalDurationSec: 0 },
+    minMech: { totalKcal: 0, totalDistanceM: 0, totalDurationSec: 0 },
   }
+  let restVO2 = DEFAULT_RESTING_VO2
+  restVO2 = vo2FromWattsPerKg(mResting(BMR.height, BMR.weight, BMR.age, BMR.sex))
   for (let i = 1; i < track.length; i += 1) {
+    const minMechSeg = processMinimumMechanicsSegment(
+      track[i - 1],
+      track[i],
+      bodyWeightKg,
+      loadKg || 0,
+      waterKg || 0,
+      terrain,
+    )
+    if (minMechSeg) {
+      results.minMech.totalKcal += minMechSeg.kcal
+      // console.log(`adding minMechSeg.kcal: ${minMechSeg.kcal} (${totalKcal})`)
+      results.minMech.totalDistanceM += minMechSeg.horizontalDistance
+      results.minMech.totalDurationSec += minMechSeg.durationSec
+      // segments.push(minMechSeg)
+    }
     const pandolfSeg = processPandolfSegment(
       track[i - 1],
       track[i],
@@ -783,6 +960,9 @@ function calorieEnsemble(coords, options) {
       // segments.push(lcdaSeg)
     }
   }
+  results.minMech.avgSpeedMs = (results.minMech.totalDurationSec > 0)
+    ? results.minMech.totalDistanceM / results.minMech.totalDurationSec
+    : 0
   results.pandolf.avgSpeedMs = (results.pandolf.totalDurationSec > 0)
     ? results.pandolf.totalDistanceM / results.pandolf.totalDurationSec
     : 0
