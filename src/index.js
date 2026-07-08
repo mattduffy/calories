@@ -618,7 +618,7 @@ function lcdaCalories(coords, BMR, options = {}) {
   console.log(terrain)
   console.log(smooth, smoothWindow)
   console.log('bmr', BMR)
-  
+
   const track = (smooth) ? smoothAltitude(coords, smoothWindow) : coords
   const segments = []
   let totalKcal = 0
@@ -792,7 +792,7 @@ function minimumMechanicCalories(coords, BMR, options = {}) {
     bodyWeightKg = 0,
     loadKg = 0,
     waterKg = 0,
-    terrain = TERRAIN_COEFFICIENT.DIRT,
+    terrain = TERRAIN_COEFFICIENTS.DIRT,
     smooth = SMOOTH_DEFAULT,
     smoothWindow = SMOOTH_DEFAULT_WINDOW,
   } = options
@@ -828,7 +828,7 @@ function minimumMechanicCalories(coords, BMR, options = {}) {
       totalKcal += seg.kcal
       totalDistanceM += seg.horizontalDistance
       totalDurationSec += seg.durationSec
-      segments.push(seg)
+      // segments.push(seg)
     }
   }
   const avgSpeedMs = (totalDurationSec > 0) ? totalDistanceM / totalDurationSec : 0
@@ -838,7 +838,7 @@ function minimumMechanicCalories(coords, BMR, options = {}) {
     totalDistanceM,
     totalDurationSec,
     avgSpeedMs,
-    segments,
+    // segments,
   }
 }
 
@@ -879,7 +879,7 @@ function calorieEnsemble(coords, options) {
     bodyWeightKg,
     loadKg = 0,
     waterKg = 0,
-    terrain = TERRAIN_COEFFICIENT.DIRT,
+    terrain = TERRAIN_COEFFICIENTS.DIRT,
     smooth = SMOOTH_DEFAULT,
     smoothWindow = SMOOTH_DEFAULT_WINDOW,
   } = options
@@ -904,7 +904,7 @@ function calorieEnsemble(coords, options) {
     throw new Error('options.bodyWeightKg is required and must be a positive number.')
   }
   const track = (smooth) ? smoothAltitude(coords, smoothWindow) : coords
-  const segments = []
+  // const segments = []
   const results = {
     lcda: { totalKcal: 0, totalDistanceM: 0, totalDurationSec: 0 },
     pandolf: { totalKcal: 0, totalDistanceM: 0, totalDurationSec: 0 },
