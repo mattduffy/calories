@@ -3,7 +3,7 @@ This package is a dependency-free ES module that estimates calories burned durin
 
 Creating accurate estimates of the number of calories burned during a physical activity period is notoriously difficult, especially when attempting to incorporate positional data.  Most instances of estimating calories burned are simply calculated as an exertion effort based on body weight, time duration and a known **MET** ([Metabolic Equivalent Task](https://en.wikipedia.org/wiki/Metabolic_equivalent_of_task)) value for a given activity.  This method doesn't include positional data such as distance, velocity or elevation changes.  This can be considered a simple calorie estimate.
 
-There are several, more advanced methods for estimating calories burned that do attempt to incorporate GPS data for a richer, more nuanced estimate.  This package provides more advanced functions to calculate calories burned using either the Pandolf-Santee or LCDA predictive models.
+There are several, more advanced methods for estimating calories burned that do attempt to incorporate GPS data for a richer, more nuanced estimate.  This package provides more advanced functions to calculate calories burned using either the Pandolf-Santee, Minimum Mechanics or LCDA predictive models.
 
 ## Using 
 
@@ -12,7 +12,13 @@ npm install --save @mattduffy/calories
 ```
 
 ```javascript
-import { simpleCalories, pandolfCalories, lcdaCalories } from '@mattduffy/calories'
+import {
+  lcdaCalories,
+  simpleCalories,
+  pandolfCalories,
+  calorieEnsemble,
+  minimumMechanicCalories,
+} from '@mattduffy/calories'
 ```
 
 ## Simple Calories
@@ -95,19 +101,12 @@ console.log(pandolf_calories)
 // }
 ```
 
-### The LCDA Predicitve Model
+### The LCDA Model
 A much more recently developed predictive model for calculating energy expenditure over distance, while carrying a load is the **L**oad **C**arrying **D**ecision **A**id model. [LCDA](https://pmc.ncbi.nlm.nih.gov/articles/PMC8919998/) is considered to be slightly more accurate than the Pandolf model at the extra expense of requiring parameters to calculate basal metabolic rate.
 
 The ``coords`` and ``options`` parameters for ``lcdaCalories()`` are the same as for the above ``pandolfCalories()`` function.  The values in the ``BMR`` parameter object are used to create a value for basal metabolic rate using the [Mifflin-St Jeor equation](https://www.jandonline.org/article/S0002-8223(05)00149-5/abstract).
 
 ```javascript
-const coords = [
-//[gps longitude,       gps latitude,      heading (in deg),   altitude (meters),  gps accuracy (m),  timestamp (ms)], 
-  [-122.18413372578239, 37.82762389320808, 289.500900176593, 410.60703301243484, 6.935079779936697, 1781733047033],
-  [-122.18414765202105, 37.827625731095864, 291.71648070840496, 411.11239344626665, 6.935079779936697, 1781733048037],
-  [-122.1841647535281, 37.82762780033335, 286.09169894511865, 410.85964420530945, 7.091013324104003, 1781733049031],
-  [-122.18417633225566, 37.827625146283225, 284.4996500921467, 411.22145825996995, 7.091013324104003, 1781733050034],
-]
 const BMR = {
   height: 162.5 // Required, measured in centimeters
   weight: 70    // Required, measured in kilograms
@@ -129,5 +128,73 @@ console.log(lcda_calories)
 //   totalDistanceM: 5544.758689134893,
 //   totalDurationSec: 3829.9640000000027,
 //   avgSpeedMs: 1.4477312813214143
+// }
+```
+
+### The Minimum Mechanics Model
+The Minimum Mechanics predictive model was developed as a less complex model than the negative grade-corrective Pandolf-Santee model by [Ludlow & Weyland](https://pubmed.ncbi.nlm.nih.gov/28729390/).  This model incorporates the basal metabolic rate, like the **LCDA** model above, but forgoes terrain characterization.  The function signature is the same as that for **LCDA**.
+
+```javascript
+const BMR = {
+  height: 162.5 // Required, measured in centimeters
+  weight: 70    // Required, measured in kilograms
+  age: 45       // Required, measured in years
+  sex: 'm'      // Required, either 'm' or 'f'
+}
+const options = {
+  bodyWeightKg: 70, // Required, measured in kilograms
+  loadKg: 13.6,     // optional, measured in kilograms
+  waterKg: 0,       // optional, measured in kilograms
+  smooth: true,     // optional, smooth GSP elvation values
+  smoothWindow: 5,  // optional, default value = 5
+}
+const minMech_calories = minimumMechanicCalories(coords, BMR, options)
+console.log(lcda_calories)
+// {
+//   totalKcal: 476.211434723359,
+//   totalDistanceM: 5544.758689134893,
+//   totalDurationSec: 3829.9640000000027,
+//   avgSpeedMs: 1.4477312813214143
+// }
+```
+
+### The Calorie Ensemble
+If you would like to compare the results of each of the predictive models for a given hike's dataset, you can use the `calorieEnsemble()` function.  This function maps each of the predictive models over each segment of the coordinates array in a single pass, to give comparative results.  For this function, the `BMR` parameter is combined into the `options` parameter.  You will notice that each of the predictive models gives a slightly different result for `totalKcal`.  This is expected and indicative of the differences in the respective models.
+
+```javascript
+const options = {
+  bodyWeightKg: 70, // Required, measured in kilograms
+  loadKg: 13.6,     // optional, measured in kilograms
+  waterKg: 0,       // optional, measured in kilograms
+  smooth: true,     // optional, smooth GSP elvation values
+  smoothWindow: 5,  // optional, default value = 5
+  BMR: {
+    height: 162.5 // Required, measured in centimeters
+    weight: 70    // Required, measured in kilograms
+    age: 45       // Required, measured in years
+    sex: 'm'      // Required, either 'm' or 'f'
+  },
+}
+const resultSet = calorieEnsemble(coords, options)
+console.log(resultSet)
+// {
+//   lcda: {
+//     totalKcal: 590.292205191523,
+//     totalDistanceM: 5544.758689134893,
+//     totalDurationSec: 3829.9640000000027,
+//     avgSpeedMs: 1.4477312813214143
+//   },
+//   pandolf: {
+//     totalKcal: 581.492205191523,
+//     totalDistanceM: 5544.758689134893,
+//     totalDurationSec: 3829.9640000000027,
+//     avgSpeedMs: 1.4477312813214143
+//   },
+//   minMech: {
+//     totalKcal: 476.211434723359,
+//     totalDistanceM: 5544.758689134893,
+//     totalDurationSec: 3829.9640000000027,
+//     avgSpeedMs: 1.4477312813214143
+//   }
 // }
 ```
