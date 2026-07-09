@@ -47,8 +47,9 @@ import walk_21 from './walk_21-warehouse-there-house.json' with { type: 'json' }
 import walk_22 from './walk_22-guard-else-is-not-what-you-think.json' with { type: 'json' }
 import walk_23 from './walk_23-and-the-worm-begins-to-charge.json' with { type: 'json' }
 import walk_24 from './walk_24-the-secular-gato-society.json' with { type: 'json' }
+import walk_25 from './walk_25-pickle-put-magic-beans-in-their-chili.json' with { type: 'json' }
 
-const latest = walk_24
+const latest = walk_25
 
 const results = [
   {
@@ -2281,6 +2282,95 @@ describe('Pandolf-Santee predictive model tests', async () => {
       })
     }
   })
+
+  it('Pandolf calorie comparison test - walk_25', async () => {
+    console.log('')
+    console.log(`name: ${walk_25.features[0].properties.name}`)
+    const cal25W = walk_25.features[0].properties.weights
+    const walk_25_minutes = m2m(walk_25.features[0].properties.duration)
+    console.log('cal25W weights in lbs are:', cal25W)
+    const walk25Simple = simpleCalories(
+      walk_25_minutes,
+      {
+        body: _dot1(cal25W.body / 2.2),
+        ruck: _dot1(cal25W.ruck / 2.2),
+        water: (cal25W.water === 0) ? 0 : cal25W.water / 2.2,
+      },
+    )
+    const cal25 = pandolfCalories(
+      walk_25.features[0].geometry.coordinates,
+      {
+        bodyWeightKg: (cal25W.body / 2.2),
+        loadKg: (cal25W.ruck / 2.2),
+        waterKg: (cal25W.water / 2.2),
+        terrain: 1.1,
+      },
+    )
+    const simple = walk_25.features[0].properties.simpleCalories
+    const date_25 = new Date(walk_25.features[0].properties.date)
+      .toLocaleDateString('en-US', {
+        month: '2-digit',
+        day: '2-digit',
+        year: 'numeric',
+      })
+    results.push({
+      date: date_25,
+      name: clipName(walk_25.features[0].properties.name),
+      distance: dist(walk_25.features[0].properties.distance),
+      duration: _dot1(walk_25_minutes),
+      avgSpd: _dot1(cal25.avgSpeedMs),
+      weights: `b: ${_dot1(cal25W.body / 2.2)}, r: ${_dot1(cal25W.ruck / 2.2)}`,
+      apple: _dot1(walk_25.features[0].properties?.apple?.activity) ?? 0,
+      simple1: _dot1(walk_25.features[0].properties.simpleCalories),
+      simple2: _dot1(walk25Simple),
+      pandolf1: _dot1(walk_25.features[0].properties.pandolfCalories.totalKcal) ?? null,
+      pandolf2: _dot1(cal25.totalKcal),
+      lcda: null,
+      minMech: null,
+    })
+    console.log(`walk_25 pandolf calories: ${cal25.totalKcal} (simpleCalories: ${simple})`)
+    console.log(
+      `walk_25 pandolf distance: calculated ${_dot1(cal25.totalDistanceM)} `
+      + `(original ${_dot1(walk_25.features[0].properties.distance)})`,
+    )
+    console.log(
+      `walk_25 pandolf duration: calculated ${_dot1(cal25.totalDurationSec)}, `
+      + `(original ${_dot1(walk_25.features[0].properties.duration / 1000)})`,
+    )
+    console.log(
+      'within5 distance:',
+      `${_dot1(cal25.totalDistanceM)}, ${_dot1(walk_25.features[0].properties.distance)}`,
+      within5(cal25.totalDistanceM, walk_25.features[0].properties.distance),
+    )
+    console.log(
+      'within10 distance:',
+      within10(cal25.totalDistanceM, walk_25.features[0].properties.distance),
+      `calculated ${_dot1(cal25.totalDistanceM)} /`,
+      `original ${_dot1(walk_25.features[0].properties.distance)} =`,
+      _dot1(cal25.totalDistanceM) / _dot1(walk_25.features[0].properties.distance),
+    )
+    console.log(
+      'within5 calories:',
+      within5(cal25.totalKcal, walk25Simple),
+      `calculated ${_dot1(cal25.totalKcal)} /`,
+      `original ${_dot1(walk25Simple)} =`,
+      _dot1(cal25.totalKcal) / _dot1(walk25Simple),
+    )
+    console.log('within10 calories:', within10(cal25.totalKcal, walk25Simple))
+    if (cal25.segments.length > 0) {
+      cal25.segments.map((seg, i) => {
+        if (seg.kcal > calClamp) {
+          console.log(
+            `seg # ${i}, `
+            + `seg kcal ${seg.kcal}, `
+            + `distance ${seg.horizontalDistance}, `
+            + `time ${seg.durationSec}`,
+          )
+        }
+        return 0
+      })
+    }
+  })
 })
 
 describe('LCDA predictive model suite', async () => {
@@ -2787,6 +2877,27 @@ describe('LCDA predictive model suite', async () => {
     const lcda = lcdaCalories(coords, bmr, details)
     console.log(lcda)
     results[24].lcda = _dot1(lcda.totalKcal)
+  })
+
+  it('Lcda predictive model with walk_25', async () => {
+    console.log('')
+    console.log(`name: ${walk_25.features[0].properties.name}`)
+    const coords = walk_25.features[0].geometry.coordinates
+    const weight = walk_25.features[0].properties.weights
+    const bodyW = _dot1(weight.body / 2.2)
+    const ruckW = _dot1(weight.ruck / 2.2)
+    const bmr = {
+      height: HEIGHT, weight: bodyW, age: AGE, sex: SEX,
+    }
+    const details = {
+      bodyWeightKg: bodyW,
+      loadKg: ruckW,
+      waterKg: 0,
+      terrain: 1.1,
+    }
+    const lcda = lcdaCalories(coords, bmr, details)
+    console.log(lcda)
+    results[25].lcda = _dot1(lcda.totalKcal)
   })
 })
 
@@ -3313,6 +3424,27 @@ describe('Minimum Mechanics predictive model', async () => {
     const minMech = minimumMechanicCalories(coords, bmr, details)
     console.log(minMech)
     results[24].minMech = _dot1(minMech.totalKcal)
+  })
+
+  it('Minimum Mechanics predictive model with walk_25', async () => {
+    console.log('')
+    console.log(`name: ${walk_25.features[0].properties.name}`)
+    const coords = walk_25.features[0].geometry.coordinates
+    const weight = walk_25.features[0].properties.weights
+    const bodyW = _dot1(weight.body / 2.2)
+    const ruckW = _dot1(weight.ruck / 2.2)
+    const bmr = {
+      height: HEIGHT, weight: bodyW, age: AGE, sex: SEX,
+    }
+    const details = {
+      bodyWeightKg: bodyW,
+      loadKg: ruckW,
+      waterKg: 0,
+      terrain: 1.1,
+    }
+    const minMech = minimumMechanicCalories(coords, bmr, details)
+    console.log(minMech)
+    results[25].minMech = _dot1(minMech.totalKcal)
   })
 })
 
