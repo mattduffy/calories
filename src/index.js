@@ -50,8 +50,8 @@ const MM_COEFFICIENTS = {
 
 /**
  * Mean measured supine resting metabolic rate across all 32 study subjects
- * (ml O2 kg-body^-1 min^-1). Used as the default V̇O2-rest term when no subject-specific resting
- * metabolic rate is supplied.
+ * (ml O2 kg-body^-1 min^-1). Used as the default V̇O2-rest term if no subject-specific resting
+ * metabolic rate is given.
  */
 const DEFAULT_RESTING_VO2 = 3.05
 
@@ -666,11 +666,10 @@ function vo2FromWattsPerKg(wattsPerKg) {
 
 /**
  * @summary Predict body-mass-specific walking oxygen uptake using the Minimum
- *          Mechanics model (Ludlow & Weyand, 2017, Eq. 2). Positive grades follow
- *          the fitted minimum-walking + speed-dependent-walking formula directly.
- *          Negative grades are modeled as a fixed fraction (Cdecline) of the
- *          level-grade (G=0) walking cost at the same speed, since the study found
- *          no reliable difference in metabolic rate between -3° and -6° declines.
+ *          Mechanics model. Positive grades follow the fitted
+ *          minimum-walking + speed-dependent-walking formula directly. Negative grades are
+ *          modeled as a fixed fraction (Cdecline) of the level-grade (G=0) walking cost at the
+ *          same speed.
  * @author Matthew Duffy <mattduffy@gmail.com>
  * @param {Number} V - Walking speed, in m/s.
  * @param {Number} G - Grade as a percentage (e.g. 10 for 10% incline, -5 for decline).
@@ -688,10 +687,11 @@ function minimumMechanicsVO2(V, G, restVO2 = DEFAULT_RESTING_VO2) {
   let vo2Walk
   if (G >= 0) {
     vo2Walk = VO2_WALK_MIN * (1 + C1 * G) + (1 + C2 * G) * C3 * V ** 2
+    // vo2Walk = ((C1 * G) + VO2_WALK_MIN) + (1 + (C2 * G)) * (C3 * V ** 2)
   } else {
     vo2Walk = C_DECLINE * (VO2_WALK_MIN + C3 * V ** 2)
   }
-  // Guard against pathological inputs producing a negative rate.
+  // clamp outputs producing a negative rate to zero.
   vo2Walk = Math.max(0, vo2Walk)
   return { vo2Walk, vo2Gross: restVO2 + vo2Walk }
 }
@@ -761,7 +761,6 @@ function processMinimumMechanicsSegment(point1, point2, W, L, H2O, restVO2) {
  * @param {Number} options.bodyWeightKg - Body weight in kg (required).
  * @param {Number} [options.loadKg=0] - Load/ruck weight in kg.
  * @param {Number} [options.waterKg=0] - Water weight carried in kg.
- * @param {Number} [options.terrain=1.1] - Terrain coefficient (n) Use TERRAIN_COEFFICIENTS.
  * @param {Boolean} [options.smooth=true] - Whether to smooth GPS altitude before calculating.
  * @param {Number} [options.smoothWindow=5] - Rolling average size for altitude smoothing.
  * @throws {Error} - Throws error if not enough coordinates.
@@ -791,7 +790,6 @@ function minimumMechanicCalories(coords, BMR, options = {}) {
     bodyWeightKg = 0,
     loadKg = 0,
     waterKg = 0,
-    terrain = TERRAIN_COEFFICIENTS.DIRT,
     smooth = SMOOTH_DEFAULT,
     smoothWindow = SMOOTH_DEFAULT_WINDOW,
   } = options
@@ -803,7 +801,6 @@ function minimumMechanicCalories(coords, BMR, options = {}) {
 
   console.log('minimum mechanics parameters:')
   console.log(bodyWeightKg, loadKg, waterKg)
-  console.log(terrain)
   console.log(smooth, smoothWindow)
   console.log('bmr', BMR)
   console.log('restVO2', restVO2)
