@@ -441,7 +441,7 @@ function pandolfCalories(coords, options = {}) {
     totalDistanceM,
     totalDurationSec,
     avgSpeedMs,
-    // segments,
+    segments,
   }
 }
 
@@ -619,7 +619,7 @@ function lcdaCalories(coords, BMR, options = {}) {
   console.log('bmr', BMR)
 
   const track = (smooth) ? smoothAltitude(coords, smoothWindow) : coords
-  const segments = []
+  // const segments = []
   let totalKcal = 0
   let totalDistanceM = 0
   let totalDurationSec = 0
@@ -638,7 +638,7 @@ function lcdaCalories(coords, BMR, options = {}) {
       // console.log(`adding seg.kcal: ${seg.kcal} (${totalKcal})`)
       totalDistanceM += seg.horizontalDistance
       totalDurationSec += seg.durationSec
-      segments.push(seg)
+      // segments.push(seg)
     }
   }
   const avgSpeedMs = (totalDurationSec > 0) ? totalDistanceM / totalDurationSec : 0
