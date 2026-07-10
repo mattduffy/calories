@@ -1,3 +1,10 @@
+## Contents
+- [Simple Calories](#simple-calories)
+- [Pandolf-Santee Model](#pandolf-santee-model)
+- [LCDA Model](#lcda-model)
+- [Minimum Mechanics Model](#minimum-mechanics-model)
+- [Calorie Ensemble](#calorie-ensemble)
+
 ## Estimating Energy Expenditure and Calories Burned
 This package is a dependency-free ES module that estimates calories burned during physical activities (walking, hiking, rucking, etc) with functions for both simple calorie estimates, and more advanced methods utilizing GPS data.
 
@@ -21,7 +28,7 @@ import {
 } from '@mattduffy/calories'
 ```
 
-## Simple Calories
+## [Simple Calories]
 ### Using Metabolic Equivalent Tasks
 The simple calories calculation takes 3 parameters: ``minutes``, ``weights``, and ``MET``, and returns a positive floating point value.  The function throws an ``Error`` if the required parameters are missing, or of the wrong type.  You need to know the ``MET`` value for any specific activity you are measuring.  A good list of ``MET`` values can be found at the [Compendium of Physical Activities](https://pacompendium.com).  The required body weight parameter is measured in kilograms.
 
@@ -56,7 +63,7 @@ console.log(simple_calories)
 ```
 
 ## Advanced Calorie Predictive Models
-### The Pandolf-Santee Model
+### [The Pandolf-Santee Model](#pandolf-santee-model)
 This method of estimating energy expenditure is based on the [Pandolf-Santee](https://en.wikipedia.org/wiki/Pandolf_equation) equation.  The required parameters include an array of GPS coordinate data, and a body weight, measured in kilograms.  Additional values can be provided in the options parameter; including the weight of a ruck load, the weight of additional water carried, and the type of terrain covered.  There is also an option to _smooth_ out the GPS elevation data.  If the elevation data comes from a GPS sensor (rather than a barometric pressure sensor), it can be useful to smooth out the values with a rolling average because some GPS sensors can provide pretty jittery values for this field.
 
 The ``pandolfCalories()`` function expects the coordinates parameter to be an array of arrays with the following format: [longitude, latitude, heading, altitude (m), accuracy (m), timestamp (ms)].  In this particular implementation, the heading and accuracy fields are not currently being used.  Those fields can be empty or null.  The fields for longitude, latitude, altitude and timestamp must be valid, non-null values.  Altitude is measured in meters and the timestamp is Javascript default milliseconds.
@@ -101,7 +108,7 @@ console.log(pandolf_calories)
 // }
 ```
 
-### The LCDA Model
+### [The LCDA Model](#lcda-model)
 A much more recently developed predictive model for calculating energy expenditure over distance, while carrying a load is the **L**oad **C**arrying **D**ecision **A**id model. [LCDA](https://pmc.ncbi.nlm.nih.gov/articles/PMC8919998/) is considered to be slightly more accurate than the Pandolf model at the extra expense of requiring parameters to calculate basal metabolic rate.
 
 The ``coords`` and ``options`` parameters for ``lcdaCalories()`` are the same as for the above ``pandolfCalories()`` function.  The values in the ``BMR`` parameter object are used to create a value for basal metabolic rate using the [Mifflin-St Jeor equation](https://www.jandonline.org/article/S0002-8223(05)00149-5/abstract).
@@ -131,8 +138,8 @@ console.log(lcda_calories)
 // }
 ```
 
-### The Minimum Mechanics Model
-The Minimum Mechanics predictive model was developed as a less complex model than the negative grade-corrective Pandolf-Santee model by [Ludlow & Weyland](https://pubmed.ncbi.nlm.nih.gov/28729390/).  This model incorporates the basal metabolic rate, like the **LCDA** model above, but forgoes terrain characterization.  The function signature is the same as that for **LCDA**.
+### [The Minimum Mechanics Model](#minimum-mechanics-model)
+The Minimum Mechanics predictive model was developed by [Ludlow & Weyland](https://pubmed.ncbi.nlm.nih.gov/28729390/) as a less complex model altrnative to the negative grade-corrective Pandolf-Santee model.  This model incorporates the basal metabolic rate, like the **LCDA** model above, but forgoes terrain characterization.  The function signature is the same as that for **LCDA**.
 
 ```javascript
 const BMR = {
@@ -158,7 +165,7 @@ console.log(lcda_calories)
 // }
 ```
 
-### The Calorie Ensemble
+### [The Calorie Ensemble](#calorie-ensemble)
 If you would like to compare the results of each of the predictive models for a given hike's dataset, you can use the `calorieEnsemble()` function.  This function maps each of the predictive models over each segment of the coordinates array in a single pass, to give comparative results.  For this function, the `BMR` parameter is combined into the `options` parameter.  You will notice that each of the predictive models gives a slightly different result for `totalKcal`.  This is expected and indicative of the differences in the respective models.
 
 ```javascript
