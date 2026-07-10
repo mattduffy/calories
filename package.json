@@ -27,17 +27,20 @@
     "postinstall": "node src/postinstall.js"
   },
   "keywords": [
-    "calories",
-    "calories burned",
-    "Pandolf",
-    "Santee",
-    "Pandolf-Santee",
-    "Load Carrying Decision Aid",
-    "LCDA",
-    "Mifflin-St Jeor Equation",
-    "Basal Metabolic Rate",
     "MET",
-    "metabolic equivalent tasks"
+    "LCDA",
+    "Santee",
+    "Pandolf",
+    "calories",
+    "Pandolf-Santee",
+    "Walking Economy",
+    "calories burned",
+    "Minimum Mechanics",
+    "Basal Metabolic Rate",
+    "Resting Metabolic Rate",
+    "Mifflin-St Jeor Equation",
+    "metabolic equivalent tasks",
+    "Load Carrying Decision Aid"
   ],
   "devDependencies": {
     "@babel/eslint-parser": "7.28.6",
