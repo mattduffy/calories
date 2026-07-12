@@ -48,8 +48,11 @@ import walk_22 from './walk_22-guard-else-is-not-what-you-think.json' with { typ
 import walk_23 from './walk_23-and-the-worm-begins-to-charge.json' with { type: 'json' }
 import walk_24 from './walk_24-the-secular-gato-society.json' with { type: 'json' }
 import walk_25 from './walk_25-pickle-put-magic-beans-in-their-chili.json' with { type: 'json' }
+import walk_26 from './walk_26-which-cardinal-do-you-find-most-sexually-attractive.json' with {
+  type: 'json'
+}
 
-const latest = walk_25
+const latest = walk_26
 
 const results = [
   {
@@ -3468,6 +3471,58 @@ describe('Calorie ensemble tests', async () => {
     }
     const resultSet = calorieEnsemble(coords, details)
     console.log(resultSet)
+    assert(within10(resultSet.pandolf.totalKcal, resultSet.lcda.totalKcal))
+  })
+
+  it('calorieEnsemble test', async () => {
+    console.log('')
+    console.log('calorie ensemble function test using the latest data file')
+    const coords = walk_26.features[0].geometry.coordinates
+    const date_26 = new Date(walk_26.features[0].properties.date)
+      .toLocaleDateString('en-US', {
+        month: '2-digit',
+        day: '2-digit',
+        year: 'numeric',
+      })
+    const weight = walk_26.features[0].properties.weights
+    const bodyW = _dot1(weight.body / 2.2)
+    const ruckW = _dot1(weight.ruck / 2.2)
+    const bmr = {
+      height: HEIGHT, weight: bodyW, age: AGE, sex: SEX,
+    }
+    const details = {
+      bodyWeightKg: bodyW,
+      loadKg: ruckW,
+      waterKg: 0,
+      terrain: 1.1,
+      BMR: bmr,
+    }
+    const walk26Simple = simpleCalories(
+      m2m(walk_26.features[0].properties.duration),
+      {
+        body: _dot1(weight.body / 2.2),
+        ruck: _dot1(weight.ruck / 2.2),
+        water: 0,
+      }
+    )
+    const resultSet = calorieEnsemble(coords, details)
+    console.log(resultSet)
+    results.push({
+      date: date_26,
+      name: clipName(walk_26.features[0].properties.name),
+      distance: dist(walk_26.features[0].properties.distance),
+      duration: _dot1(m2m(walk_26.features[0].properties.duration)),
+      avgSpd: _dot1(resultSet.pandolf.avgSpeedMs),
+      weights: walk_26.features[0].weights = `b: ${_dot1(weight.body / 2.2)}, `
+        + `r: ${_dot1(weight.ruck / 2.2)}`,
+      apple: walk_26.features[0].properties.apple.activity,
+      simple1: _dot1(walk_26.features[0].properties.simpleCalories),
+      simple2: _dot1(walk26Simple),
+      pandolf1: _dot1(walk_26.features[0].properties.pandolfCalories.totalKcal),
+      pandolf2: _dot1(resultSet.pandolf.totalKcal),
+      lcda: _dot1(resultSet.lcda.totalKcal),
+      minMech: _dot1(resultSet.minMech.totalKcal),
+    })
     assert(within10(resultSet.pandolf.totalKcal, resultSet.lcda.totalKcal))
   })
 })
