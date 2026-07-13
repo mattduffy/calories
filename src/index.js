@@ -5,6 +5,11 @@
  * @file src/index.js
  */
 
+/**
+ * Is this file being executed by node, or from inside a web browser?
+ */
+const isNode = typeof process !== 'undefined' && process.versions && process.versions.node
+
 /* eslint-disable camelcase */
 let BODY_WEIGHT
 let RUCK_WEIGHT
@@ -969,6 +974,18 @@ function calorieEnsemble(coords, options) {
   return results
 }
 
+async function getCaloriesJs(ctx) {
+  if (isNode) {
+    console.log(__filename)
+    console.log(ctx)
+    const fs = await import('node:fs')
+    const file = fs.readFileSync(__filename, 'utf-8')
+    ctx.status = 200
+    ctx.type = 'text/javascript; charset=utf-8'
+    ctx.body = file
+  }
+}
+
 export {
   m2m,
   degs,
@@ -976,6 +993,7 @@ export {
   within5,
   within10,
   lcdaCalories,
+  getCaloriesJs,
   simpleCalories,
   pandolfCalories,
   calorieEnsemble,
