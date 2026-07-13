@@ -976,8 +976,10 @@ function calorieEnsemble(coords, options) {
 
 async function getCaloriesJs(ctx) {
   if (isNode) {
-    console.log(__filename)
     console.log(ctx)
+    const { fileURLToPath } = await import('url')
+    const __filename = fileURLToPath(import.meta.url)
+    console.log(__filename)
     const fs = await import('node:fs')
     const file = fs.readFileSync(__filename, 'utf-8')
     ctx.status = 200
