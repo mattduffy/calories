@@ -1,6 +1,6 @@
 {
   "name": "@mattduffy/calories",
-  "version": "1.4.1",
+  "version": "1.5.0",
   "description": "A dependency-free library to estimate energy expenditure, in calories, using either Pandolf-Santee, LCDA or Metabolic Equivalent Task equations.",
   "author": "Matthew Duffy",
   "license": "ISC",
