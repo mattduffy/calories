@@ -4,6 +4,7 @@
 - [LCDA Model](#the-lcda-model)
 - [Minimum Mechanics Model](#the-minimum-mechanics-model)
 - [Calorie Ensemble](#the-calorie-ensemble)
+- [Koa-style Router Middleware](#koa-style-router-middleware)
 
 ## Estimating Energy Expenditure and Calories Burned
 This package is a dependency-free ES module that estimates calories burned during physical activities (walking, hiking, rucking, etc) with functions for both simple calorie estimates, and more advanced methods utilizing GPS data.
@@ -176,10 +177,10 @@ const options = {
   smooth: true,     // optional, smooth GSP elvation values
   smoothWindow: 5,  // optional, default value = 5
   BMR: {
-    height: 162.5 // Required, measured in centimeters
-    weight: 70    // Required, measured in kilograms
-    age: 45       // Required, measured in years
-    sex: 'm'      // Required, either 'm' or 'f'
+    height: 162.5   // Required, measured in centimeters
+    weight: 70      // Required, measured in kilograms
+    age: 45         // Required, measured in years
+    sex: 'm'        // Required, either 'm' or 'f'
   },
 }
 const resultSet = calorieEnsemble(coords, options)
@@ -204,4 +205,33 @@ console.log(resultSet)
 //     avgSpeedMs: 1.4477312813214143
 //   }
 // }
+```
+
+### Koa-style Router Middleware
+Because this package is a dependency-free, single-file module, it also works well executing in the browser.  If you are running a Koajs compatible web app server, you can use the `getCaloriesJs()` middleware function as a route handler to emit the module file as a `text/javascript; charset=utf-8` response to a HTTP GET request.  You can assign whatever URL route for the file that makes sense for your app, and have access to all the calorie estimating functions within the module.
+```javascript
+import * as Koa from 'koa'
+import { Router } from '@koa/router'
+import { getCaloriesJs } from '@mattduffy/calories'
+
+const app = new Koa.default()
+const router = new Router()
+// Create a GET route and assign the getCaloriesJs() function as the route handler.
+// This example creates a 'named' route called calories.
+// The route in this case is /js/calories.js, but it can be whatever fits your needs.
+// The getCaloriesJs() handler function emits a full copy of the src/index.js module file.
+router.get('calories', '/js/calories.js' getCaloriesJs)
+app.use(router.routes())
+```
+
+```html
+<script type="module"
+  import {
+    pandolfCalories,
+    lcdaCalories,
+    minimumMechanicCalories,
+  } from '/js/calories.js'
+
+  const pandolf = pandolfCalories(coords, options)
+</script>
 ```
