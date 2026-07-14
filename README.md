@@ -208,7 +208,7 @@ console.log(resultSet)
 ```
 
 ### Koa-style Router Middleware
-Because this package is a dependency-free, single-file module, it also works well executing in the browser.  If you are running a Koajs compatible web app server, you can use the `getCaloriesJs()` middleware function as a route handler to emit the module file as a `text/javascript; charset=utf-8` response to a HTTP GET request.  You can assign whatever URL route for the file that makes sense for your app, and have access to all the calorie estimating functions within the module.
+Because this package is a dependency-free, single-file module, it also works well executing in the browser.  If you are running a Koajs compatible web app server, you can use the `getCaloriesJs()` middleware function as a route handler to emit the module file as a `text/javascript; charset=utf-8` response to an HTTP GET request.  You can assign whatever URL route for the file that makes sense for your app, and have access to all the calorie estimating functions within the module.
 ```javascript
 import * as Koa from 'koa'
 import { Router } from '@koa/router'
