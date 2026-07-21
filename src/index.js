@@ -210,7 +210,7 @@ function calculateSlopeGrade(point1, point2) {
  * coordinate array. Raw GPS altitude can have ±5–15 m of noise, which creates
  * artificial grade spikes that inflate calorie estimates.
  * @author Matthew Duffy <mattduffy@gmail.com>
- * @param {Numver[][]} coords - Array of coordinate arrays
+ * @param {Number[][]} coords - Array of coordinate arrays
  * @param {number} [windowSize=5] - Number of points to average (odd number recommended)
  * @returns {Number[][]} New coordinate array with smoothed altitudes
  */
