@@ -54,8 +54,9 @@ import walk_26 from './walk_26-which-cardinal-do-you-find-most-sexually-attracti
 import walk_27 from './walk_27-my-emergency-cat-costume.json' with { type: 'json' }
 import walk_28 from './walk_28-do-you-want-cache-for-your-worker.json' with { type: 'json' }
 import walk_29 from './walk_29-denise-richards-is-chair-denier.json' with { type: 'json' }
+import walk_30 from './walk_30-take-a-jance-on-me.json' with { type: 'json' }
 
-const latest = walk_29
+const latest = walk_30
 
 const results = [
   {
@@ -3678,6 +3679,58 @@ describe('Calorie ensemble tests', async () => {
       simple1: _dot1(walk_29.features[0].properties.simpleCalories),
       simple2: _dot1(walk29Simple),
       pandolf1: _dot1(walk_29.features[0].properties.pandolfCalories.totalKcal),
+      pandolf2: _dot1(resultSet.pandolf.totalKcal),
+      lcda: _dot1(resultSet.lcda.totalKcal),
+      minMech: _dot1(resultSet.minMech.totalKcal),
+    })
+    assert(within10(resultSet.pandolf.totalKcal, resultSet.lcda.totalKcal))
+  })
+
+  it('calorieEnsemble test - walk_30', async () => {
+    console.log('')
+    console.log('calorie ensemble function test using the latest data file')
+    const coords = walk_30.features[0].geometry.coordinates
+    const date_30 = new Date(walk_30.features[0].properties.date)
+      .toLocaleDateString('en-US', {
+        month: '2-digit',
+        day: '2-digit',
+        year: 'numeric',
+      })
+    const weight = walk_30.features[0].properties.weights
+    const bodyW = _dot1(weight.body / 2.2)
+    const ruckW = _dot1(weight.ruck / 2.2)
+    const bmr = {
+      height: HEIGHT, weight: bodyW, age: AGE, sex: SEX,
+    }
+    const details = {
+      bodyWeightKg: bodyW,
+      loadKg: ruckW,
+      waterKg: 0,
+      terrain: 1.1,
+      BMR: bmr,
+    }
+    const walk30Simple = simpleCalories(
+      m2m(walk_30.features[0].properties.duration),
+      {
+        body: _dot1(weight.body / 2.2),
+        ruck: _dot1(weight.ruck / 2.2),
+        water: 0,
+      },
+    )
+    const resultSet = calorieEnsemble(coords, details)
+    console.log(resultSet)
+    results.push({
+      date: date_30,
+      name: clipName(walk_30.features[0].properties.name),
+      distance: dist(walk_30.features[0].properties.distance),
+      duration: _dot1(m2m(walk_30.features[0].properties.duration)),
+      avgSpd: _dot1(resultSet.pandolf.avgSpeedMs),
+      weights: walk_30.features[0].weights = `b: ${_dot1(weight.body / 2.2)}, `
+        + `r: ${_dot1(weight.ruck / 2.2)}`,
+      apple: walk_30.features[0].properties.apple.activity,
+      simple1: _dot1(walk_30.features[0].properties.simpleCalories),
+      simple2: _dot1(walk30Simple),
+      pandolf1: _dot1(walk_30.features[0].properties.pandolfCalories.totalKcal),
       pandolf2: _dot1(resultSet.pandolf.totalKcal),
       lcda: _dot1(resultSet.lcda.totalKcal),
       minMech: _dot1(resultSet.minMech.totalKcal),
