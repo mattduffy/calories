@@ -391,6 +391,7 @@ function processPandolfSegment(point1, point2, W, L, H2O, n) {
  * @param {Number} [options.terrain=1.1]  - Terrain coefficient (n). Use TERRAIN_COEFFICIENTS.
  * @param {Boolean} [options.smooth=true] - Whether to smooth GPS altitude before calculating.
  * @param {Number} [options.smoothWindow=5] - Rolling average size for altitude smoothing.
+ * @param {Boolean} [options.returnSegments=false] - Return array of all calculated segments.
  * @throws {Error} - Throws error if not enough coordinates.
  * @throws {Error} - Throws error if body weight is not provided.
  * @returns {Object} Result object:
@@ -441,13 +442,17 @@ function pandolfCalories(coords, options = {}) {
     }
   }
   const avgSpeedMs = (totalDurationSec > 0) ? totalDistanceM / totalDurationSec : 0
-  return {
+  const results = {
     totalKcal,
     totalDistanceM,
     totalDurationSec,
     avgSpeedMs,
     segments,
   }
+  if (options.returnSegments) {
+    results.segments = segments
+  }
+  return results
 }
 
 /**
@@ -590,6 +595,7 @@ function processLcdaSegment(point1, point2, W, L, H2O, n, rM) {
  * @param {Number} [options.terrain=1.1] - Terrain coefficient (n) Use TERRAIN_COEFFICIENTS.
  * @param {Boolean} [options.smooth=true] - Whether to smooth GPS altitude before calculating.
  * @param {Number} [options.smoothWindow=5] - Rolling average size for altitude smoothing.
+ * @param {Boolean} [options.returnSegments=false] - Return array of all calculated segments.
  * @throws {Error} - Throws error if not enough coordinates.
  * @throws {Error} - Throws error if body weight is not provided.
  * @return {Object} Result object.
@@ -624,7 +630,7 @@ function lcdaCalories(coords, BMR, options = {}) {
   console.log('bmr', BMR)
 
   const track = (smooth) ? smoothAltitude(coords, smoothWindow) : coords
-  // const segments = []
+  const segments = []
   let totalKcal = 0
   let totalDistanceM = 0
   let totalDurationSec = 0
@@ -643,17 +649,20 @@ function lcdaCalories(coords, BMR, options = {}) {
       // console.log(`adding seg.kcal: ${seg.kcal} (${totalKcal})`)
       totalDistanceM += seg.horizontalDistance
       totalDurationSec += seg.durationSec
-      // segments.push(seg)
+      segments.push(seg)
     }
   }
   const avgSpeedMs = (totalDurationSec > 0) ? totalDistanceM / totalDurationSec : 0
-  return {
+  const results = {
     totalKcal,
     totalDistanceM,
     totalDurationSec,
     avgSpeedMs,
-    // segments,
   }
+  if (options.returnSegments) {
+    results.segments = segments
+  }
+  return results
 }
 
 /**
@@ -768,6 +777,7 @@ function processMinimumMechanicsSegment(point1, point2, W, L, H2O, restVO2) {
  * @param {Number} [options.waterKg=0] - Water weight carried in kg.
  * @param {Boolean} [options.smooth=true] - Whether to smooth GPS altitude before calculating.
  * @param {Number} [options.smoothWindow=5] - Rolling average size for altitude smoothing.
+ * @param {Boolean} [options.returnSegments=false] - Return array of all calculated segments.
  * @throws {Error} - Throws error if not enough coordinates.
  * @throws {Error} - Throws error if body weight is not provided.
  * @return {Object} Result object.
@@ -811,7 +821,7 @@ function minimumMechanicCalories(coords, BMR, options = {}) {
   console.log('restVO2', restVO2)
 
   const track = (smooth) ? smoothAltitude(coords, smoothWindow) : coords
-  // const segments = []
+  const segments = []
   let totalKcal = 0
   let totalDistanceM = 0
   let totalDurationSec = 0
@@ -829,18 +839,20 @@ function minimumMechanicCalories(coords, BMR, options = {}) {
       totalKcal += seg.kcal
       totalDistanceM += seg.horizontalDistance
       totalDurationSec += seg.durationSec
-      // segments.push(seg)
+      segments.push(seg)
     }
   }
   const avgSpeedMs = (totalDurationSec > 0) ? totalDistanceM / totalDurationSec : 0
-
-  return {
+  const results = {
     totalKcal,
     totalDistanceM,
     totalDurationSec,
     avgSpeedMs,
-    // segments,
   }
+  if (options.returnSegments) {
+    results.segments = segments
+  }
+  return results
 }
 
 /**
@@ -858,6 +870,7 @@ function minimumMechanicCalories(coords, BMR, options = {}) {
  * @param {Number} [options.terrain=1.1]  - Terrain coefficient (n). Use TERRAIN_COEFFICIENTS.
  * @param {Number} [options.smoothWindow=5] - Rolling average size for altitude smoothing.
  * @param {Boolean} [options.smooth=true] - Whether to smooth GPS altitude before calculating.
+ * @param {Boolean} [options.returnSegments=false] - Return array of all calculated segments. 
  * @param {Object} [options.BMR] - Values for calculating resting metabolic rate.
  * @param {Number} [options.BMR.height] - BMR body height in cm.
  * @param {Number} [options.BMR.weight] - BMR body weight in kg.
