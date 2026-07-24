@@ -69,11 +69,12 @@ This method of estimating energy expenditure is based on the [Pandolf-Santee](ht
 
 The ``pandolfCalories()`` function expects the coordinates parameter to be an array of arrays with the following format: [longitude, latitude, heading, altitude (m), accuracy (m), timestamp (ms)].  In this particular implementation, the heading and accuracy fields are not currently being used.  Those fields can be empty or null.  The fields for longitude, latitude, altitude and timestamp must be valid, non-null values.  Altitude is measured in meters and the timestamp is Javascript default milliseconds.
 
-**\*\*Update\*\*** The Santee correction factor for including downhill travel (negative grade values) is now being applied when calculating the advanced estimates.  This correction factor results in energy expenditure estimates that are typically about 16% - 20% higher when the GPS data contains significant amounts of downhill travel.
+The Santee correction factor for including downhill travel (negative grade values) is being applied when calculating the advanced estimates.  This correction factor results in energy expenditure estimates that are typically about 16% - 25% higher when the GPS data contains significant amounts of downhill travel vs the original pandolf equation that couldn't account for negative grade values.
 
+To calculate the results, the pandolf-santee model is executed over each consecutive pair-wise GPS points in the the coordinates array.  Each of these pair-wise calculations is referred to as a segment.  To get the final results, the segments are aggregated together.  The boolean options property ``options.returnSegments`` controls whether an array of segment results is included in the function return value.  The default value is ``false``.  Setting this to ``true`` includes this segments array.
 ```javascript
 const cooords = [
-//[gps longitude,       gps latitude,      heading (in deg),   altitude (meters),  gps accuracy (m),  timestamp (ms)], 
+//[gps longitude,       gps latitude,      heading (in deg), altitude (meters),  gps accuracy (m),  timestamp (ms)], 
   [-122.18413372578239, 37.82762389320808, 289.500900176593, 410.60703301243484, 6.935079779936697, 1781733047033],
   [-122.18414765202105, 37.827625731095864, 291.71648070840496, 411.11239344626665, 6.935079779936697, 1781733048037],
   [-122.1841647535281, 37.82762780033335, 286.09169894511865, 410.85964420530945, 7.091013324104003, 1781733049031],
@@ -92,12 +93,13 @@ const cooords = [
 // sufficient.  If elevation data comes from a barometric
 // sensor, set smooth to false.
 const options = {
-  bodyWeightKg: 70, // Required, measured in kilograms
-  loadKg: 13.6,     // optional, measured in kilograms
-  waterKg: 0,       // optional, measured in kilograms
-  terrain: 1.1,     // optional, default value = 1.1
-  smooth: true,     // optional, smooth GSP elvation values
-  smoothWindow: 5,  // optional, default value = 5
+  bodyWeightKg: 70,     // Required, measured in kilograms
+  loadKg: 13.6,         // optional, measured in kilograms
+  waterKg: 0,           // optional, measured in kilograms
+  terrain: 1.1,         // optional, default value = 1.1
+  smooth: true,         // optional, smooth GSP elvation values
+  smoothWindow: 5,      // optional, default value = 5
+  returnSegments: false // optional, return calculated GPS segments
 }
 const pandolf_calories = pandofCalories(coords, options)
 console.log(pandolf_calories)
@@ -105,7 +107,8 @@ console.log(pandolf_calories)
 //   totalKcal: 581.492205191523,
 //   totalDistanceM: 5544.758689134893,
 //   totalDurationSec: 3829.9640000000027,
-//   avgSpeedMs: 1.4477312813214143
+//   avgSpeedMs: 1.4477312813214143,
+//   segments: [{...},{...},...], /* only included if options.returnSegments === true */
 // }
 ```
 
@@ -122,12 +125,13 @@ const BMR = {
   sex: 'm'      // Required, either 'm' or 'f'
 }
 const options = {
-  bodyWeightKg: 70, // Required, measured in kilograms
-  loadKg: 13.6,     // optional, measured in kilograms
-  waterKg: 0,       // optional, measured in kilograms
-  terrain: 1.1,     // optional, default value = 1.1
-  smooth: true,     // optional, smooth GSP elvation values
-  smoothWindow: 5,  // optional, default value = 5
+  bodyWeightKg: 70,     // Required, measured in kilograms
+  loadKg: 13.6,         // optional, measured in kilograms
+  waterKg: 0,           // optional, measured in kilograms
+  terrain: 1.1,         // optional, default value = 1.1
+  smooth: true,         // optional, smooth GSP elvation values
+  smoothWindow: 5,      // optional, default value = 5
+  returnSegments: false // optional, return calculated GPS segments
 }
 const lcda_calories = lcdaCalories(coords, BMR, options)
 console.log(lcda_calories)
@@ -150,11 +154,12 @@ const BMR = {
   sex: 'm'      // Required, either 'm' or 'f'
 }
 const options = {
-  bodyWeightKg: 70, // Required, measured in kilograms
-  loadKg: 13.6,     // optional, measured in kilograms
-  waterKg: 0,       // optional, measured in kilograms
-  smooth: true,     // optional, smooth GSP elvation values
-  smoothWindow: 5,  // optional, default value = 5
+  bodyWeightKg: 70,     // Required, measured in kilograms
+  loadKg: 13.6,         // optional, measured in kilograms
+  waterKg: 0,           // optional, measured in kilograms
+  smooth: true,         // optional, smooth GSP elvation values
+  smoothWindow: 5,      // optional, default value = 5
+  returnSegments: false // optional, return calculated GPS segments
 }
 const minMech_calories = minimumMechanicCalories(coords, BMR, options)
 console.log(lcda_calories)
@@ -171,16 +176,17 @@ If you would like to compare the results of each of the predictive models for a 
 
 ```javascript
 const options = {
-  bodyWeightKg: 70, // Required, measured in kilograms
-  loadKg: 13.6,     // optional, measured in kilograms
-  waterKg: 0,       // optional, measured in kilograms
-  smooth: true,     // optional, smooth GSP elvation values
-  smoothWindow: 5,  // optional, default value = 5
+  bodyWeightKg: 70,     // Required, measured in kilograms
+  loadKg: 13.6,         // optional, measured in kilograms
+  waterKg: 0,           // optional, measured in kilograms
+  smooth: true,         // optional, smooth GSP elvation values
+  smoothWindow: 5,      // optional, default value = 5
+  returnSegments: false // optional, return calculated GPS segments
   BMR: {
-    height: 162.5   // Required, measured in centimeters
-    weight: 70      // Required, measured in kilograms
-    age: 45         // Required, measured in years
-    sex: 'm'        // Required, either 'm' or 'f'
+    height: 162.5       // Required, measured in centimeters
+    weight: 70          // Required, measured in kilograms
+    age: 45             // Required, measured in years
+    sex: 'm'            // Required, either 'm' or 'f'
   },
 }
 const resultSet = calorieEnsemble(coords, options)
