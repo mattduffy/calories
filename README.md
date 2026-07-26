@@ -25,7 +25,7 @@ import {
   simpleCalories,
   pandolfCalories,
   calorieEnsemble,
-  minimumMechanicCalories,
+  minimumMechanicsCalories,
 } from '@mattduffy/calories'
 ```
 
@@ -161,7 +161,7 @@ const options = {
   smoothWindow: 5,      // optional, default value = 5
   returnSegments: false // optional, return calculated GPS segments
 }
-const minMech_calories = minimumMechanicCalories(coords, BMR, options)
+const minMech_calories = minimumMechanicsCalories(coords, BMR, options)
 console.log(lcda_calories)
 // {
 //   totalKcal: 476.211434723359,
@@ -235,7 +235,7 @@ app.use(router.routes())
   import {
     pandolfCalories,
     lcdaCalories,
-    minimumMechanicCalories,
+    minimumMechanicsCalories,
   } from '/js/calories.js'
 
   const pandolf = pandolfCalories(coords, options)

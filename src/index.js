@@ -456,7 +456,7 @@ function pandolfCalories(coords, options = {}) {
 }
 
 /**
- * @summary A wrapper function to preserver the function name calculateCalories() after
+ * @summary A wrapper function to preserve the function name calculateCalories() after
  *          it was renamed pandolfCalories(), to make room for additional advanced calorie
  *          estimating models.
  * @author Matthew Duffy <mattduffy@gmail.com>
@@ -856,6 +856,18 @@ function minimumMechanicCalories(coords, BMR, options = {}) {
 }
 
 /**
+ * @summary A wrapper function to provide the name minimumMechanicsCalories() which is a
+ *          better match of the documentation. 
+ * @author Matthew Duffy <mattduffy@gmail.com>
+ * @see {@link minimumMechanicCalories}
+ * @see minimumMechanicCalories
+ */
+function minimumMechanicsCalories(coords, options = {}) {
+  return minimumMechanicCalories(coords, options)
+}
+
+
+/**
  * A function entrypoint that calculates the calorie estimate for each available predictive
  * model, passing over the coords array just once, but processing each coordinate segment with
  * each calorie model.
@@ -1015,4 +1027,5 @@ export {
   calculateCalories,
   calculateSlopeGrade,
   minimumMechanicCalories,
+  minimumMechanicsCalories,
 }
