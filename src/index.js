@@ -235,7 +235,7 @@ function smoothAltitude(coords, windowSize = SMOOTH_DEFAULT_WINDOW) {
  * MET - ratio of energy spent per unit time during a specific physical activity to a
  * reference value of 3.5 ml O₂/(kg·min).
  * Metabolic Equivalent Task (Hiking):
- *  MET = 7.5 (7.0 for backpacking or general weight lifting has a MET of 3.5)
+ *  MET = 3.5 (3.5 Walking for pleasure or general weight lifting has a MET of 5.0)
  *  Calories Burned Per Minute: Calories / minute = (MET * 3.5 * Weight in kg) / 200
  *  Ttl Calories Burned: Total Caloires Burned = (MET * 3.5 * Weight in kg) / 200 * minutes
  * How to use:
@@ -248,12 +248,12 @@ function smoothAltitude(coords, windowSize = SMOOTH_DEFAULT_WINDOW) {
  * @param {Number} [weights.body=0] - Body weight in kilograms.
  * @param {Number} [weights.ruck=0] - Ruck weight carried, in kilograms.
  * @param {Number} [weights.water=0] - Weight of water carried, in kilograms.
- * @param {Number} [MET=7.5] - The metabolic equivalent task number.
+ * @param {Number} [MET=3.5] - The metabolic equivalent task number.
  * @throws {Error} - If minutes is not a number greater than zero.
  * @throws {Error} - If weights.body is not a number greater than zero.
  * @return {Number} - Estimated calories used per duration of MET.
  */
-function simpleCalories(minutes = 1, weights = { body: 0, ruck: 0, water: 0 }, MET = 7.5) {
+function simpleCalories(minutes = 1, weights = { body: 0, ruck: 0, water: 0 }, MET = 3.5) {
   if (minutes <= 0 || !Number.isFinite(minutes) || minutes === null) {
     throw new Error('minutes parameter must be a number greater than zero.')
   }
