@@ -31,7 +31,7 @@ import {
 
 ## Simple Calories
 ### Using Metabolic Equivalent Tasks
-The simple calories calculation takes 3 parameters: ``minutes``, ``weights``, and ``MET``, and returns a positive floating point value.  The function throws an ``Error`` if the required parameters are missing, or of the wrong type.  You need to know the ``MET`` value for any specific activity you are measuring.  A good list of ``MET`` values can be found at the [Compendium of Physical Activities](https://pacompendium.com).  The required body weight parameter is measured in kilograms.
+The simple calories calculation takes 3 parameters: ``minutes``, ``weights``, and ``MET``, and returns a positive floating point value.  The function throws an ``Error`` if the required parameters are missing, or of the wrong type.  The required body weight parameter is measured in kilograms.  You need to know the ``MET`` value for any specific activity you are measuring.  A good list of ``MET`` values can be found at the [Compendium of Physical Activities](https://pacompendium.com).
 
 ```javascript
 // The number of minutes MET activity is performed.
@@ -51,13 +51,14 @@ const weights = {
 }
 // The MET number for a particular task.  For example:
 // Walking slowly:         2.0
-// Walking, 3.0 mph:       3.0
+// Walking, 2.5 mph:       3.0
+// Walking, for pleasure:  3.5 <-- Default value
 // Weight lifting:         5.0
-// Backpacking:            7.5 <-- Default value
+// Backpacking:            7.5
 // Swimming:               8.0
 // Rope jumping (84/min): 10.5
 // Jogging, 6.8 mph:      11.2
-const MET = 7.5
+const MET = 7.5 // Backpacking
 const simple_calories = simpleCalories(minutes, weights, MET)
 console.log(simple_calories)
 // 143.381765625
