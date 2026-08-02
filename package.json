@@ -19,6 +19,7 @@
   ],
   "exports": {
     ".": "./src/index.js",
+    "./sample_data.json": "./src/sample_data.json",
     "./package.json": "./package.json"
   },
   "scripts": {

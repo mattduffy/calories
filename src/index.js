@@ -411,6 +411,7 @@ function pandolfCalories(coords, options = {}) {
     terrain = TERRAIN_COEFFICIENTS.DIRT,
     smooth = true,
     smoothWindow = SMOOTH_DEFAULT_WINDOW,
+    returnSegments = false,
   } = options
 
   if (coords.length < 2) {
@@ -447,9 +448,8 @@ function pandolfCalories(coords, options = {}) {
     totalDistanceM,
     totalDurationSec,
     avgSpeedMs,
-    segments,
   }
-  if (options.returnSegments) {
+  if (returnSegments) {
     results.segments = segments
   }
   return results
