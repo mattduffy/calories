@@ -232,7 +232,7 @@ app.use(router.routes())
 ```
 
 ```html
-<script type="module"
+<script type="module">
   import {
     pandolfCalories,
     lcdaCalories,
@@ -241,4 +241,27 @@ app.use(router.routes())
 
   const pandolf = pandolfCalories(coords, options)
 </script>
+```
+
+### Sample Data
+This package includes a sample data file to help illustrate the data format.  ``sample_data.json`` is a GEOJson formatted data file containing a single ``LineString`` feature with a coordinates array that can be passed into the calorie functions.  In this sample data, the ``features[0].properties.weights`` object contains the necessary weight values to supply in the options parameter of the calories functions (these weights are recorded in lbs so convert them to kgs).
+
+The coordinates array in this sample data does not conform _exactly_ to the GEOJson specification, which only defines longitude and latitude values in the array.  No guarantee is given to the validity of values following latitude.  In this case, an app tracking the progress of a hike is populating typical GPS values of accuracy, altitude, heading, and timestamp into the coordinate arrays in a format appropriate for the calorie functions.
+```javascript
+import pandolfCalories from '@mattduffy/calories'
+import sample_data from '@mattduffy/calories/sample_data.json' with { type: 'json' }
+
+const coords = sample_data.features[0].geometry.coordinates
+const opts = {
+  bodyWeightKg: sample_data.features[0].properties.weights.body / 2.2, // convert lbs to kgs
+  loadKg: sample_data.features[0].properties.weights.ruck / 2.2,       // convert lbs to kgs
+}
+const kcals = pandolfCalories(coords, opts)
+console.log(kcals)
+// {
+//    totalKcal: 187.1436731904045,
+//    totalDistanceM: 1899.4192932570354,
+//    totalDurationSec: 949,
+//    avgSpeedMs: 2.001495567183388,
+// }
 ```
