@@ -281,17 +281,19 @@ describe('Pandolf-Santee predictive model tests', async () => {
       `walk_1 pandolf duration: ${cal1.totalDurationSec}, `
       + `(${walk_1.features[0].properties.duration / 1000})`,
     )
-    cal1.segments.map((seg, i) => {
-      if (seg.kcal > calClamp) {
-        console.log(
-          `seg # ${i}, `
-          + `seg kcal ${seg.kcal}, `
-          + `distance ${seg.horizontalDistance}, `
-          + `time ${seg.durationSec}`,
-        )
-      }
-      return 0
-    })
+    if (cal1.segments) {
+      cal1.segments.map((seg, i) => {
+        if (seg.kcal > calClamp) {
+          console.log(
+            `seg # ${i}, `
+            + `seg kcal ${seg.kcal}, `
+            + `distance ${seg.horizontalDistance}, `
+            + `time ${seg.durationSec}`,
+          )
+        }
+        return 0
+      })
+    }
   })
 
   it('Pandolf calorie comparison test - walk_02', async () => {
@@ -349,17 +351,19 @@ describe('Pandolf-Santee predictive model tests', async () => {
       _dot1(cal2.totalKcal) / _dot1(walk2Simple),
     )
     console.log('within10 calories:', within10(cal2.totalKcal, walk2Simple))
-    cal2.segments.map((seg, i) => {
-      if (seg.kcal > calClamp) {
-        console.log(
-          `seg # ${i}, `
-          + `seg kcal ${seg.kcal}, `
-          + `distance ${seg.horizontalDistance}, `
-          + `time ${seg.durationSec}`,
-        )
-      }
-      return 0
-    })
+    if (cal2.segments) {
+      cal2.segments.map((seg, i) => {
+        if (seg.kcal > calClamp) {
+          console.log(
+            `seg # ${i}, `
+            + `seg kcal ${seg.kcal}, `
+            + `distance ${seg.horizontalDistance}, `
+            + `time ${seg.durationSec}`,
+          )
+        }
+        return 0
+      })
+    }
   })
 
   it('Pandolf calorie comparison test - walk_03', async () => {
@@ -436,17 +440,19 @@ describe('Pandolf-Santee predictive model tests', async () => {
       _dot1(cal3.totalKcal) / _dot1(walk3Simple),
     )
     console.log('within10 calories:', within10(cal3.totalKcal, walk3Simple))
-    cal3.segments.map((seg, i) => {
-      if (seg.kcal > calClamp) {
-        console.log(
-          `seg # ${i}, `
-          + `seg kcal ${seg.kcal}, `
-          + `distance ${seg.horizontalDistance}, `
-          + `time ${seg.durationSec}`,
-        )
-      }
-      return 0
-    })
+    if (cal3.segments) {
+      cal3.segments.map((seg, i) => {
+        if (seg.kcal > calClamp) {
+          console.log(
+            `seg # ${i}, `
+            + `seg kcal ${seg.kcal}, `
+            + `distance ${seg.horizontalDistance}, `
+            + `time ${seg.durationSec}`,
+          )
+        }
+        return 0
+      })
+    }
   })
 
   it('Pandolf calorie comparison test - walk_04', async () => {
@@ -522,17 +528,19 @@ describe('Pandolf-Santee predictive model tests', async () => {
       _dot1(cal4.totalKcal) / _dot1(walk4Simple),
     )
     console.log('within10 calories:', within10(cal4.totalKcal, walk4Simple))
-    cal4.segments.map((seg, i) => {
-      if (seg.kcal > calClamp) {
-        console.log(
-          `seg # ${i}, `
-          + `seg kcal ${seg.kcal}, `
-          + `distance ${seg.horizontalDistance}, `
-          + `time ${seg.durationSec}`,
-        )
-      }
-      return 0
-    })
+    if (cal4.segments) {
+      cal4.segments.map((seg, i) => {
+        if (seg.kcal > calClamp) {
+          console.log(
+            `seg # ${i}, `
+            + `seg kcal ${seg.kcal}, `
+            + `distance ${seg.horizontalDistance}, `
+            + `time ${seg.durationSec}`,
+          )
+        }
+        return 0
+      })
+    }
   })
 
   it('Pandolf calorie comparison test - walk_05', async () => {
@@ -609,17 +617,19 @@ describe('Pandolf-Santee predictive model tests', async () => {
       _dot1(cal5.totalKcal) / _dot1(walk5Simple),
     )
     console.log('within10 calories:', within10(cal5.totalKcal, walk5Simple))
-    cal5.segments.map((seg, i) => {
-      if (seg.kcal > calClamp) {
-        console.log(
-          `seg # ${i}, `
-          + `seg kcal ${seg.kcal}, `
-          + `distance ${seg.horizontalDistance}, `
-          + `time ${seg.durationSec}`,
-        )
-      }
-      return 0
-    })
+    if (cal5.segments) {
+      cal5.segments.map((seg, i) => {
+        if (seg.kcal > calClamp) {
+          console.log(
+            `seg # ${i}, `
+            + `seg kcal ${seg.kcal}, `
+            + `distance ${seg.horizontalDistance}, `
+            + `time ${seg.durationSec}`,
+          )
+        }
+        return 0
+      })
+    }
   })
 
   it('Pandolf calorie comparison test - walk_06', async () => {
@@ -696,17 +706,19 @@ describe('Pandolf-Santee predictive model tests', async () => {
       _dot1(cal6.totalKcal) / _dot1(walk6Simple),
     )
     console.log('within10 calories:', within10(cal6.totalKcal, walk6Simple))
-    cal6.segments.map((seg, i) => {
-      if (seg.kcal > calClamp) {
-        console.log(
-          `seg # ${i}, `
-          + `seg kcal ${seg.kcal}, `
-          + `distance ${seg.horizontalDistance}, `
-          + `time ${seg.durationSec}`,
-        )
-      }
-      return 0
-    })
+    if (cal6.segments) {
+      cal6.segments.map((seg, i) => {
+        if (seg.kcal > calClamp) {
+          console.log(
+            `seg # ${i}, `
+            + `seg kcal ${seg.kcal}, `
+            + `distance ${seg.horizontalDistance}, `
+            + `time ${seg.durationSec}`,
+          )
+        }
+        return 0
+      })
+    }
   })
 
   it('Pandolf calorie comparison test - walk_07', async () => {
@@ -783,17 +795,19 @@ describe('Pandolf-Santee predictive model tests', async () => {
       _dot1(cal7.totalKcal) / _dot1(walk7Simple),
     )
     console.log('within10 calories:', within10(cal7.totalKcal, walk7Simple))
-    cal7.segments.map((seg, i) => {
-      if (seg.kcal > calClamp) {
-        console.log(
-          `seg # ${i}, `
-          + `seg kcal ${seg.kcal}, `
-          + `distance ${seg.horizontalDistance}, `
-          + `time ${seg.durationSec}`,
-        )
-      }
-      return 0
-    })
+    if (cal7.segments) {
+      cal7.segments.map((seg, i) => {
+        if (seg.kcal > calClamp) {
+          console.log(
+            `seg # ${i}, `
+            + `seg kcal ${seg.kcal}, `
+            + `distance ${seg.horizontalDistance}, `
+            + `time ${seg.durationSec}`,
+          )
+        }
+        return 0
+      })
+    }
   })
 
   it('Pandolf calorie comparison test - walk_08', async () => {
@@ -870,17 +884,19 @@ describe('Pandolf-Santee predictive model tests', async () => {
       _dot1(cal8.totalKcal) / _dot1(walk8Simple),
     )
     console.log('within10 calories:', within10(cal8.totalKcal, walk8Simple))
-    cal8.segments.map((seg, i) => {
-      if (seg.kcal > calClamp) {
-        console.log(
-          `seg # ${i}, `
-          + `seg kcal ${seg.kcal}, `
-          + `distance ${seg.horizontalDistance}, `
-          + `time ${seg.durationSec}`,
-        )
-      }
-      return 0
-    })
+    if (cal8.segments) {
+      cal8.segments.map((seg, i) => {
+        if (seg.kcal > calClamp) {
+          console.log(
+            `seg # ${i}, `
+            + `seg kcal ${seg.kcal}, `
+            + `distance ${seg.horizontalDistance}, `
+            + `time ${seg.durationSec}`,
+          )
+        }
+        return 0
+      })
+    }
   })
 
   it('Pandolf calorie comparison test - walk_09', async () => {
@@ -957,17 +973,19 @@ describe('Pandolf-Santee predictive model tests', async () => {
       _dot1(cal9.totalKcal) / _dot1(walk9Simple),
     )
     console.log('within10 calories:', within10(cal9.totalKcal, walk9Simple))
-    cal9.segments.map((seg, i) => {
-      if (seg.kcal > calClamp) {
-        console.log(
-          `seg # ${i}, `
-          + `seg kcal ${seg.kcal}, `
-          + `distance ${seg.horizontalDistance}, `
-          + `time ${seg.durationSec}`,
-        )
-      }
-      return 0
-    })
+    if (cal9.segments) {
+      cal9.segments.map((seg, i) => {
+        if (seg.kcal > calClamp) {
+          console.log(
+            `seg # ${i}, `
+            + `seg kcal ${seg.kcal}, `
+            + `distance ${seg.horizontalDistance}, `
+            + `time ${seg.durationSec}`,
+          )
+        }
+        return 0
+      })
+    }
   })
 
   it('Pandolf calorie comparison test - walk_10', async () => {
@@ -1044,17 +1062,19 @@ describe('Pandolf-Santee predictive model tests', async () => {
       _dot1(cal10.totalKcal) / _dot1(walk10Simple),
     )
     console.log('within10 calories:', within10(cal10.totalKcal, walk10Simple))
-    cal10.segments.map((seg, i) => {
-      if (seg.kcal > calClamp) {
-        console.log(
-          `seg # ${i}, `
-          + `seg kcal ${seg.kcal}, `
-          + `distance ${seg.horizontalDistance}, `
-          + `time ${seg.durationSec}`,
-        )
-      }
-      return 0
-    })
+    if (cal10.segments) {
+      cal10.segments.map((seg, i) => {
+        if (seg.kcal > calClamp) {
+          console.log(
+            `seg # ${i}, `
+            + `seg kcal ${seg.kcal}, `
+            + `distance ${seg.horizontalDistance}, `
+            + `time ${seg.durationSec}`,
+          )
+        }
+        return 0
+      })
+    }
   })
 
   it('Pandolf calorie comparison test - walk_11', async () => {
@@ -1131,17 +1151,19 @@ describe('Pandolf-Santee predictive model tests', async () => {
       _dot1(cal11.totalKcal) / _dot1(walk11Simple),
     )
     console.log('within10 calories:', within10(cal11.totalKcal, walk11Simple))
-    cal11.segments.map((seg, i) => {
-      if (seg.kcal > calClamp) {
-        console.log(
-          `seg # ${i}, `
-          + `seg kcal ${seg.kcal}, `
-          + `distance ${seg.horizontalDistance}, `
-          + `time ${seg.durationSec}`,
-        )
-      }
-      return 0
-    })
+    if (cal11.segments) {
+      cal11.segments.map((seg, i) => {
+        if (seg.kcal > calClamp) {
+          console.log(
+            `seg # ${i}, `
+            + `seg kcal ${seg.kcal}, `
+            + `distance ${seg.horizontalDistance}, `
+            + `time ${seg.durationSec}`,
+          )
+        }
+        return 0
+      })
+    }
   })
 
   it('Pandolf calorie comparison test - walk_12', async () => {
@@ -1218,17 +1240,19 @@ describe('Pandolf-Santee predictive model tests', async () => {
       _dot1(cal12.totalKcal) / _dot1(walk12Simple),
     )
     console.log('within10 calories:', within10(cal12.totalKcal, walk12Simple))
-    cal12.segments.map((seg, i) => {
-      if (seg.kcal > calClamp) {
-        console.log(
-          `seg # ${i}, `
-          + `seg kcal ${seg.kcal}, `
-          + `distance ${seg.horizontalDistance}, `
-          + `time ${seg.durationSec}`,
-        )
-      }
-      return 0
-    })
+    if (cal12.segments) {
+      cal12.segments.map((seg, i) => {
+        if (seg.kcal > calClamp) {
+          console.log(
+            `seg # ${i}, `
+            + `seg kcal ${seg.kcal}, `
+            + `distance ${seg.horizontalDistance}, `
+            + `time ${seg.durationSec}`,
+          )
+        }
+        return 0
+      })
+    }
   })
 
   it('Pandolf calorie comparison test - walk_13', async () => {
@@ -1305,17 +1329,19 @@ describe('Pandolf-Santee predictive model tests', async () => {
       _dot1(cal13.totalKcal) / _dot1(walk13Simple),
     )
     console.log('within10 calories:', within10(cal13.totalKcal, walk13Simple))
-    cal13.segments.map((seg, i) => {
-      if (seg.kcal > calClamp) {
-        console.log(
-          `seg # ${i}, `
-          + `seg kcal ${seg.kcal}, `
-          + `distance ${seg.horizontalDistance}, `
-          + `time ${seg.durationSec}`,
-        )
-      }
-      return 0
-    })
+    if (cal13.segments) {
+      cal13.segments.map((seg, i) => {
+        if (seg.kcal > calClamp) {
+          console.log(
+            `seg # ${i}, `
+            + `seg kcal ${seg.kcal}, `
+            + `distance ${seg.horizontalDistance}, `
+            + `time ${seg.durationSec}`,
+          )
+        }
+        return 0
+      })
+    }
   })
 
   it('Pandolf calorie comparison test - walk_14', async () => {
@@ -1392,17 +1418,19 @@ describe('Pandolf-Santee predictive model tests', async () => {
       _dot1(cal14.totalKcal) / _dot1(walk14Simple),
     )
     console.log('within10 calories:', within10(cal14.totalKcal, walk14Simple))
-    cal14.segments.map((seg, i) => {
-      if (seg.kcal > calClamp) {
-        console.log(
-          `seg # ${i}, `
-          + `seg kcal ${seg.kcal}, `
-          + `distance ${seg.horizontalDistance}, `
-          + `time ${seg.durationSec}`,
-        )
-      }
-      return 0
-    })
+    if (cal14.segments) {
+      cal14.segments.map((seg, i) => {
+        if (seg.kcal > calClamp) {
+          console.log(
+            `seg # ${i}, `
+            + `seg kcal ${seg.kcal}, `
+            + `distance ${seg.horizontalDistance}, `
+            + `time ${seg.durationSec}`,
+          )
+        }
+        return 0
+      })
+    }
   })
 
   it('Pandolf calorie comparison test - walk_15', async () => {
@@ -1479,17 +1507,19 @@ describe('Pandolf-Santee predictive model tests', async () => {
       _dot1(cal15.totalKcal) / _dot1(walk15Simple),
     )
     console.log('within10 calories:', within10(cal15.totalKcal, walk15Simple))
-    cal15.segments.map((seg, i) => {
-      if (seg.kcal > calClamp) {
-        console.log(
-          `seg # ${i}, `
-          + `seg kcal ${seg.kcal}, `
-          + `distance ${seg.horizontalDistance}, `
-          + `time ${seg.durationSec}`,
-        )
-      }
-      return 0
-    })
+    if (cal15.segments) {
+      cal15.segments.map((seg, i) => {
+        if (seg.kcal > calClamp) {
+          console.log(
+            `seg # ${i}, `
+            + `seg kcal ${seg.kcal}, `
+            + `distance ${seg.horizontalDistance}, `
+            + `time ${seg.durationSec}`,
+          )
+        }
+        return 0
+      })
+    }
   })
 
   it('Pandolf calorie comparison test - walk_16', async () => {
@@ -1566,18 +1596,20 @@ describe('Pandolf-Santee predictive model tests', async () => {
       _dot1(cal16.totalKcal) / _dot1(walk16Simple),
     )
     console.log('within10 calories:', within10(cal16.totalKcal, walk16Simple))
-    if (cal16.segments.length > 0) {
-      cal16.segments.map((seg, i) => {
-        if (seg.kcal > calClamp) {
-          console.log(
-            `seg # ${i}, `
-            + `seg kcal ${seg.kcal}, `
-            + `distance ${seg.horizontalDistance}, `
-            + `time ${seg.durationSec}`,
-          )
-        }
-        return 0
-      })
+    if (cal16.segments) {
+      if (cal16.segments.length > 0) {
+        cal16.segments.map((seg, i) => {
+          if (seg.kcal > calClamp) {
+            console.log(
+              `seg # ${i}, `
+              + `seg kcal ${seg.kcal}, `
+              + `distance ${seg.horizontalDistance}, `
+              + `time ${seg.durationSec}`,
+            )
+          }
+          return 0
+        })
+      }
     }
   })
 
@@ -1655,7 +1687,7 @@ describe('Pandolf-Santee predictive model tests', async () => {
       _dot1(cal17.totalKcal) / _dot1(walk17Simple),
     )
     console.log('within10 calories:', within10(cal17.totalKcal, walk17Simple))
-    if (cal17.segments.length > 0) {
+    if (cal17.segments?.length > 0) {
       cal17.segments.map((seg, i) => {
         if (seg.kcal > calClamp) {
           console.log(
@@ -1744,7 +1776,7 @@ describe('Pandolf-Santee predictive model tests', async () => {
       _dot1(cal18.totalKcal) / _dot1(walk18Simple),
     )
     console.log('within10 calories:', within10(cal18.totalKcal, walk18Simple))
-    if (cal18.segments.length > 0) {
+    if (cal18.segments?.length > 0) {
       cal18.segments.map((seg, i) => {
         if (seg.kcal > calClamp) {
           console.log(
@@ -1833,7 +1865,7 @@ describe('Pandolf-Santee predictive model tests', async () => {
       _dot1(cal19.totalKcal) / _dot1(walk19Simple),
     )
     console.log('within10 calories:', within10(cal19.totalKcal, walk19Simple))
-    if (cal19.segments.length > 0) {
+    if (cal19.segments?.length > 0) {
       cal19.segments.map((seg, i) => {
         if (seg.kcal > calClamp) {
           console.log(
@@ -1922,7 +1954,7 @@ describe('Pandolf-Santee predictive model tests', async () => {
       _dot1(cal20.totalKcal) / _dot1(walk20Simple),
     )
     console.log('within10 calories:', within10(cal20.totalKcal, walk20Simple))
-    if (cal20.segments.length > 0) {
+    if (cal20.segments?.length > 0) {
       cal20.segments.map((seg, i) => {
         if (seg.kcal > calClamp) {
           console.log(
@@ -2011,7 +2043,7 @@ describe('Pandolf-Santee predictive model tests', async () => {
       _dot1(cal21.totalKcal) / _dot1(walk21Simple),
     )
     console.log('within10 calories:', within10(cal21.totalKcal, walk21Simple))
-    if (cal21.segments.length > 0) {
+    if (cal21.segments?.length > 0) {
       cal21.segments.map((seg, i) => {
         if (seg.kcal > calClamp) {
           console.log(
@@ -2100,7 +2132,7 @@ describe('Pandolf-Santee predictive model tests', async () => {
       _dot1(cal22.totalKcal) / _dot1(walk22Simple),
     )
     console.log('within10 calories:', within10(cal22.totalKcal, walk22Simple))
-    if (cal22.segments.length > 0) {
+    if (cal22.segments?.length > 0) {
       cal22.segments.map((seg, i) => {
         if (seg.kcal > calClamp) {
           console.log(
@@ -2189,7 +2221,7 @@ describe('Pandolf-Santee predictive model tests', async () => {
       _dot1(cal23.totalKcal) / _dot1(walk23Simple),
     )
     console.log('within10 calories:', within10(cal23.totalKcal, walk23Simple))
-    if (cal23.segments.length > 0) {
+    if (cal23.segments?.length > 0) {
       cal23.segments.map((seg, i) => {
         if (seg.kcal > calClamp) {
           console.log(
@@ -2278,7 +2310,7 @@ describe('Pandolf-Santee predictive model tests', async () => {
       _dot1(cal24.totalKcal) / _dot1(walk24Simple),
     )
     console.log('within10 calories:', within10(cal24.totalKcal, walk24Simple))
-    if (cal24.segments.length > 0) {
+    if (cal24.segments?.length > 0) {
       cal24.segments.map((seg, i) => {
         if (seg.kcal > calClamp) {
           console.log(
@@ -2367,7 +2399,7 @@ describe('Pandolf-Santee predictive model tests', async () => {
       _dot1(cal25.totalKcal) / _dot1(walk25Simple),
     )
     console.log('within10 calories:', within10(cal25.totalKcal, walk25Simple))
-    if (cal25.segments.length > 0) {
+    if (cal25.segments?.length > 0) {
       cal25.segments.map((seg, i) => {
         if (seg.kcal > calClamp) {
           console.log(
