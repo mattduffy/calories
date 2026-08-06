@@ -1020,6 +1020,7 @@ export {
   within5,
   within10,
   lcdaCalories,
+  pointDistance,
   getCaloriesJs,
   simpleCalories,
   pandolfCalories,
