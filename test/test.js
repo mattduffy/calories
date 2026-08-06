@@ -59,8 +59,9 @@ import walk_31 from './walk_31-i-m-on-unifi.json' with { type: 'json' }
 import walk_32 from './walk_32-in-the-vacuum-of-space.json' with { type: 'json' }
 import walk_33 from './walk_33-doo-wopping-behind-us.json' with { type: 'json' }
 import walk_34 from './walk_34-i-might-as-well-be-gone.json' with { type: 'json' }
+import walk_35 from './walk_35-you-can-get-multiple-things.json' with { type: 'json' }
 
-const latest = walk_34
+const latest = walk_35
 
 const results = [
   {
@@ -284,6 +285,77 @@ describe('Pandolf-Santee predictive model tests', async () => {
     )
     if (cal1.segments) {
       cal1.segments.map((seg, i) => {
+        if (seg.kcal > calClamp) {
+          console.log(
+            `seg # ${i}, `
+            + `seg kcal ${seg.kcal}, `
+            + `distance ${seg.horizontalDistance}, `
+            + `time ${seg.durationSec}`,
+          )
+        }
+        return 0
+      })
+    }
+  })
+
+  it('XXX Pandolf calorie comparison test - walk_35', async () => {
+    console.log('')
+    console.log(`name: ${walk_35.features[0].properties.name}`)
+    const cal35W = walk_35.features[0].properties.weights
+    console.log('cal35W weights in lbs are:', cal35W)
+    const walk35Simple = simpleCalories(
+      m2m(walk_35.features[0].properties.duration),
+      {
+        body: _dot1(cal35W.body / 2.2),
+        ruck: _dot1(cal35W.ruck / 2.2),
+        water: (cal35W.water === 0) ? 0 : cal35W.water / 2.2,
+      },
+    )
+    const cal35 = pandolfCalories(
+      walk_35.features[0].geometry.coordinates,
+      {
+        bodyWeightKg: cal35W.body / 2.2,
+        loadKg: cal35W.ruck / 2.2,
+        waterKg: (cal35W.water === 0) ? 0 : cal35W.water / 2.2,
+        terrain: 1.1,
+        returnSegments: true,
+      },
+    )
+    results[2].pandolf2 = _dot1(cal35.totalKcal)
+    results[2].avgSpd = _dot1(cal35.avgSpeedMs)
+    results[2].apple = _dot1(walk_35.features[0].properties?.apple?.activity) ?? 0
+    const simple = walk_35.features[0].properties.simpleCalories
+    console.log(`XXX walk_35 pandolf calories: ${cal35.totalKcal} (simpleCalories: ${simple})`)
+    console.log(
+      `XXX walk_35 pandolf distance calculated: ${cal35.totalDistanceM} `
+      + `(original ${walk_35.features[0].properties.distance})`,
+    )
+    console.log(
+      `XXX walk_35 pandolf duration calculated: ${cal35.totalDurationSec}, `
+      + `(original ${walk_35.features[0].properties.duration / 1000})`,
+    )
+    console.log(
+      'XXX within5 distance: ',
+      `${_dot1(cal35.totalDistanceM)}, ${_dot1(walk_35.features[0].properties.distance)}`,
+      within5(cal35.totalDistanceM, walk_35.features[0].properties.distance),
+    )
+    console.log(
+      'XXX within10 distance: ',
+      within10(cal35.totalDistanceM, walk_35.features[0].properties.distance),
+      `calculated ${_dot1(cal35.totalDistanceM)} / `,
+      `original ${_dot1(walk_35.features[0].properties.distance)} =`,
+      _dot1(cal35.totalDistanceM) / _dot1(walk_35.features[0].properties.distance),
+    )
+    console.log(
+      'XXX within5 calories:',
+      within5(cal35.totalKcal, walk35Simple),
+      `calculated ${_dot1(cal35.totalKcal)} /`,
+      `original ${_dot1(walk35Simple)} =`,
+      _dot1(cal35.totalKcal) / _dot1(walk35Simple),
+    )
+    console.log('XXX within10 calories:', within10(cal35.totalKcal, walk35Simple))
+    if (cal35.segments) {
+      cal35.segments.map((seg, i) => {
         if (seg.kcal > calClamp) {
           console.log(
             `seg # ${i}, `
@@ -3516,7 +3588,7 @@ describe('Calorie ensemble tests', async () => {
 
   it('calorieEnsemble test - walk_26', async () => {
     console.log('')
-    console.log('calorie ensemble function test using the latest data file')
+    console.log('calorie ensemble function test using walk_26 data file')
     const coords = walk_26.features[0].geometry.coordinates
     const date_26 = new Date(walk_26.features[0].properties.date)
       .toLocaleDateString('en-US', {
@@ -3568,7 +3640,7 @@ describe('Calorie ensemble tests', async () => {
 
   it('calorieEnsemble test - walk_27', async () => {
     console.log('')
-    console.log('calorie ensemble function test using the latest data file')
+    console.log('calorie ensemble function test using walk_27 data file')
     const coords = walk_27.features[0].geometry.coordinates
     const date_27 = new Date(walk_27.features[0].properties.date)
       .toLocaleDateString('en-US', {
@@ -3620,7 +3692,7 @@ describe('Calorie ensemble tests', async () => {
 
   it('calorieEnsemble test - walk_28', async () => {
     console.log('')
-    console.log('calorie ensemble function test using the latest data file')
+    console.log('calorie ensemble function test using walk_28 data file')
     const coords = walk_28.features[0].geometry.coordinates
     const date_28 = new Date(walk_28.features[0].properties.date)
       .toLocaleDateString('en-US', {
@@ -3672,7 +3744,7 @@ describe('Calorie ensemble tests', async () => {
 
   it('calorieEnsemble test - walk_29', async () => {
     console.log('')
-    console.log('calorie ensemble function test using the latest data file')
+    console.log('calorie ensemble function test using walk_29 data file')
     const coords = walk_29.features[0].geometry.coordinates
     const date_29 = new Date(walk_29.features[0].properties.date)
       .toLocaleDateString('en-US', {
@@ -3724,7 +3796,7 @@ describe('Calorie ensemble tests', async () => {
 
   it('calorieEnsemble test - walk_30', async () => {
     console.log('')
-    console.log('calorie ensemble function test using the latest data file')
+    console.log('calorie ensemble function test using walk_30 data file')
     const coords = walk_30.features[0].geometry.coordinates
     const date_30 = new Date(walk_30.features[0].properties.date)
       .toLocaleDateString('en-US', {
@@ -3776,7 +3848,7 @@ describe('Calorie ensemble tests', async () => {
 
   it('calorieEnsemble test - walk_31', async () => {
     console.log('')
-    console.log('calorie ensemble function test using the latest data file')
+    console.log('calorie ensemble function test using walk_31 data file')
     const coords = walk_31.features[0].geometry.coordinates
     const date_31 = new Date(walk_31.features[0].properties.date)
       .toLocaleDateString('en-US', {
@@ -3828,7 +3900,7 @@ describe('Calorie ensemble tests', async () => {
 
   it('calorieEnsemble test - walk_32', async () => {
     console.log('')
-    console.log('calorie ensemble function test using the latest data file')
+    console.log('calorie ensemble function test using walk_32 data file')
     const coords = walk_32.features[0].geometry.coordinates
     const date_32 = new Date(walk_32.features[0].properties.date)
       .toLocaleDateString('en-US', {
@@ -3880,7 +3952,7 @@ describe('Calorie ensemble tests', async () => {
 
   it('calorieEnsemble test - walk_33', async () => {
     console.log('')
-    console.log('calorie ensemble function test using the latest data file')
+    console.log('calorie ensemble function test using walk_33 data file')
     const coords = walk_33.features[0].geometry.coordinates
     const date_33 = new Date(walk_33.features[0].properties.date)
       .toLocaleDateString('en-US', {
@@ -3932,7 +4004,7 @@ describe('Calorie ensemble tests', async () => {
 
   it('calorieEnsemble test - walk_34', async () => {
     console.log('')
-    console.log('calorie ensemble function test using the latest data file')
+    console.log('calorie ensemble function test using walk_34 data file')
     const coords = walk_34.features[0].geometry.coordinates
     const date_34 = new Date(walk_34.features[0].properties.date)
       .toLocaleDateString('en-US', {
@@ -3975,6 +4047,58 @@ describe('Calorie ensemble tests', async () => {
       simple1: _dot1(walk_34.features[0].properties.simpleCalories),
       simple2: _dot1(walk34Simple),
       pandolf1: _dot1(walk_34.features[0].properties.pandolfCalories.totalKcal),
+      pandolf2: _dot1(resultSet.pandolf.totalKcal),
+      lcda: _dot1(resultSet.lcda.totalKcal),
+      minMech: _dot1(resultSet.minMech.totalKcal),
+    })
+    assert(within10(resultSet.pandolf.totalKcal, resultSet.lcda.totalKcal))
+  })
+
+  it('calorieEnsemble test - walk_35', async () => {
+    console.log('')
+    console.log('calorie ensemble function test using walk_35 data file')
+    const coords = walk_35.features[0].geometry.coordinates
+    const date_35 = new Date(walk_35.features[0].properties.date)
+      .toLocaleDateString('en-US', {
+        month: '2-digit',
+        day: '2-digit',
+        year: 'numeric',
+      })
+    const weight = walk_35.features[0].properties.weights
+    const bodyW = _dot1(weight.body / 2.2)
+    const ruckW = _dot1(weight.ruck / 2.2)
+    const bmr = {
+      height: HEIGHT, weight: bodyW, age: AGE, sex: SEX,
+    }
+    const details = {
+      bodyWeightKg: bodyW,
+      loadKg: ruckW,
+      waterKg: 0,
+      terrain: 1.1,
+      BMR: bmr,
+    }
+    const walk35Simple = simpleCalories(
+      m2m(walk_35.features[0].properties.duration),
+      {
+        body: _dot1(weight.body / 2.2),
+        ruck: _dot1(weight.ruck / 2.2),
+        water: 0,
+      },
+    )
+    const resultSet = calorieEnsemble(coords, details)
+    console.log(resultSet)
+    results.push({
+      date: date_35,
+      name: clipName(walk_35.features[0].properties.name),
+      distance: dist(walk_35.features[0].properties.distance),
+      duration: _dot1(m2m(walk_35.features[0].properties.duration)),
+      avgSpd: _dot1(resultSet.pandolf.avgSpeedMs),
+      weights: walk_35.features[0].weights = `b: ${_dot1(weight.body / 2.2)}, `
+        + `r: ${_dot1(weight.ruck / 2.2)}`,
+      apple: walk_35.features[0].properties.apple.activity,
+      simple1: _dot1(walk_35.features[0].properties.simpleCalories),
+      simple2: _dot1(walk35Simple),
+      pandolf1: _dot1(walk_35.features[0].properties.pandolfCalories.totalKcal),
       pandolf2: _dot1(resultSet.pandolf.totalKcal),
       lcda: _dot1(resultSet.lcda.totalKcal),
       minMech: _dot1(resultSet.minMech.totalKcal),
