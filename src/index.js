@@ -6,6 +6,24 @@
  */
 
 /**
+ * Is this module running in a develoment mode or debugging context?
+ */
+const __DEBUG__ = (process.env.NODE_ENV === 'development' || process.env.CALORIES_DEBUG)
+  ? true : false
+
+/**
+ * @summary A local development debugging function.
+ * @author Matthew Duffy <mattduffy@gmail.com>
+ * @param {Any} args - Arbitrary list of arguments.
+ * @return {undefined} - Emits args content in console.log in proper environment.
+ */
+function console_log(...args) {
+  if (__DEBUG__) {
+    console.log(...args)
+  }
+}
+
+/**
  * Is this file being executed by node, or from inside a web browser?
  */
 const isNode = typeof process !== 'undefined' && process.versions && process.versions.node
@@ -68,6 +86,16 @@ const DEFAULT_RESTING_VO2 = 3.05
 const KCAL_PER_ML_O2 = 0.005
 
 /**
+ * @summary Convert a number of milliseconds to seconds.
+ * @author Matthew Duffy <mattduffy@gmail.com>
+ * @param {Number} milliseconds - The number of milliseconds to convert to seconds.
+ * @return {Number} - The converted number of seconds.
+ */
+function m2s(milliseconds) {
+  return milliseconds / 1000
+}
+
+/**
  * @summary Convert a number of milliseconds to minutes.
  * @author Matthew Duffy <mattduffy@gmail.com>
  * @param {Number} milliseconds - The number of milliseconds to convert to minutes.
@@ -121,7 +149,7 @@ function rads(degrees) {
  */
 function degs(radians) {
   const deg = radians * (180 / Math.PI)
-  console.log(`radians in ${radians} \ndegrees out ${deg}`)
+  console_log(`radians in ${radians} \ndegrees out ${deg}`)
   return deg
 }
 
@@ -134,7 +162,7 @@ function degs(radians) {
  * @return {Number} - The arc distance between to gps points.
  */
 function pointDistance(p1, p2, u = 'metric') {
-  // console.log('calories::pointDistances(p1, p2, u): ', p1, p2, u)
+  // console_log('calories::pointDistances(p1, p2, u): ', p1, p2, u)
   const earthRadiusKm = 6371
   const earthRadiusMeters = 6371000
   const earthRadiusMi = 3959
@@ -148,9 +176,9 @@ function pointDistance(p1, p2, u = 'metric') {
     r = earthRadiusMi
   } else {
     r = earthRadiusMeters
-    console.log('No units given, default to earth radius in meters')
+    console_log('No units given, default to earth radius in meters')
   }
-  // console.log(`calories::pointDistance() using earth radius: ${r} ${_u}`)
+  // console_log(`calories::pointDistance() using earth radius: ${r} ${_u}`)
   const dLat = rads(p2.latitude - p1.latitude)
   const dLon = rads(p2.longitude - p1.longitude)
   const lat1 = rads(p1.latitude)
@@ -266,12 +294,12 @@ function simpleCalories(minutes = 1, weights = { body: 0, ruck: 0, water: 0 }, M
   if (MET <= 0 || !Number.isFinite(MET) || MET === null || MET === undefined) {
     throw new Error('MET parameter must be a number greater than zero.')
   }
-  console.log('calculating simple EE method')
-  console.log('minutes', minutes)
-  console.log('weights', weights)
+  console_log('calculating simple EE method')
+  console_log('minutes', minutes)
+  console_log('weights', weights)
   COMBINED = weights.body + weights.ruck + weights.water
-  console.log('combined weights', COMBINED)
-  console.log(`computing ((${MET} * 3.5 * ${COMBINED}) / 200) * ${minutes}`)
+  console_log('combined weights', COMBINED)
+  console_log(`computing ((${MET} * 3.5 * ${COMBINED}) / 200) * ${minutes}`)
   return ((MET * 3.5 * COMBINED) / 200) * minutes
 }
 
@@ -333,13 +361,20 @@ function pandolfMetabolicRate(W, L, V, G, n) {
  * @returns {Object|null} Segment result, or null if the segment should be skipped.
  */
 function processPandolfSegment(point1, point2, W, L, H2O, n) {
-  const [lon1, lat1, , alt1, , t1] = point1
-  const [lon2, lat2, , alt2, , t2] = point2
+  let [lon1, lat1, , alt1, , t1] = point1
+  let [lon2, lat2, , alt2, , t2] = point2
 
   const p1 = { longitude: lon1, latitude: lat1, altitude: alt1 }
   const p2 = { longitude: lon2, latitude: lat2, altitude: alt2 }
   const horizontalDistance = pointDistance(p1, p2)
-  const durationSec = (t2 - t1) / 1000 // seconds
+  if (isNaN(t1)) {
+    t1 = Number.parseInt(Object.values(t1)?.[0]) ?? null
+  }
+  if (isNaN(t2)) {
+    t2 = Number.parseInt(Object.values(t2)?.[0]) ?? null
+  }
+  // console_log(t1, t2)
+  const durationSec = m2s(t2 - t1) // seconds
 
   // Skip GPS jitter, stationary points, or out-of-order timestamps.
   if (durationSec <= 0 || horizontalDistance < MIN_SEGMENT_DIST_M) return null
@@ -537,13 +572,19 @@ function lcdaMetabolicRate(L_Bp, S, G, n, rM) {
  * @returns {Object|null} Segment result, or null if the segment should be skipped.
  */
 function processLcdaSegment(point1, point2, W, L, H2O, n, rM) {
-  const [lon1, lat1, , alt1, , t1] = point1
-  const [lon2, lat2, , alt2, , t2] = point2
+  let [lon1, lat1, , alt1, , t1] = point1
+  let [lon2, lat2, , alt2, , t2] = point2
 
   const p1 = { longitude: lon1, latitude: lat1, altitude: alt1 }
   const p2 = { longitude: lon2, latitude: lat2, altitude: alt2 }
   const horizontalDistance = pointDistance(p1, p2)
-  const durationSec = (t2 - t1) / 1000 // seconds
+  if (isNaN(t1)) {
+    t1 = Number.parseInt(Object.values(t1)?.[0]) ?? null
+  }
+  if (isNaN(t2)) {
+    t2 = Number.parseInt(Object.values(t2)?.[0]) ?? null
+  }
+  const durationSec = m2s(t2 - t1) // seconds
 
   // Skip GPS jitter, stationary points, or out-of-order timestamps.
   if (durationSec <= 0 || horizontalDistance < MIN_SEGMENT_DIST_M) return null
@@ -623,11 +664,11 @@ function lcdaCalories(coords, BMR, options = {}) {
   if (!bodyWeightKg || bodyWeightKg <= 0) {
     throw new Error('options.bodyWeightKg is required and must be a positive number.')
   }
-  console.log('lcda parameters:')
-  console.log(bodyWeightKg, loadKg, waterKg)
-  console.log(terrain)
-  console.log(smooth, smoothWindow)
-  console.log('bmr', BMR)
+  console_log('lcda parameters:')
+  console_log(bodyWeightKg, loadKg, waterKg)
+  console_log(terrain)
+  console_log(smooth, smoothWindow)
+  console_log('bmr', BMR)
 
   const track = (smooth) ? smoothAltitude(coords, smoothWindow) : coords
   const segments = []
@@ -646,7 +687,7 @@ function lcdaCalories(coords, BMR, options = {}) {
     )
     if (seg) {
       totalKcal += seg.kcal
-      // console.log(`adding seg.kcal: ${seg.kcal} (${totalKcal})`)
+      // console_log(`adding seg.kcal: ${seg.kcal} (${totalKcal})`)
       totalDistanceM += seg.horizontalDistance
       totalDurationSec += seg.durationSec
       segments.push(seg)
@@ -723,13 +764,19 @@ function minimumMechanicsVO2(V, G, restVO2 = DEFAULT_RESTING_VO2) {
  * @returns {Object|null} Segment result, or null if the segment should be skipped.
  */
 function processMinimumMechanicsSegment(point1, point2, W, L, H2O, restVO2) {
-  const [lon1, lat1, , alt1, , t1] = point1
-  const [lon2, lat2, , alt2, , t2] = point2
+  let [lon1, lat1, , alt1, , t1] = point1
+  let [lon2, lat2, , alt2, , t2] = point2
 
   const p1 = { longitude: lon1, latitude: lat1, altitude: alt1 }
   const p2 = { longitude: lon2, latitude: lat2, altitude: alt2 }
   const horizontalDistance = pointDistance(p1, p2)
-  const durationSec = (t2 - t1) / 1000 // seconds
+  if (isNaN(t1)) {
+    t1 = Number.parseInt(Object.values(t1)?.[0]) ?? null
+  }
+  if (isNaN(t2)) {
+    t2 = Number.parseInt(Object.values(t2)?.[0]) ?? null
+  }
+  const durationSec = m2s(t2 - t1) // seconds
 
   // Skip GPS jitter, stationary points, or out-of-order timestamps.
   if (durationSec <= 0 || horizontalDistance < MIN_SEGMENT_DIST_M) return null
@@ -814,11 +861,11 @@ function minimumMechanicCalories(coords, BMR, options = {}) {
   let restVO2 = DEFAULT_RESTING_VO2
   restVO2 = vo2FromWattsPerKg(mResting(BMR.height, BMR.weight, BMR.age, BMR.sex))
 
-  console.log('minimum mechanics parameters:')
-  console.log(bodyWeightKg, loadKg, waterKg)
-  console.log(smooth, smoothWindow)
-  console.log('bmr', BMR)
-  console.log('restVO2', restVO2)
+  console_log('minimum mechanics parameters:')
+  console_log(bodyWeightKg, loadKg, waterKg)
+  console_log(smooth, smoothWindow)
+  console_log('bmr', BMR)
+  console_log('restVO2', restVO2)
 
   const track = (smooth) ? smoothAltitude(coords, smoothWindow) : coords
   const segments = []
@@ -910,11 +957,11 @@ function calorieEnsemble(coords, options) {
     smoothWindow = SMOOTH_DEFAULT_WINDOW,
   } = options
   const BMR = options?.BMR ?? null
-  console.log('emsemble parameters:')
-  console.log(bodyWeightKg, loadKg, waterKg)
-  console.log(terrain)
-  console.log(smooth, smoothWindow)
-  console.log('bmr', BMR)
+  console_log('emsemble parameters:')
+  console_log(bodyWeightKg, loadKg, waterKg)
+  console_log(terrain)
+  console_log(smooth, smoothWindow)
+  console_log('bmr', BMR)
   if (!coords || coords?.length <= 2) {
     throw new Error('At least 2 coordinate points are required.')
   }
@@ -949,7 +996,7 @@ function calorieEnsemble(coords, options) {
     )
     if (minMechSeg) {
       results.minMech.totalKcal += minMechSeg.kcal
-      // console.log(`adding minMechSeg.kcal: ${minMechSeg.kcal} (${totalKcal})`)
+      // console_log(`adding minMechSeg.kcal: ${minMechSeg.kcal} (${totalKcal})`)
       results.minMech.totalDistanceM += minMechSeg.horizontalDistance
       results.minMech.totalDurationSec += minMechSeg.durationSec
       // segments.push(minMechSeg)
@@ -964,7 +1011,7 @@ function calorieEnsemble(coords, options) {
     )
     if (pandolfSeg) {
       results.pandolf.totalKcal += pandolfSeg.kcal
-      // console.log(`adding pandolfSeg.kcal: ${pandolfSeg.kcal} (${totalKcal})`)
+      // console_log(`adding pandolfSeg.kcal: ${pandolfSeg.kcal} (${totalKcal})`)
       results.pandolf.totalDistanceM += pandolfSeg.horizontalDistance
       results.pandolf.totalDurationSec += pandolfSeg.durationSec
       // segments.push(pandolfSeg)
@@ -980,7 +1027,7 @@ function calorieEnsemble(coords, options) {
     )
     if (lcdaSeg) {
       results.lcda.totalKcal += lcdaSeg.kcal
-      // console.log(`adding lcdaSeg.kcal: ${lcdaSeg.kcal} (${totalKcal})`)
+      // console_log(`adding lcdaSeg.kcal: ${lcdaSeg.kcal} (${totalKcal})`)
       results.lcda.totalDistanceM += lcdaSeg.horizontalDistance
       results.lcda.totalDurationSec += lcdaSeg.durationSec
       // segments.push(lcdaSeg)
@@ -1001,10 +1048,10 @@ function calorieEnsemble(coords, options) {
 
 async function getCaloriesJs(ctx) {
   if (isNode) {
-    // console.log(ctx)
+    // console_log(ctx)
     const { fileURLToPath } = await import('url')
     const __filename = fileURLToPath(import.meta.url)
-    // console.log(__filename)
+    // console_log(__filename)
     const fs = await import('node:fs')
     const file = fs.readFileSync(__filename, 'utf-8')
     ctx.status = 200
@@ -1015,6 +1062,7 @@ async function getCaloriesJs(ctx) {
 
 export {
   m2m,
+  m2s,
   degs,
   rads,
   within5,
