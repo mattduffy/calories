@@ -8,7 +8,7 @@
 /**
  * Is this module running in a develoment mode or debugging context?
  */
-const __DEBUG__ = (process.env.NODE_ENV === 'development' || process.env.CALORIES_DEBUG)
+const __DEBUG__ = (typeof process !== 'undefined' && (process.env.NODE_ENV === 'development' || process.env.CALORIES_DEBUG))
   ? true : false
 
 /**
