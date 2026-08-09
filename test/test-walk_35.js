@@ -43,8 +43,7 @@ const SEX = 'm'
 
 const weights = {
   body: 70, // (160 / 2.2),
-  ruck: 5, // (30 / 2.2),
-  water: 0,
+  ruck: 5, // (30 / 2.2), water: 0,
 }
 
 const gpsPointA = {
@@ -107,6 +106,7 @@ describe('what is happening to walk_35?', async () => {
         loadKg: cal35W.ruck / 2.2,
         waterKg: (cal35W.water === 0) ? 0 : cal35W.water / 2.2,
         terrain: 1.1,
+        smooth: false,
         returnSegments: true,
       },
     )
