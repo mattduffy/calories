@@ -198,6 +198,12 @@ function pointDistance(p1, p2, u = 'metric') {
 function calculateVerticalInterval(alt1, alt2) {
   // Vertical difference in meters
   // return Math.abs(alt2 - alt1)
+  if (!alt2) {
+    alt2 = alt1
+  }
+  if (!alt1) {
+    alt1 = alt2
+  }
   return alt2 - alt1
 }
 
@@ -383,7 +389,8 @@ function processPandolfSegment(point1, point2, W, L, H2O, n) {
   const slopeGrade = calculateSlopeGrade(p1, p2)
   const { grade } = slopeGrade
   // Uses horizontal distance as the "run" (standard for hiking/trail grade).
-  const altitudeDiff = alt2 - alt1
+  // const altitudeDiff = alt2 - alt1
+  const altitudeDiff = calculateVerticalInterval(alt2, alt1)
 
   // Derived speed - clamped to MAX_SPEED_MS to guard against GPS outliers.
   const speed = Math.min(horizontalDistance / durationSec, MAX_SPEED_MS)
@@ -592,7 +599,8 @@ function processLcdaSegment(point1, point2, W, L, H2O, n, rM) {
   // Find the elevation change as slope between two points.
   const { grade } = calculateSlopeGrade(p1, p2)
   // Uses horizontal distance as the run (standard for hiking/trail grade).
-  const altitudeDiff = alt2 - alt1
+  // const altitudeDiff = alt2 - alt1
+  const altitudeDiff = calculateVerticalInterval(alt2, alt1)
 
   // Derived speed - clamped to MAX_SPEED_MS to guard against GPS outliers.
   const speed = Math.min(horizontalDistance / durationSec, MAX_SPEED_MS)
@@ -783,7 +791,8 @@ function processMinimumMechanicsSegment(point1, point2, W, L, H2O, restVO2) {
 
   const slopeGrade = calculateSlopeGrade(p1, p2)
   const { grade } = slopeGrade
-  const altitudeDiff = alt2 - alt1
+  // const altitudeDiff = alt2 - alt1
+  const altitudeDiff = calculateVerticalInterval(alt2, alt1)
 
   // Derived speed - clamped to MAX_SPEED_MS to guard against GPS outliers.
   const speed = Math.min(horizontalDistance / durationSec, MAX_SPEED_MS)
