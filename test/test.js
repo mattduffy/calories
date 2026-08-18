@@ -4000,7 +4000,8 @@ describe('Calorie ensemble tests', async () => {
     // assert(within10(resultSet.pandolf.totalKcal, resultSet.lcda.totalKcal))
     const pKcal = resultSet.pandolf.totalKcal
     const lKcal = resultSet.lcda.totalKcal
-    assert(withinX(pKcal, lKcal, X))
+    const mKcal = resultSet.minMech.totalKcal
+    assert(withinX(mKcal, lKcal, X))
   })
 
   it('calorieEnsemble test - walk_30', async () => {
