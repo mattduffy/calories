@@ -61,8 +61,9 @@ import walk_33 from './walk_33-doo-wopping-behind-us.json' with { type: 'json' }
 import walk_34 from './walk_34-i-might-as-well-be-gone.json' with { type: 'json' }
 import walk_35 from './walk_35-you-can-get-multiple-things.json' with { type: 'json' }
 import walk_36 from './walk_36-you-do-it-so-hard-you-get-paralyzed.json' with { type: 'json' }
+import walk_37 from './walk_37-i-m-am-fucking-reckless.json' with { type: 'json' }
 
-const latest = walk_36
+const latest = walk_37
 
 const __DEBUG__ = (process.env.NODE_ENV === 'development' || process.env.CALORIES_DEBUG)
   ? true : false
@@ -4407,6 +4408,67 @@ describe('Calorie ensemble tests', async () => {
     )
     assert(withinX(pKcal, lKcal, X))
     // console.log(`withinX ${pKcal} ${lKcal}where X is ${X}, ${withinX(pKcal, lKcal, X)}`)
+  })
+
+  it('calorieEnsemble test - walk_37', async () => {
+    console_log('')
+    console_log('calorie ensemble function test using walk_37 data file')
+    const coords = walk_37.features[0].geometry.coordinates
+    const date_37 = new Date(walk_37.features[0].properties.date)
+      .toLocaleDateString('en-US', {
+        month: '2-digit',
+        day: '2-digit',
+        year: 'numeric',
+      })
+    const weight = walk_37.features[0].properties.weights
+    const bodyW = _dot1(weight.body / 2.2)
+    const ruckW = _dot1(weight.ruck / 2.2)
+    const bmr = {
+      height: HEIGHT, weight: bodyW, age: AGE, sex: SEX,
+    }
+    const details = {
+      bodyWeightKg: bodyW,
+      loadKg: ruckW,
+      waterKg: 0,
+      terrain: 1.1,
+      smooth: SMOOTH,
+      smoothWindow: SMOOTH_WINDOW,
+      BMR: bmr,
+      smooth: SMOOTH,
+      smoothWindow: SMOOTH_WINDOW,
+    }
+    const walk37Simple = simpleCalories(
+      m2m(walk_37.features[0].properties.duration),
+      {
+        body: _dot1(weight.body / 2.2),
+        ruck: _dot1(weight.ruck / 2.2),
+        water: 0,
+      },
+    )
+    const resultSet = calorieEnsemble(coords, details)
+    console_log(resultSet)
+    results.push({
+      date: date_37,
+      name: clipName(walk_37.features[0].properties.name),
+      distance: dist(walk_37.features[0].properties.distance),
+      duration: _dot1(m2m(walk_37.features[0].properties.duration)),
+      avgSpd: _dot1(resultSet.pandolf.avgSpeedMs),
+      weights: walk_37.features[0].weights = `b: ${_dot1(weight.body / 2.2)}, `
+        + `r: ${_dot1(weight.ruck / 2.2)}`,
+      apple: walk_37.features[0].properties.apple.activity,
+      simple1: _dot1(walk_37.features[0].properties.simpleCalories),
+      simple2: _dot1(walk37Simple),
+      pandolf1: _dot1(walk_37.features[0].properties.pandolfCalories.totalKcal),
+      pandolf2: _dot1(resultSet.pandolf.totalKcal),
+      lcda: _dot1(resultSet.lcda.totalKcal),
+      minMech: _dot1(resultSet.minMech.totalKcal),
+    })
+    const pKcal = resultSet.pandolf.totalKcal
+    const lKcal = resultSet.lcda.totalKcal
+    console.log(
+      `% diff ${Number.parseInt(Math.min(pKcal, lKcal) / Math.max(pKcal, lKcal) * 100)}%`,
+    )
+    assert(withinX(pKcal, lKcal, X))
   })
 })
 
