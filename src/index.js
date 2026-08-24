@@ -135,7 +135,7 @@ function within5(x, y) {
  * @summary Convert degrees into radians.
  * @author Matthew Duffy <mattduffy@gmail.com>
  * @param {Number} degrees - Value in degrees to be converted.
- * @returm {Number} - Value in radians.
+ * @return {Number} - Value in radians.
  */
 function rads(degrees) {
   return degrees * (Math.PI / 180)
@@ -145,7 +145,7 @@ function rads(degrees) {
  * @summary Convert radians into degrees.
  * @author Matthew Duffy <mattduffy@gmail.com>
  * @param {Number} degrees - Value in radians to be converted.
- * @returm {Number} - Value in degrees.
+ * @return {Number} - Value in degrees.
  */
 function degs(radians) {
   const deg = radians * (180 / Math.PI)
@@ -1055,6 +1055,29 @@ function calorieEnsemble(coords, options) {
   return results
 }
 
+/**
+ * @summary Returns a list of available predictive models in the package.
+ * @author Matthew Duffy <mattduffy@gmail.com>
+ * @return {Object[]} - An array of dictionary objects naming available model types,
+ *                      names and descriptions.
+ */
+function models() {
+  return [
+    { name: 'Pandolf-Santee', function: 'pandolfCalories', desc: '' },
+    { name: 'Minimum Mechanics', function: 'minimumMechanicsCalories', desc: '' },
+    { name: 'LCDA', function: 'lcdaCalories', desc: '' },
+    { name: 'Calorie Ensemble', function: 'calorieEnsemble', desc: '' },
+  ]
+}
+
+/**
+ * @summary Provides a Koa.js compatible route handler function for exposing the library
+ *          on a web public URL.
+ * @author Matthew Duffy <mattduffy@gmail.com>
+ * @param {Object} ctx - A Koa.js context object containing request and response objects.
+ * @return {Promise<any>} - The contents of this file as an application/javascript HTTP
+ *                          response.
+ */
 async function getCaloriesJs(ctx) {
   if (isNode) {
     // console_log(ctx)
@@ -1074,6 +1097,7 @@ export {
   m2s,
   degs,
   rads,
+  models,
   within5,
   within10,
   lcdaCalories,
