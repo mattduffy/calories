@@ -4,6 +4,7 @@
 - [LCDA Model](#the-lcda-model)
 - [Minimum Mechanics Model](#the-minimum-mechanics-model)
 - [Calorie Ensemble](#the-calorie-ensemble)
+- [List Available Models](#list-available-models)
 - [Koa-style Router Middleware](#koa-style-router-middleware)
 
 ## Estimating Energy Expenditure and Calories Burned
@@ -211,6 +212,42 @@ console.log(resultSet)
 //     totalDurationSec: 3829.9640000000027,
 //     avgSpeedMs: 1.4477312813214143
 //   }
+// }
+```
+
+### List Available Models
+A list of model names, their respective function name, the authors associated with each model and a brief description is available with the `models()` function.
+```javascript
+import { models } from '@mattduffy/calories'
+console.log(models())
+// {
+//   models: [
+//     {
+//       name: 'Pandolf-Santee',
+//       function: 'pandolfCalories',
+//       desc: 'The Santee corrected version of the original energy expenditure model developed by USARIEM in the 1970s.  This model incorporates positional data, slope/grade, terrain characterizations, body weight and load carried to predict the energetic costs non-mechanized, cross-country movement, carrying loads.',
+//       authors: [Array]
+//     },
+//     {
+//       name: 'Load Carrying Decision Aid (LCDA)',
+//       function: 'lcdaCalories',
+//       desc: "Developed as part of a mission-planning software tool for the US military and published in 2017, this model attempts to provide more accurate energy expenditure predictions over steeper terrain variations while carrying heavier loads than previous models.  This model attempts to improve the original Pandolf-Santee model with modern GPS positional data and participant's BMR values.",
+//       authors: [Array]
+//     },
+//     {
+//       name: 'Minimum Mechanics',
+//       function: 'minimumMechanicsCalories',
+//       desc: `A predictive model published in 2017 which posits that the metabolic energy of the human walking economy can be accurately predicted using a minimum of three variables: "speed, surface grade, and total gravitational load".  This model uses GPS positional data, along with participant's BMR values to estimate total energy expeditures.`,
+//       authors: [Array]
+//     }
+//   ],
+//   collections: [
+//     {
+//       name: 'Calorie Ensemble',
+//       function: 'calorieEnsemble',
+//       desc: 'Perform all of the available predictive model calculations at once over a given dataset.'
+//     }
+//   ]
 // }
 ```
 
