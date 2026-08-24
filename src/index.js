@@ -1062,12 +1062,50 @@ function calorieEnsemble(coords, options) {
  *                      names and descriptions.
  */
 function models() {
-  return [
-    { name: 'Pandolf-Santee', function: 'pandolfCalories', desc: '' },
-    { name: 'Minimum Mechanics', function: 'minimumMechanicsCalories', desc: '' },
-    { name: 'LCDA', function: 'lcdaCalories', desc: '' },
-    { name: 'Calorie Ensemble', function: 'calorieEnsemble', desc: '' },
-  ]
+  return {
+    models: [
+      {
+        name: 'Pandolf-Santee',
+        function: 'pandolfCalories',
+        desc: 'The Santee corrected version of the original energy expenditure model developed by '
+          + 'USARIEM in the 1970s.  This model incorporates positional data, slope/grade, terrain '
+          + 'characterizations, body weight and load carried to predict the energetic costs '
+          + 'non-mechanized, cross-country movement, carrying loads.',
+        authors: ["Paul W. Richmond", "Adam W. Potter" , "William R. Santee"],
+      },
+      {
+        name: 'Load Carrying Decision Aid (LCDA)',
+        function: 'lcdaCalories',
+        desc: 'Developed as part of a mission-planning software tool for the US military and '
+          + 'published in 2017, this model attempts to provide more accurate energy expenditure '
+          + 'predictions over steeper terrain variations while carrying heavier loads than '
+          + 'previous models.  This model attempts to improve the original Pandolf-Santee model '
+          + 'with modern GPS positional data and participant\'s BMR values.',
+        authors: [
+          "David P. Looney", "Elizabeth M. Lavoie", "Sai V. Vangala", "Lucas D. Holden",
+          "Peter S. Figueiredo", "Karl E. Friedl", "Peter N. Frykman", "Jason W. Hancock",
+          "Scott J. Montain", "J. Luke Pryor", "William R. Santee", "Adam W. Potter",
+        ],
+      },
+      {
+        name: 'Minimum Mechanics',
+        function: 'minimumMechanicsCalories',
+        desc: 'A predictive model published in 2017 which posits that the metabolic energy of the '
+          + 'human walking economy can be accurately predicted using a minimum of three variables: '
+          + '"speed, surface grade, and total gravitational load".  This model uses GPS positional '
+          + 'data, along with participant\'s BMR values to estimate total energy expeditures.',
+        authors: ["Lindsay W. Ludlow", "Peter G. Weyand"],
+      },
+          ],
+    collections: [ 
+      {
+        name: 'Calorie Ensemble',
+        function: 'calorieEnsemble',
+        desc: 'Perform all of the available predictive model calculations at once over a given '
+          + 'dataset.',
+      },
+    ],
+  }
 }
 
 /**
