@@ -3,7 +3,6 @@ import walk_35 from './walk_35-you-can-get-multiple-things.json' with { type: 'j
 
 const coords = walk_35.features[0].geometry.coordinates
 
-let wacky
 let max = 0
 let newMax = 0
 coords.map((c, i) => {
@@ -28,13 +27,7 @@ coords.map((c, i) => {
       console.log(`point distance: ${d}`)
     }
   }
+  return true
 })
 console.log(`max point distance is ${max}`)
 // [-122.23285675000001, 37.78451156, 0, null, 10.40676430921577, 1785964802756]
- 
- 
- 
- 
- 
- 
-
