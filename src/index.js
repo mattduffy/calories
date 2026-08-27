@@ -8,8 +8,9 @@
 /**
  * Is this module running in a develoment mode or debugging context?
  */
-const __DEBUG__ = (typeof process !== 'undefined' && (process.env.NODE_ENV === 'development' || process.env.CALORIES_DEBUG))
-  ? true : false
+const __DEBUG__ = (typeof process !== 'undefined'
+  && (process.env.NODE_ENV === 'development'
+    || process.env.CALORIES_DEBUG))
 
 /**
  * @summary A local development debugging function.
@@ -17,7 +18,7 @@ const __DEBUG__ = (typeof process !== 'undefined' && (process.env.NODE_ENV === '
  * @param {Any} args - Arbitrary list of arguments.
  * @return {undefined} - Emits args content in console.log in proper environment.
  */
-function console_log(...args) {
+function console_log(...args) { // eslint-disable-line
   if (__DEBUG__) {
     console.log(...args)
   }
@@ -199,10 +200,10 @@ function calculateVerticalInterval(alt1, alt2) {
   // Vertical difference in meters
   // return Math.abs(alt2 - alt1)
   if (!alt2) {
-    alt2 = alt1
+    alt2 = alt1 // eslint-disable-line
   }
   if (!alt1) {
-    alt1 = alt2
+    alt1 = alt2 // eslint-disable-line
   }
   return alt2 - alt1
 }
@@ -367,17 +368,21 @@ function pandolfMetabolicRate(W, L, V, G, n) {
  * @returns {Object|null} Segment result, or null if the segment should be skipped.
  */
 function processPandolfSegment(point1, point2, W, L, H2O, n) {
-  let [lon1, lat1, , alt1, , t1] = point1
-  let [lon2, lat2, , alt2, , t2] = point2
+  const [lon1, lat1, , alt1, ,] = point1
+  let [, , , , , t1] = point1
+  const [lon2, lat2, , alt2, ,] = point2
+  let [, , , , , t2] = point2
 
   const p1 = { longitude: lon1, latitude: lat1, altitude: alt1 }
   const p2 = { longitude: lon2, latitude: lat2, altitude: alt2 }
   const horizontalDistance = pointDistance(p1, p2)
-  if (isNaN(t1)) {
-    t1 = Number.parseInt(Object.values(t1)?.[0]) ?? null
+  // if (Number.isNaN(t1)) {
+  if (isNaN(t1)) { // eslint-disable-line
+    t1 = Number.parseInt(Object.values(t1)?.[0], 10) ?? null
   }
-  if (isNaN(t2)) {
-    t2 = Number.parseInt(Object.values(t2)?.[0]) ?? null
+  // if (Number.isNaN(t2)) {
+  if (isNaN(t2)) { // eslint-disable-line
+    t2 = Number.parseInt(Object.values(t2)?.[0], 10) ?? null
   }
   // console_log(t1, t2)
   const durationSec = m2s(t2 - t1) // seconds
@@ -579,17 +584,21 @@ function lcdaMetabolicRate(L_Bp, S, G, n, rM) {
  * @returns {Object|null} Segment result, or null if the segment should be skipped.
  */
 function processLcdaSegment(point1, point2, W, L, H2O, n, rM) {
-  let [lon1, lat1, , alt1, , t1] = point1
-  let [lon2, lat2, , alt2, , t2] = point2
+  const [lon1, lat1, , alt1, ,] = point1
+  let [, , , , , t1] = point1
+  const [lon2, lat2, , alt2, ,] = point2
+  let [, , , , , t2] = point2
 
   const p1 = { longitude: lon1, latitude: lat1, altitude: alt1 }
   const p2 = { longitude: lon2, latitude: lat2, altitude: alt2 }
   const horizontalDistance = pointDistance(p1, p2)
-  if (isNaN(t1)) {
-    t1 = Number.parseInt(Object.values(t1)?.[0]) ?? null
+  // if (Number.isNaN(t1)) {
+  if (isNaN(t1)) { // eslint-disable-line
+    t1 = Number.parseInt(Object.values(t1)?.[0], 10) ?? null
   }
-  if (isNaN(t2)) {
-    t2 = Number.parseInt(Object.values(t2)?.[0]) ?? null
+  // if (Number.isNaN(t2)) {
+  if (isNaN(t2)) { // eslint-disable-line
+    t2 = Number.parseInt(Object.values(t2)?.[0], 10) ?? null
   }
   const durationSec = m2s(t2 - t1) // seconds
 
@@ -772,17 +781,21 @@ function minimumMechanicsVO2(V, G, restVO2 = DEFAULT_RESTING_VO2) {
  * @returns {Object|null} Segment result, or null if the segment should be skipped.
  */
 function processMinimumMechanicsSegment(point1, point2, W, L, H2O, restVO2) {
-  let [lon1, lat1, , alt1, , t1] = point1
-  let [lon2, lat2, , alt2, , t2] = point2
+  const [lon1, lat1, , alt1, ,] = point1
+  let [, , , , , t1] = point1
+  const [lon2, lat2, , alt2, ,] = point2
+  let [, , , , , t2] = point2
 
   const p1 = { longitude: lon1, latitude: lat1, altitude: alt1 }
   const p2 = { longitude: lon2, latitude: lat2, altitude: alt2 }
   const horizontalDistance = pointDistance(p1, p2)
-  if (isNaN(t1)) {
-    t1 = Number.parseInt(Object.values(t1)?.[0]) ?? null
+  // if (Number.isNaN(t1)) {
+  if (isNaN(t1)) { // eslint-disable-line
+    t1 = Number.parseInt(Object.values(t1)?.[0], 10) ?? null
   }
-  if (isNaN(t2)) {
-    t2 = Number.parseInt(Object.values(t2)?.[0]) ?? null
+  // if (Number.isNaN(t2)) {
+  if (isNaN(t2)) { // eslint-disable-line
+    t2 = Number.parseInt(Object.values(t2)?.[0], 10) ?? null
   }
   const durationSec = m2s(t2 - t1) // seconds
 
@@ -913,7 +926,7 @@ function minimumMechanicCalories(coords, BMR, options = {}) {
 
 /**
  * @summary A wrapper function to provide the name minimumMechanicsCalories() which is a
- *          better match of the documentation. 
+ *          better match of the documentation.
  * @author Matthew Duffy <mattduffy@gmail.com>
  * @see {@link minimumMechanicCalories}
  * @see minimumMechanicCalories
@@ -921,7 +934,6 @@ function minimumMechanicCalories(coords, BMR, options = {}) {
 function minimumMechanicsCalories(coords, options = {}) {
   return minimumMechanicCalories(coords, options)
 }
-
 
 /**
  * A function entrypoint that calculates the calorie estimate for each available predictive
@@ -938,7 +950,7 @@ function minimumMechanicsCalories(coords, options = {}) {
  * @param {Number} [options.terrain=1.1]  - Terrain coefficient (n). Use TERRAIN_COEFFICIENTS.
  * @param {Number} [options.smoothWindow=5] - Rolling average size for altitude smoothing.
  * @param {Boolean} [options.smooth=true] - Whether to smooth GPS altitude before calculating.
- * @param {Boolean} [options.returnSegments=false] - Return array of all calculated segments. 
+ * @param {Boolean} [options.returnSegments=false] - Return array of all calculated segments.
  * @param {Object} [options.BMR] - Values for calculating resting metabolic rate.
  * @param {Number} [options.BMR.height] - BMR body height in cm.
  * @param {Number} [options.BMR.weight] - BMR body weight in kg.
@@ -1072,7 +1084,7 @@ function models() {
           + 'USARIEM in the 1970s.  This model incorporates positional data, slope/grade, terrain '
           + 'characterizations, body weight and load carried to predict the energetic costs '
           + 'non-mechanized, cross-country movement, carrying loads.',
-        authors: ["Paul W. Richmond", "Adam W. Potter" , "William R. Santee"],
+        authors: ['Paul W. Richmond', 'Adam W. Potter', 'William R. Santee'],
       },
       {
         name: 'Load Carrying Decision Aid',
@@ -1084,9 +1096,9 @@ function models() {
           + 'previous models.  This model attempts to improve the original Pandolf-Santee model '
           + 'with modern GPS positional data and participant\'s BMR values.',
         authors: [
-          "David P. Looney", "Elizabeth M. Lavoie", "Sai V. Vangala", "Lucas D. Holden",
-          "Peter S. Figueiredo", "Karl E. Friedl", "Peter N. Frykman", "Jason W. Hancock",
-          "Scott J. Montain", "J. Luke Pryor", "William R. Santee", "Adam W. Potter",
+          'David P. Looney', 'Elizabeth M. Lavoie', 'Sai V. Vangala', 'Lucas D. Holden',
+          'Peter S. Figueiredo', 'Karl E. Friedl', 'Peter N. Frykman', 'Jason W. Hancock',
+          'Scott J. Montain', 'J. Luke Pryor', 'William R. Santee', 'Adam W. Potter',
         ],
       },
       {
@@ -1097,10 +1109,10 @@ function models() {
           + 'human walking economy can be accurately predicted using a minimum of three variables: '
           + '"speed, surface grade, and total gravitational load".  This model uses GPS positional '
           + 'data, along with participant\'s BMR values to estimate total energy expeditures.',
-        authors: ["Lindsay W. Ludlow", "Peter G. Weyand"],
+        authors: ['Lindsay W. Ludlow', 'Peter G. Weyand'],
       },
-          ],
-    collections: [ 
+    ],
+    collections: [
       {
         name: 'Calorie Ensemble',
         shortName: 'Calorie Ensemble',
