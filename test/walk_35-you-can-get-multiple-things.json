@@ -9,17 +9,11 @@
       "properties": {
         "id": null,
         "version": 0.2,
-        "date": {
-          "$numberLong": "1785958645101"
-        },
+        "date": 1785958645101,
         "name": "You can get multiple things?",
         "location": "2130 Mountain Blvd, Oakland, CA",
-        "startTime": {
-          "$numberLong": "1785958645101"
-        },
-        "endTime": {
-          "$numberLong": "1785966221120"
-        },
+        "startTime": 1785958645101,
+        "endTime": 1785966221120,
         "duration": 7576019,
         "startPosition": {
           "latitude": 37.82457702424558,
@@ -34,9 +28,7 @@
           "accuracy": 4.780001888489442,
           "heading": 147.4520054095685,
           "altitude": 179.08470460772514,
-          "timestamp": {
-            "$numberLong": "1785966221120"
-          },
+          "timestamp": 1785966221120,
           "distance": 0
         },
         "distance": 11167.149086634709,
