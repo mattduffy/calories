@@ -1066,6 +1066,7 @@ function models() {
     models: [
       {
         name: 'Pandolf-Santee',
+        shortName: 'Pandolf-Santee',
         function: 'pandolfCalories',
         desc: 'The Santee corrected version of the original energy expenditure model developed by '
           + 'USARIEM in the 1970s.  This model incorporates positional data, slope/grade, terrain '
@@ -1074,7 +1075,8 @@ function models() {
         authors: ["Paul W. Richmond", "Adam W. Potter" , "William R. Santee"],
       },
       {
-        name: 'Load Carrying Decision Aid (LCDA)',
+        name: 'Load Carrying Decision Aid',
+        shortName: 'LCDA',
         function: 'lcdaCalories',
         desc: 'Developed as part of a mission-planning software tool for the US military and '
           + 'published in 2017, this model attempts to provide more accurate energy expenditure '
@@ -1089,6 +1091,7 @@ function models() {
       },
       {
         name: 'Minimum Mechanics',
+        shortName: 'Minimum Mechanics',
         function: 'minimumMechanicsCalories',
         desc: 'A predictive model published in 2017 which posits that the metabolic energy of the '
           + 'human walking economy can be accurately predicted using a minimum of three variables: '
@@ -1100,6 +1103,7 @@ function models() {
     collections: [ 
       {
         name: 'Calorie Ensemble',
+        shortName: 'Calorie Ensemble',
         function: 'calorieEnsemble',
         desc: 'Perform all of the available predictive model calculations at once over a given '
           + 'dataset.',
