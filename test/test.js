@@ -69,7 +69,6 @@ import walk_40 from './walk_40-sit-back-and-enjoy-the-show.json' with { type: 'j
 const latest = walk_40
 
 const __DEBUG__ = (process.env.NODE_ENV === 'development' || process.env.CALORIES_DEBUG)
-  ? true : false
 
 function console_log(...args) {
   if (__DEBUG__) {
@@ -82,7 +81,7 @@ const SMOOTH_WINDOW = process.env.SMOOTH_WINDOW || 5
 const X = process.env.X || 25
 console_log(`smooth=${SMOOTH} window=${SMOOTH_WINDOW} X=${X}`)
 
-function withinX(m, n, X = 10) {
+function withinX(m, n, X = 10) { // eslint-disable-line
   const _min = Math.min(m, n)
   const _max = Math.max(m, n)
   // If X% of _max is less than the value of _min, return true.
@@ -3831,7 +3830,7 @@ describe('Calorie ensemble tests', async () => {
     const pKcal = resultSet.pandolf.totalKcal
     const lKcal = resultSet.lcda.totalKcal
     console.log(
-      `% diff ${Number.parseInt(Math.min(pKcal, lKcal) / Math.max(pKcal, lKcal) * 100)}%`,
+      `% diff ${Number.parseInt((Math.min(pKcal, lKcal) / Math.max(pKcal, lKcal)) * 100, 10)}%`,
     )
     assert(withinX(pKcal, lKcal, X))
   })
@@ -4002,7 +4001,7 @@ describe('Calorie ensemble tests', async () => {
       minMech: _dot1(resultSet.minMech.totalKcal),
     })
     // assert(within10(resultSet.pandolf.totalKcal, resultSet.lcda.totalKcal))
-    const pKcal = resultSet.pandolf.totalKcal
+    // const pKcal = resultSet.pandolf.totalKcal
     const lKcal = resultSet.lcda.totalKcal
     const mKcal = resultSet.minMech.totalKcal
     assert(withinX(mKcal, lKcal, X))
@@ -4317,6 +4316,7 @@ describe('Calorie ensemble tests', async () => {
       BMR: bmr,
       smooth: SMOOTH,
       smoothWindow: SMOOTH_WINDOW,
+      returnSegments: true,
     }
     const walk35Simple = simpleCalories(
       m2m(walk_35.features[0].properties.duration),
@@ -4347,7 +4347,9 @@ describe('Calorie ensemble tests', async () => {
     // assert(within10(resultSet.pandolf.totalKcal, resultSet.lcda.totalKcal))
     const pKcal = resultSet.pandolf.totalKcal
     const lKcal = resultSet.lcda.totalKcal
-    assert(withinX(pKcal, lKcal, X))
+    const myassert = withinX(pKcal, lKcal, X)
+    console_log('my assert', myassert)
+    assert(myassert)
   })
 
   it('calorieEnsemble test - walk_36', async () => {
@@ -4374,8 +4376,6 @@ describe('Calorie ensemble tests', async () => {
       smooth: SMOOTH,
       smoothWindow: SMOOTH_WINDOW,
       BMR: bmr,
-      smooth: SMOOTH,
-      smoothWindow: SMOOTH_WINDOW,
     }
     const walk36Simple = simpleCalories(
       m2m(walk_36.features[0].properties.duration),
@@ -4407,7 +4407,7 @@ describe('Calorie ensemble tests', async () => {
     const pKcal = resultSet.pandolf.totalKcal
     const lKcal = resultSet.lcda.totalKcal
     console.log(
-      `% diff ${Number.parseInt(Math.min(pKcal, lKcal) / Math.max(pKcal, lKcal) * 100)}%`,
+      `% diff ${Number.parseInt((Math.min(pKcal, lKcal) / Math.max(pKcal, lKcal)) * 100, 10)}%`,
     )
     assert(withinX(pKcal, lKcal, X))
     // console.log(`withinX ${pKcal} ${lKcal}where X is ${X}, ${withinX(pKcal, lKcal, X)}`)
@@ -4437,8 +4437,6 @@ describe('Calorie ensemble tests', async () => {
       smooth: SMOOTH,
       smoothWindow: SMOOTH_WINDOW,
       BMR: bmr,
-      smooth: SMOOTH,
-      smoothWindow: SMOOTH_WINDOW,
     }
     const walk37Simple = simpleCalories(
       m2m(walk_37.features[0].properties.duration),
@@ -4469,7 +4467,7 @@ describe('Calorie ensemble tests', async () => {
     const pKcal = resultSet.pandolf.totalKcal
     const lKcal = resultSet.lcda.totalKcal
     console.log(
-      `% diff ${Number.parseInt(Math.min(pKcal, lKcal) / Math.max(pKcal, lKcal) * 100)}%`,
+      `% diff ${Number.parseInt((Math.min(pKcal, lKcal) / Math.max(pKcal, lKcal)) * 100, 10)}%`,
     )
     assert(withinX(pKcal, lKcal, X))
   })
@@ -4498,8 +4496,6 @@ describe('Calorie ensemble tests', async () => {
       smooth: SMOOTH,
       smoothWindow: SMOOTH_WINDOW,
       BMR: bmr,
-      smooth: SMOOTH,
-      smoothWindow: SMOOTH_WINDOW,
     }
     const walk38Simple = simpleCalories(
       m2m(walk_38.features[0].properties.duration),
@@ -4530,7 +4526,7 @@ describe('Calorie ensemble tests', async () => {
     const pKcal = resultSet.pandolf.totalKcal
     const lKcal = resultSet.lcda.totalKcal
     console.log(
-      `% diff ${Number.parseInt(Math.min(pKcal, lKcal) / Math.max(pKcal, lKcal) * 100)}%`,
+      `% diff ${Number.parseInt((Math.min(pKcal, lKcal) / Math.max(pKcal, lKcal)) * 100, 10)}%`,
     )
     assert(withinX(pKcal, lKcal, X))
   })
@@ -4559,8 +4555,6 @@ describe('Calorie ensemble tests', async () => {
       smooth: SMOOTH,
       smoothWindow: SMOOTH_WINDOW,
       BMR: bmr,
-      smooth: SMOOTH,
-      smoothWindow: SMOOTH_WINDOW,
     }
     const walk39Simple = simpleCalories(
       m2m(walk_39.features[0].properties.duration),
@@ -4591,7 +4585,7 @@ describe('Calorie ensemble tests', async () => {
     const pKcal = resultSet.pandolf.totalKcal
     const lKcal = resultSet.lcda.totalKcal
     console.log(
-      `% diff ${Number.parseInt(Math.min(pKcal, lKcal) / Math.max(pKcal, lKcal) * 100)}%`,
+      `% diff ${Number.parseInt((Math.min(pKcal, lKcal) / Math.max(pKcal, lKcal)) * 100, 10)}%`,
     )
     assert(withinX(pKcal, lKcal, X))
   })
@@ -4620,8 +4614,6 @@ describe('Calorie ensemble tests', async () => {
       smooth: SMOOTH,
       smoothWindow: SMOOTH_WINDOW,
       BMR: bmr,
-      smooth: SMOOTH,
-      smoothWindow: SMOOTH_WINDOW,
     }
     const walk40Simple = simpleCalories(
       m2m(walk_40.features[0].properties.duration),
@@ -4652,7 +4644,7 @@ describe('Calorie ensemble tests', async () => {
     const pKcal = resultSet.pandolf.totalKcal
     const lKcal = resultSet.lcda.totalKcal
     console.log(
-      `% diff ${Number.parseInt(Math.min(pKcal, lKcal) / Math.max(pKcal, lKcal) * 100)}%`,
+      `% diff ${Number.parseInt((Math.min(pKcal, lKcal) / Math.max(pKcal, lKcal)) * 100, 10)}%`,
     )
     assert(withinX(pKcal, lKcal, X))
   })
@@ -4661,6 +4653,7 @@ describe('Calorie ensemble tests', async () => {
 describe('Results table', async () => {
   it('Display the results of all the walks tested.', async () => {
     // console_log('pandolf function is using seconds instead of milliseconds.')
+    console.log('X', X)
     console.table(results)
     assert(true)
   })
