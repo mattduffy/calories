@@ -71,8 +71,9 @@ import walk_43 from './walk_43-a-budding-friendship.json' with { type: 'json' }
 import walk_44 from './walk_44-let-me-borrow-a-dracula.json' with { type: 'json' }
 import walk_45 from './walk_45-those-days-are-dead-and-gone.json' with { type: 'json' }
 import walk_46 from './walk_46-the-turrlett-family.json' with { type: 'json' }
+import walk_47 from './walk_47-my-twitter-acounts-been-hacked.json' with { type: 'json' }
 
-const latest = walk_46
+const latest = walk_47
 
 const __DEBUG__ = (process.env.NODE_ENV === 'development' || process.env.CALORIES_DEBUG)
 
@@ -4997,6 +4998,65 @@ describe('Calorie ensemble tests', async () => {
       simple1: _dot1(walk_46.features[0].properties.simpleCalories),
       simple2: _dot1(walk46Simple),
       pandolf1: _dot1(walk_46.features[0].properties.pandolfCalories.totalKcal),
+      pandolf2: _dot1(resultSet.pandolf.totalKcal),
+      lcda: _dot1(resultSet.lcda.totalKcal),
+      minMech: _dot1(resultSet.minMech.totalKcal),
+    })
+    const pKcal = resultSet.pandolf.totalKcal
+    const lKcal = resultSet.lcda.totalKcal
+    console.log(
+      `% diff ${Number.parseInt((Math.min(pKcal, lKcal) / Math.max(pKcal, lKcal)) * 100, 10)}%`,
+    )
+    assert(withinX(pKcal, lKcal, X))
+  })
+
+  it('calorieEnsemble test - walk_47', async () => {
+    console_log('')
+    console_log('calorie ensemble function test using walk_47 data file')
+    const coords = walk_47.features[0].geometry.coordinates
+    const date_47 = new Date(walk_37.features[0].properties.date)
+      .toLocaleDateString('en-US', {
+        month: '2-digit',
+        day: '2-digit',
+        year: 'numeric',
+      })
+    const weight = walk_47.features[0].properties.weights
+    const bodyW = _dot1(weight.body / 2.2)
+    const ruckW = _dot1(weight.ruck / 2.2)
+    const bmr = {
+      height: HEIGHT, weight: bodyW, age: AGE, sex: SEX,
+    }
+    const details = {
+      bodyWeightKg: bodyW,
+      loadKg: ruckW,
+      waterKg: 0,
+      terrain: 1.1,
+      smooth: SMOOTH,
+      smoothWindow: SMOOTH_WINDOW,
+      BMR: bmr,
+    }
+    const walk47Simple = simpleCalories(
+      m2m(walk_47.features[0].properties.duration),
+      {
+        body: _dot1(weight.body / 2.2),
+        ruck: _dot1(weight.ruck / 2.2),
+        water: 0,
+      },
+    )
+    const resultSet = calorieEnsemble(coords, details)
+    console_log(resultSet)
+    results.push({
+      date: date_47,
+      name: clipName(walk_47.features[0].properties.name),
+      distance: dist(walk_47.features[0].properties.distance),
+      duration: _dot1(m2m(walk_47.features[0].properties.duration)),
+      avgSpd: _dot1(resultSet.pandolf.avgSpeedMs),
+      weights: walk_47.features[0].weights = `b: ${_dot1(weight.body / 2.2)}, `
+        + `r: ${_dot1(weight.ruck / 2.2)}`,
+      apple: walk_47.features[0].properties.apple.activity,
+      simple1: _dot1(walk_47.features[0].properties.simpleCalories),
+      simple2: _dot1(walk47Simple),
+      pandolf1: _dot1(walk_47.features[0].properties.pandolfCalories.totalKcal),
       pandolf2: _dot1(resultSet.pandolf.totalKcal),
       lcda: _dot1(resultSet.lcda.totalKcal),
       minMech: _dot1(resultSet.minMech.totalKcal),
