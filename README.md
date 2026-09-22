@@ -223,19 +223,30 @@ console.log(models())
 // {
 //   models: [
 //     {
+//       name: 'Simple Calories',
+//       shortName: 'Simple Calories',
+//       function: 'simpleCalories',
+//       desc: 'A relative estimate of energy spent per unit of time doing a specific physical '
+//         + 'activity to a reference value of 3.5 ml O₂/(kg·min).',
+//       authors: [],
+//     }, 
+//     {
 //       name: 'Pandolf-Santee',
+//       shortName: 'Pandolf-Santee',
 //       function: 'pandolfCalories',
 //       desc: 'The Santee corrected version of the original energy expenditure model developed by USARIEM in the 1970s.  This model incorporates positional data, slope/grade, terrain characterizations, body weight and load carried to predict the energetic costs non-mechanized, cross-country movement, carrying loads.',
 //       authors: [Array]
 //     },
 //     {
-//       name: 'Load Carrying Decision Aid (LCDA)',
+//       name: 'Load Carrying Decision Aid',
+//       shortName: 'LCDA',
 //       function: 'lcdaCalories',
 //       desc: "Developed as part of a mission-planning software tool for the US military and published in 2017, this model attempts to provide more accurate energy expenditure predictions over steeper terrain variations while carrying heavier loads than previous models.  This model attempts to improve the original Pandolf-Santee model with modern GPS positional data and participant's BMR values.",
 //       authors: [Array]
 //     },
 //     {
 //       name: 'Minimum Mechanics',
+//       shortName: 'Minimum Mechanics',
 //       function: 'minimumMechanicsCalories',
 //       desc: `A predictive model published in 2017 which posits that the metabolic energy of the human walking economy can be accurately predicted using a minimum of three variables: "speed, surface grade, and total gravitational load".  This model uses GPS positional data, along with participant's BMR values to estimate total energy expeditures.`,
 //       authors: [Array]
@@ -244,6 +255,7 @@ console.log(models())
 //   collections: [
 //     {
 //       name: 'Calorie Ensemble',
+//       shortName: 'Calorie Ensemble',
 //       function: 'calorieEnsemble',
 //       desc: 'Perform all of the available predictive model calculations at once over a given dataset.'
 //     }
