@@ -1077,6 +1077,14 @@ function models() {
   return {
     models: [
       {
+        name: 'Simple Calories',
+        shortName: 'Simple Calories',
+        function: 'simpleCalories',
+        desc: 'A relative estimate of energy spent per unit of time doing a specific physical '
+          + 'activity to a reference value of 3.5 ml O₂/(kg·min).',
+        authors: [],
+      },
+      {
         name: 'Pandolf-Santee',
         shortName: 'Pandolf-Santee',
         function: 'pandolfCalories',
