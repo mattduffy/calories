@@ -25,7 +25,7 @@
   "scripts": {
     "lint": "eslint --",
     "test": "CALORIES_DEBUG=true DEBUG=* node --test test/test.js",
-    "test-simplified": "CALORIES_DEBUG=true DEBUG=* node --test test/test-simplified-track.js" 
+    "test-simplified": "CALORIES_DEBUG=true DEBUG=* node --test-isolation=none --test test/test-simplified-track.js --" 
   },
   "keywords": [
     "MET",
