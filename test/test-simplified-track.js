@@ -56,7 +56,8 @@ const SMOOTH_WINDOW = 5
 
 const walks = {
   walk_35, walk_36, walk_37, walk_38, walk_39, walk_40,
-  walk_41, walk_42, walk_43, walk_44, walk_45, walk_47,
+  walk_41, walk_42, walk_43, walk_44, walk_45, walk_46,
+  walk_47,
 }
 
 const results = []
