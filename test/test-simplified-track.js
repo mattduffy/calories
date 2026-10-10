@@ -166,7 +166,7 @@ describe('what is happens to calries when track is simplified?', async () => {
       try {
         walk.features[0].geometry.coordinates = coords_s
         console.log('shorted coords track:', walk.features[0].geometry.coordinates.length)
-        writeFileSync(newPath, JSON.toString(walk), { encoding: 'utf8' })
+        writeFileSync(newPath, JSON.stringify(walk), { encoding: 'utf8' })
       } catch (e) {
         console.error('failed to write new short-track walk data file to:', newPath)
         console.error(e)
