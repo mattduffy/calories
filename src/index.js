@@ -5,6 +5,9 @@
  * @file src/index.js
  */
 
+import { crossTrackDistance } from '../util/ctd.js'
+import { ramerDouglasPeucker } from '../util/rdp.js'
+
 /**
  * Is this module running in a develoment mode or debugging context?
  */
@@ -1169,6 +1172,8 @@ export {
   pandolfCalories,
   calorieEnsemble,
   calculateCalories,
+  crossTrackDistance,
+  ramerDouglasPeucker,
   calculateSlopeGrade,
   minimumMechanicCalories,
   minimumMechanicsCalories,

@@ -19,6 +19,8 @@
   ],
   "exports": {
     ".": "./src/index.js",
+    "./rdp.js": "./util/rdp.js",
+    "./ctd": "./util/ctd.js",
     "./sample_data.json": "./src/sample_data.json",
     "./package.json": "./package.json"
   },
