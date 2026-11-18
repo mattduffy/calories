@@ -34,10 +34,10 @@ export function ramerDouglasPeucker(points, epsilon = 2.0) {
   }
   let simplifiedList
   if (maxDistance > epsilon) {
-    const recResultLeft = ramerDouglasPeucker(points.slice(0, index + 1), epsilon)
-    const recResultRight = ramerDouglasPeucker(points.slice(index, end), epsilon)
+    const recurseResultLeft = ramerDouglasPeucker(points.slice(0, index + 1), epsilon)
+    const recurseResultRight = ramerDouglasPeucker(points.slice(index, end), epsilon)
     // The two slices overlap at points[index], so drop the duplicate copy at the seam.
-    simplifiedList = [...recResultLeft.slice(0, -1), ...recResultRight]
+    simplifiedList = [...recurseResultLeft.slice(0, -1), ...recurseResultRight]
     // console.log('simplifiedList length:', simplifiedList.length)
   } else {
     simplifiedList = [points[0], points[end - 1]]
